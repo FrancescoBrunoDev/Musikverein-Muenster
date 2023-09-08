@@ -19,7 +19,12 @@
 
   let data: DataRecordChart[] = []; // Declare data as a variable outside of onMount
   const x = (d: DataRecordCoordinates) => d.x;
-  const y = (d: DataRecordCoordinates) => d.y;
+  const y = [
+    (d: DataRecordCoordinates) => d.y,
+    (d: DataRecordCoordinates) => d.y1,
+    (d: DataRecordCoordinates) => d.y2
+  ]
+
   const triggers = {
     [Scatter.selectors.point]: (d: DataRecordCoordinates) =>
       `<span>x :  ${d.x}<br / >y :  ${d.y}</span>`,

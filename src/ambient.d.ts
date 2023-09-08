@@ -15,7 +15,7 @@ type DataRecordChart = [
   }
 ];
 
-type DataRecordCoordinates = { x: number; y: number };
+type DataRecordCoordinates = { x: number; y: number; y1: number, y2: number };
 
 type Entities =
   | "event"

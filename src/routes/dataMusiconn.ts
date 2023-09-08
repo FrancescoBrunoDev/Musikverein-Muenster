@@ -118,6 +118,12 @@ const joinEventByYear = async () => {
 };
 
 const dataForGraph = async (eventsByYear: Events[]) => {
+  console.log("eventsByYear", eventsByYear);
+  let _filters
+  filters.subscribe((res) => {
+    _filters = res;
+  });
+  console.log("_filters", _filters);
   const data: DataRecordCoordinates[] = [];
   const linea: DataRecordChart[] = [
     {
@@ -125,6 +131,8 @@ const dataForGraph = async (eventsByYear: Events[]) => {
       data: data,
     },
   ];
+
+  
   for (const key in eventsByYear) {
     const events = eventsByYear[key];
     const year = Number(key);
@@ -132,9 +140,11 @@ const dataForGraph = async (eventsByYear: Events[]) => {
     data.push({
       x: year,
       y: eventCount,
+      y1: 10,
+      y2: 20,
     });
   }
-
+  console.log("linea", linea);
   return linea;
 };
 
@@ -168,6 +178,7 @@ const filterEventsByYear = async (filtersToFilter: Filters) => {
           }
         });
         if (hasMatchingPerformance) {
+          const composerId = performances[0].composers[0].person.toString();
           filteredEvents[year] = filteredEvents[year] || [];
           try {
             filteredEvents[year].push(events[eventId]);
@@ -178,7 +189,6 @@ const filterEventsByYear = async (filtersToFilter: Filters) => {
       }
     }
   }
-
   return filteredEvents;
 };
 
