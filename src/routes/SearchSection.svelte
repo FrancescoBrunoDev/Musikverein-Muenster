@@ -7,5 +7,3 @@
 	<SearchBox />
 	<ActiveFilters />
 </div>
-
-<!-- dropdown with autosuggest -->

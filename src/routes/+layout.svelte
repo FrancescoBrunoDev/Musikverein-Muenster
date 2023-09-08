@@ -1,9 +1,9 @@
 <script lang="ts">
-	import '../app.css';
+  import "../app.css";
 </script>
 
 <div class="bg-black">
-	<div class="container mx-auto content-center">
-		<slot />
-	</div>
+  <div class="h-screen grid justify-items-center">
+    <slot />
+  </div>
 </div>
