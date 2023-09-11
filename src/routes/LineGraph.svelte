@@ -18,12 +18,11 @@
   });
 
   let data: DataRecordChart[] = []; // Declare data as a variable outside of onMount
+  function getY(c: Filter): (d: DataRecord) => string {
+    return (d: DataRecord) => d.filters[c.name];
+  }
   const x = (d: DataRecordCoordinates) => d.x;
-  const y = [
-    (d: DataRecordCoordinates) => d.y,
-    (d: DataRecordCoordinates) => d.y1,
-    (d: DataRecordCoordinates) => d.y2
-  ]
+  let y;
 
   const triggers = {
     [Scatter.selectors.point]: (d: DataRecordCoordinates) =>
@@ -35,10 +34,12 @@
       let _dataForGraph = {};
       if ($filters.length === 0) {
         _dataForGraph = $fetchedEvents;
+        y = (d: DataRecordCoordinates) => d.eventCount;
       } else {
         _dataForGraph = await filterEventsByYear($filters);
+        y = $filters.map(getY);
       }
-      const res = await dataForGraph(_dataForGraph);
+      const res = await dataForGraph($fetchedEvents);
       data = res[0].data;
     }
     updateGraph();

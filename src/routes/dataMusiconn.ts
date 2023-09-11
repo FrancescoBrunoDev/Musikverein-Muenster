@@ -119,20 +119,20 @@ const joinEventByYear = async () => {
 
 const dataForGraph = async (eventsByYear: Events[]) => {
   console.log("eventsByYear", eventsByYear);
-  let _filters
+  let _filters;
   filters.subscribe((res) => {
     _filters = res;
   });
   console.log("_filters", _filters);
   const data: DataRecordCoordinates[] = [];
+  const composerCounts = [];
   const linea: DataRecordChart[] = [
     {
       name: "main",
-      data: data,
+      data: composerCounts,
     },
   ];
 
-  
   for (const key in eventsByYear) {
     const events = eventsByYear[key];
     const year = Number(key);
@@ -140,11 +140,51 @@ const dataForGraph = async (eventsByYear: Events[]) => {
     data.push({
       x: year,
       y: eventCount,
-      y1: 10,
-      y2: 20,
     });
   }
-  console.log("linea", linea);
+  // test
+
+  for (const key in eventsByYear) {
+    const year = Number(key);
+    const events = eventsByYear[key];
+    const eventCount = events.length;
+    const yearObj = { x: year, filters: {}, eventCount: eventCount };
+
+    for (const filter of _filters) {
+      const actualFilter = filter.id;
+      const filterName = filter.name;
+      const filterEntity = filter.entity;
+      let filterCount = 0;
+
+      for (const event of eventsByYear[key]) {
+        const performances = event.performances || [];
+        let hasMatchingPerformance = false;
+
+        if (filterEntity === "person") {
+          for (const performance of performances) {
+            const composerId =
+              performance.composers && performance.composers[0]
+                ? performance.composers[0].person.toString()
+                : "";
+
+            if (actualFilter === composerId) {
+              hasMatchingPerformance = true;
+            }
+          }
+        } else if (filterEntity === "work") {
+        }
+
+        if (hasMatchingPerformance) {
+          filterCount++;
+        }
+      }
+
+      yearObj.filters[filterName] = filterCount;
+    }
+
+    composerCounts.push(yearObj);
+  }
+
   return linea;
 };
 
