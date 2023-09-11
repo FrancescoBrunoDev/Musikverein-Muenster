@@ -15,7 +15,11 @@ type DataRecordChart = [
   }
 ];
 
-type DataRecordCoordinates = { x: number; y: number; y1: number, y2: number };
+type DataRecordCoordinates = { x: number; filters: {}; eventCount: number };
+
+type filtersCount = {
+  [key: string]: number;
+};
 
 type Entities =
   | "event"
@@ -68,8 +72,10 @@ type Filters = {
   [key: number]: Filter;
 };
 
-type Filter = {
-  name: string;
-  entity: string;
-  id: string;
-};
+type Filter =
+  | {
+      name: string;
+      entity: string;
+      id: string;
+    }
+  | undefined;

@@ -3,11 +3,12 @@
   import SearchSection from "./SearchSection.svelte";
 </script>
 
-<div class="h-screen lg:w-1/2 md:w-2/3 w-5/6">
-  <div class="h-1/2 grid content-center">
+<div class="h-screen w-screen relative">
+  <div class="h-2/3 grid place-items-center content-center">
     <SearchSection />
   </div>
-  <div class="h-1/2">
+
+  <div class="absolute bottom-28">
     <LineGraph />
   </div>
 </div>

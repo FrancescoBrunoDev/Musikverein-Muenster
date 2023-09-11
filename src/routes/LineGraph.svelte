@@ -7,14 +7,20 @@
     VisScatter,
     VisTooltip,
   } from "@unovis/svelte";
-  import { dataForGraph, filterEventsByYear } from "./dataMusiconn";
   import { onMount } from "svelte";
-  import { fetchAndStoreEvents, filters, fetchedEvents } from "../store";
-
-  console.log($filters, "filters in component");
+  import {
+    fetchAndStoreEvents,
+    filters,
+    fetchedEvents,
+    filteredEvents,
+    filteredEventsForGraph,
+    updateFilteredEventsAndUdateDataForGraph,
+  } from "../store";
 
   onMount(async () => {
-    await fetchAndStoreEvents();
+    await fetchAndStoreEvents().then(() => {
+      updateFilteredEventsAndUdateDataForGraph();
+    });
   });
 
   let data: DataRecordChart[] = []; // Declare data as a variable outside of onMount
@@ -34,34 +40,44 @@
       let _dataForGraph = {};
       if ($filters.length === 0) {
         _dataForGraph = $fetchedEvents;
+
         y = (d: DataRecordCoordinates) => d.eventCount;
       } else {
-        _dataForGraph = await filterEventsByYear($filters);
+        _dataForGraph = $filteredEvents;
         y = $filters.map(getY);
       }
-      const res = await dataForGraph($fetchedEvents);
-      data = res[0].data;
+      data = $filteredEventsForGraph;
     }
     updateGraph();
   }
 </script>
 
-{#if data && data.length > 0}
-  <VisXYContainer
-    {data}
-    height={400}
-    scaleByDomain={true}
-    xDomain={[1850, 1900]}
-    yDomain={[0, 20]}
-  >
-    <VisLine {x} {y} />
-    <VisScatter {x} {y} size={10} />
-    <VisTooltip {triggers} />
-    <VisAxis
-      gridLine={false}
-      domainLine={false}
-      tickLine={undefined}
-      type="x"
-    />
-  </VisXYContainer>
-{/if}
+<div class="relative">
+  <div
+    class="bg-gradient-to-r absolute from-black w-32 h-full to-transparent z-50"
+  />
+  <div
+    class="bg-gradient-to-l right-0 absolute from-black to-transparent w-32 h-full z-50"
+  />
+  {#if data && data.length > 0}
+    <div class="z-10 w-screen">
+      <VisXYContainer
+        {data}
+        height={300}
+        scaleByDomain={true}
+        xDomain={[1850, 1910]}
+        yDomain={[0, 30]}
+      >
+        <VisLine {x} {y} />
+        <VisScatter {x} {y} size={10} />
+        <VisTooltip {triggers} />
+        <VisAxis
+          gridLine={false}
+          domainLine={false}
+          tickLine={undefined}
+          type="x"
+        />
+      </VisXYContainer>
+    </div>
+  {/if}
+</div>

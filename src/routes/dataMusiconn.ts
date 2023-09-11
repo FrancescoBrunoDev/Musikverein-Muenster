@@ -1,6 +1,4 @@
-import { fetchedEvents, filters } from "../store";
-
-let MuensterID = 307;
+let MuensterID = 307; //307 is the ID of Muenster in the musiconn database
 
 const getMuensterEventsAndChildLocation = async () => {
   try {
@@ -86,13 +84,26 @@ const getAllEvents = async () => {
     const allEventIds = extractEventIds(
       muensterWithAllEventAndAllChildsEvent.location[MuensterID]
     );
-    const joinedEventIds = allEventIds.join("|");
 
-    const res = await fetch(
-      `https://performance.musiconn.de/api?action=get&event=${joinedEventIds}&props=dates|corporations|performances|persons&format=json`
-    );
-    const allEvents = await res.json();
-    return allEvents;
+    const batchSize = 1000;
+    const batches = [];
+
+    // Split the event IDs into batches of size batchSize
+    for (let i = 0; i < allEventIds.length; i += batchSize) {
+      const batch = allEventIds.slice(i, i + batchSize);
+      batches.push(batch);
+    }
+
+    const fetchPromises = batches.map(async (batch) => {
+      const joinedEventIds = batch.join("|");
+      const url = `https://performance.musiconn.de/api?action=get&event=${joinedEventIds}&props=dates|corporations|performances|persons&format=json`;
+      const res = await fetch(url);
+      return res.json();
+    });
+
+    const eventsArrays = await Promise.all(fetchPromises);
+    console.log("eventsArrays", eventsArrays);
+    return eventsArrays;
   } catch (error) {
     console.error("Error fetching all events:", error);
     return [];
@@ -102,159 +113,21 @@ const getAllEvents = async () => {
 const joinEventByYear = async () => {
   const allEvents = await getAllEvents();
   const eventsByYear = {};
+  for (const batch of allEvents) {
+    const allEvents = batch.event;
+    for (const key in allEvents) {
+      const event = allEvents[key];
+      const year = event.dates[0].date.split("-")[0];
 
-  for (const key in allEvents.event) {
-    const event = allEvents.event[key];
-    const year = event.dates[0].date.split("-")[0];
-
-    if (eventsByYear[year]) {
-      eventsByYear[year].push(event);
-    } else {
-      eventsByYear[year] = [event];
+      if (eventsByYear[year]) {
+        eventsByYear[year].push(event);
+      } else {
+        eventsByYear[year] = [event];
+      }
     }
   }
 
   return eventsByYear;
-};
-
-const dataForGraph = async (eventsByYear: Events[]) => {
-  console.log("eventsByYear", eventsByYear);
-  let _filters;
-  filters.subscribe((res) => {
-    _filters = res;
-  });
-  console.log("_filters", _filters);
-  const data: DataRecordCoordinates[] = [];
-  const composerCounts = [];
-  const linea: DataRecordChart[] = [
-    {
-      name: "main",
-      data: composerCounts,
-    },
-  ];
-
-  for (const key in eventsByYear) {
-    const events = eventsByYear[key];
-    const year = Number(key);
-    const eventCount = events.length;
-    data.push({
-      x: year,
-      y: eventCount,
-    });
-  }
-  // test
-
-  for (const key in eventsByYear) {
-    const year = Number(key);
-    const events = eventsByYear[key];
-    const eventCount = events.length;
-    const yearObj = { x: year, filters: {}, eventCount: eventCount };
-
-    for (const filter of _filters) {
-      const actualFilter = filter.id;
-      const filterName = filter.name;
-      const filterEntity = filter.entity;
-      let filterCount = 0;
-
-      for (const event of eventsByYear[key]) {
-        const performances = event.performances || [];
-        let hasMatchingPerformance = false;
-
-        if (filterEntity === "person") {
-          for (const performance of performances) {
-            const composerId =
-              performance.composers && performance.composers[0]
-                ? performance.composers[0].person.toString()
-                : "";
-
-            if (actualFilter === composerId) {
-              hasMatchingPerformance = true;
-            }
-          }
-        } else if (filterEntity === "work") {
-        }
-
-        if (hasMatchingPerformance) {
-          filterCount++;
-        }
-      }
-
-      yearObj.filters[filterName] = filterCount;
-    }
-
-    composerCounts.push(yearObj);
-  }
-
-  return linea;
-};
-
-const filterEventsByYear = async (filtersToFilter: Filters) => {
-  let fetchedEventsToFilter = undefined;
-  fetchedEvents.subscribe((res) => {
-    fetchedEventsToFilter = res;
-  });
-
-  const filtersSortedByTypeOnlyId = optimizeAndCombineFilters(filtersToFilter);
-
-  let filteredEvents = {};
-
-  // filter for works
-  for (const year in fetchedEventsToFilter) {
-    const events = fetchedEventsToFilter[year];
-    for (const eventId in events) {
-      const performances = events[eventId].performances || [];
-      if (performances.length > 0) {
-        const hasMatchingPerformance = performances.some((performance) => {
-          const workId = performance.work.toString(); // Convert to string for comparison
-          const composerId =
-            performance.composers && performance.composers.length > 0
-              ? performance.composers[0].person.toString()
-              : null;
-          if (
-            filtersSortedByTypeOnlyId.work.includes(workId) ||
-            filtersSortedByTypeOnlyId.person.includes(composerId)
-          ) {
-            return true;
-          }
-        });
-        if (hasMatchingPerformance) {
-          const composerId = performances[0].composers[0].person.toString();
-          filteredEvents[year] = filteredEvents[year] || [];
-          try {
-            filteredEvents[year].push(events[eventId]);
-          } catch (error) {
-            console.error(error);
-          }
-        }
-      }
-    }
-  }
-  return filteredEvents;
-};
-
-const optimizeAndCombineFilters = (filters) => {
-  const filterMap = {};
-
-  for (const filter of filters) {
-    const entity = filter.entity;
-    const ids = filter.id.split(",").map((id) => id.trim());
-
-    if (filterMap[entity]) {
-      filterMap[entity].push(...ids);
-    } else {
-      filterMap[entity] = ids;
-    }
-  }
-
-  const combinedFilters = {
-    work: [],
-    person: [],
-  };
-  for (const entity in filterMap) {
-    combinedFilters[entity] = filterMap[entity];
-  }
-
-  return combinedFilters;
 };
 
 const autocomplete = async (query: string) => {
@@ -271,4 +144,4 @@ const autocomplete = async (query: string) => {
   }
 };
 
-export { dataForGraph, autocomplete, joinEventByYear, filterEventsByYear };
+export { autocomplete, joinEventByYear };
