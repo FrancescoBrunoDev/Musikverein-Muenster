@@ -21,15 +21,7 @@ type filtersCount = {
   [key: string]: number;
 };
 
-type Entities =
-  | "event"
-  | "series"
-  | "location"
-  | "corporation"
-  | "person"
-  | "work"
-  | "source"
-  | "subject";
+type Entities = "series" | "location" | "corporation" | "person" | "work";
 
 type AutocompleteResult = [string, string, string];
 

@@ -1,6 +1,10 @@
 <script lang="ts">
-  import { filters, removeFilterElement } from "../store";
-  import { slide, fade } from "svelte/transition";
+  import {
+    filters,
+    removeFilterElement,
+    changeFilterPersonOrComposer,
+  } from "../store";
+  import { slide } from "svelte/transition";
 
   // Create a function to group filters by their 'entity' property
   function groupFiltersByEntity(filters) {
@@ -23,17 +27,39 @@
 
 <div>
   {#each Object.keys(groupedFilters) as entity}
-    <div class="mt-4 grid border-l-2 pl-2 border-slate-500" transition:slide={{ axis: "y", delay: 150 }}>
-      <h2 class="text-white text-sm font-semibold mb-2">{entity}</h2>
+    <div
+      class="mt-4 grid pl-2"
+      transition:slide={{ axis: "y", delay: 150 }}
+    >
+      <h2 class="text-white text-sm font-bold mb-2">{entity === "person" ? "perfomer" : entity}</h2>
       <div class="flex gap-2 flex-wrap">
         {#each groupedFilters[entity] as filter}
           <div
             id={filter.id}
-            class="inline-block rounded-full px-3 py-1 text-sm bg-slate-100 max-w-sm truncate"
+            class={"inline-block rounded-full pl-3 py-1 text-sm border text-white" +
+              (filter.entity === "person" || filter.entity === "composer"
+                ? " pr-1"
+                : " pr-2")}
           >
-            <button on:click={() => removeFilterElement(filter.id)}>
+            <button class="truncate max-w-xs" on:click={() => removeFilterElement(filter.id)}>
               {filter.name}
             </button>
+            {#if filter.entity === "person"}
+              <button
+                on:click={() =>
+                  changeFilterPersonOrComposer(filter.id, filter.entity)}
+                class="bg-white px-2 rounded-full text-black"
+                >as a performer</button
+              >
+            {/if}
+            {#if filter.entity === "composer"}
+              <button
+                on:click={() =>
+                  changeFilterPersonOrComposer(filter.id, filter.entity)}
+                class="bg-white px-2 rounded-full text-black"
+                >as a composer</button
+              >
+            {/if}
           </div>
         {/each}
       </div>

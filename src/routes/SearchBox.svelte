@@ -1,7 +1,11 @@
 <script lang="ts">
   import { autocomplete } from "./dataMusiconn";
   import { slide } from "svelte/transition";
-  import { addFilterElement } from "../store";
+  import {
+    addFilterElement,
+    updateEntitiesForSearchBox,
+    entitiesForSearchBox,
+  } from "../store";
 
   let suggestions: AutocompleteResult[] = [];
   let inputValue = "";
@@ -22,6 +26,7 @@
     suggestions = [];
     inputValue = ""; // Clear the input field
   };
+  const Entities = ["person", "work", "corporation"];
 </script>
 
 <input
@@ -32,17 +37,41 @@
   on:input={(input) => handleInput(input.target.value)}
   placeholder="Search"
 />
+<div class="my-2 flex gap-2 pl-2">
+  {#each Entities as entity}
+    <button
+      on:click={() => {
+        updateEntitiesForSearchBox(entity);
+        handleInput(inputValue);
+      }}
+      class={"px-2 rounded-full text-sm " +
+        ($entitiesForSearchBox.includes(entity)
+          ? "bg-white text-slate-800"
+          : "bg-slate-800 text-white")}
+    >
+      {entity}
+    </button>
+  {/each}
+</div>
 {#if suggestions && suggestions.length > 0}
   <div
     transition:slide
     class="w-full max-h-64 overflow-auto grid grid-cols-1 gap-y-2 mt-2 z-10 rounded-xl p-2 border overscroll-auto bg-white"
   >
     {#each suggestions as suggestion}
-      <button
-        class="text-left"
-        on:click={handleFilterFromSuggestion({ suggestion })}
-        id={suggestion[2]}>{suggestion[0]}</button
-      >
+      <div class="flex items-center gap-1">
+        {#if $entitiesForSearchBox.length > 1}
+          <div class="text-xs border-2 border-black px-2 rounded-full h-fit">
+            {suggestion[1]}
+          </div>
+        {/if}
+
+        <button
+          class="text-left"
+          on:click={handleFilterFromSuggestion({ suggestion })}
+          id={suggestion[2]}>{suggestion[0]}</button
+        >
+      </div>
     {/each}
   </div>
 {/if}

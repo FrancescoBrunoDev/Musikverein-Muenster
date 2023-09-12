@@ -6,6 +6,11 @@ const filters = writable<Filter[]>([]);
 const fetchedEvents = writable<Events[]>(undefined);
 const filteredEvents = writable([]);
 const filteredEventsForGraph = writable([]);
+const entitiesForSearchBox = writable<Entities[]>([
+  "person",
+  "corporation",
+  "work",
+]);
 
 const addFilterElement = (selected: any) => {
   const filter: Filter = {
@@ -14,15 +19,63 @@ const addFilterElement = (selected: any) => {
     id: selected.suggestion[2],
   };
 
+  if (filter.entity == "person") {
+    filter.entity = isMoreAPersonOrAComposer(filter.id);
+  }
+
   filters.update((currentFilters) => {
-    const filterExists = currentFilters.some((f) => f.id === filter.id);
+    const filterExists = currentFilters.some(
+      (f) => f.id === filter.id && f.entity === filter.entity
+    );
     if (filterExists) {
       return currentFilters;
     } else {
       return [...currentFilters, filter];
     }
   });
+
   updateFilteredEventsAndUdateDataForGraph();
+};
+
+const isMoreAPersonOrAComposer = (id: string) => {
+  const personId = id.toString();
+  let _fetchedEvents: Events[] = [];
+  fetchedEvents.subscribe((res) => {
+    _fetchedEvents = res;
+  });
+  let countPerson = 0;
+  let countComposer = 0;
+  for (const key in _fetchedEvents) {
+    const events = _fetchedEvents[key];
+    for (const event of events) {
+      const persons = event.persons;
+      if (persons.length > 0) {
+        for (const person of persons) {
+          if (person.person.toString() === personId) {
+            countPerson++;
+          }
+        }
+      }
+      const performances = event.performances;
+      if (performances) {
+        for (const performance of performances) {
+          const composers = performance.composers;
+          if (composers) {
+            for (const composer of composers) {
+              if (composer.person.toString() === personId) {
+                countComposer++;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (countPerson > countComposer) {
+    return "person";
+  } else {
+    return "composer";
+  }
 };
 
 const removeFilterElement = (selected: string) => {
@@ -35,7 +88,42 @@ const removeFilterElement = (selected: string) => {
   updateFilteredEventsAndUdateDataForGraph();
 };
 
-// da sistemare
+const updateEntitiesForSearchBox = (selected: string) => {
+  entitiesForSearchBox.update((currentEntities) => {
+    if (currentEntities.includes(selected)) {
+      const index = currentEntities.indexOf(selected);
+      currentEntities.splice(index, 1);
+    } else {
+      currentEntities.push(selected);
+    }
+    return currentEntities;
+  });
+};
+
+const changeFilterPersonOrComposer = (selectedId: any, selectedEntity: any) => {
+  filters.update((currentFilters) => {
+    const filterToChange = currentFilters.find(
+      (f) => f.id === selectedId && f.entity === selectedEntity
+    );
+    const actualState = filterToChange.entity;
+    const newState = actualState === "person" ? "composer" : "person";
+    const thereIsAnotherFilterWithSameIdAndEntity = currentFilters.some(
+      (f) => f.id === selectedId && f.entity === newState
+    );
+    if (thereIsAnotherFilterWithSameIdAndEntity) {
+      const filterToRemove = currentFilters.find(
+        (f) => f.id === selectedId && f.entity === actualState
+      );
+      const index = currentFilters.indexOf(filterToRemove);
+      currentFilters.splice(index, 1);
+    }
+
+    filterToChange.entity = newState;
+    return currentFilters;
+  });
+  updateFilteredEventsAndUdateDataForGraph();
+};
+
 const fetchAndStoreEvents = async () => {
   let eventsByYear;
 
@@ -83,7 +171,7 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
             if (performance.composers) {
               for (const composer of performance.composers) {
                 if (
-                  filter.entity === "person" &&
+                  filter.entity === "composer" &&
                   filter.id === composer.person.toString()
                 ) {
                   hasMatchingPerformance = true;
@@ -112,6 +200,15 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
             }
           }
 
+          for (const person of event.persons) {
+            if (
+              filter.entity === "person" &&
+              filter.id === person.person.toString()
+            ) {
+              hasMatchingPerformance = true;
+            }
+          }
+
           if (hasMatchingPerformance) {
             filterCount++;
             filteredEvents.update((currentEvents) => {
@@ -137,8 +234,11 @@ export {
   fetchedEvents,
   filteredEvents,
   filteredEventsForGraph,
+  entitiesForSearchBox,
   addFilterElement,
   removeFilterElement,
+  changeFilterPersonOrComposer,
   fetchAndStoreEvents,
   updateFilteredEventsAndUdateDataForGraph,
+  updateEntitiesForSearchBox,
 };

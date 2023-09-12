@@ -69,7 +69,7 @@
         yDomain={[0, 30]}
       >
         <VisLine {x} {y} />
-        <VisScatter {x} {y} size={10} />
+        <VisScatter {x} {y} size={7} />
         <VisTooltip {triggers} />
         <VisAxis
           gridLine={false}

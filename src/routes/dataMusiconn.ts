@@ -1,4 +1,5 @@
 let MuensterID = 307; //307 is the ID of Muenster in the musiconn database
+import { entitiesForSearchBox } from "../store";
 
 const getMuensterEventsAndChildLocation = async () => {
   try {
@@ -102,7 +103,6 @@ const getAllEvents = async () => {
     });
 
     const eventsArrays = await Promise.all(fetchPromises);
-    console.log("eventsArrays", eventsArrays);
     return eventsArrays;
   } catch (error) {
     console.error("Error fetching all events:", error);
@@ -131,16 +131,23 @@ const joinEventByYear = async () => {
 };
 
 const autocomplete = async (query: string) => {
-  try {
-    const res = await fetch(
-      `https://performance.musiconn.de/api?action=autocomplete&title=${query}&entities=corporation|person|work&project=26&format=json`
-    );
-    const results = await res.json();
+  let _entitiesForSearchBox;
+  entitiesForSearchBox.subscribe((res) => {
+    _entitiesForSearchBox = res;
+  });
+  const entities = _entitiesForSearchBox.join("|");
+  if (entities.length !== 0) {
+    try {
+      const res = await fetch(
+        `https://performance.musiconn.de/api?action=autocomplete&title=${query}&entities=${entities}&project=26&format=json`
+      );
+      const results = await res.json();
 
-    return results;
-  } catch (error) {
-    console.error("Error fetching all events:", error);
-    return [];
+      return results;
+    } catch (error) {
+      console.error("Error fetching all events:", error);
+      return [];
+    }
   }
 };
 
