@@ -1,73 +1,74 @@
 type MuensterEventsAndChildLocation = {
-  location: {
-    [key: string]: {
-      childs: {
-        location: string;
-      }[];
-    };
-  };
+	location: {
+		[key: string]: {
+			childs: {
+				location: string;
+			}[];
+		};
+	};
 };
 ƒ;
 type DataRecordChart = [
-  {
-    name: string;
-    data: DataRecordCoordinates[];
-  }
+	{
+		name: string;
+		data: DataRecordCoordinates[];
+	}
 ];
 
 type DataRecordCoordinates = { x: number; filters: {}; eventCount: number };
 
 type filtersCount = {
-  [key: string]: number;
+	[key: string]: number;
 };
 
-type Entities = "series" | "location" | "corporation" | "person" | "work";
+type Entities = 'series' | 'location' | 'corporation' | 'person' | 'work';
 
 type AutocompleteResult = [string, string, string];
 
 type Store = {
-  selectedPerson: AutocompleteResult[];
+	selectedPerson: AutocompleteResult[];
 };
 
 type Person = {
-  person: number;
-  subject?: number; // Optional subject property
-  order: number;
+	person: number;
+	subject?: number; // Optional subject property
+	order: number;
 };
 
 type Composer = {
-  person: number;
+	person: number;
 };
 
 type Medium = {
-  subject: number;
+	subject: number;
 };
 
 type Performance = {
-  work: number;
-  order: number;
-  composers: Composer[];
-  persons: (Person & { mediums?: Medium[] })[]; // Person with optional mediums
+	work: number;
+	order: number;
+	composers: Composer[];
+	persons: (Person & { mediums?: Medium[] })[]; // Person with optional mediums
 };
 
 type EventItem = {
-  dates: DateObject[];
-  persons: Person[];
-  performances: Performance[];
+	dates: DateObject[];
+	persons: Person[];
+	performances: Performance[];
 };
 
 type Events = {
-  [key: string]: EventItem[];
+	[key: string]: EventItem[];
 };
 
 type Filters = {
-  [key: number]: Filter;
+	[key: number]: Filter;
 };
 
 type Filter =
-  | {
-      name: string;
-      entity: string;
-      id: string;
-    }
-  | undefined;
+	| {
+			name: string;
+			entity: string;
+			id: string;
+			color: string;
+	  }
+	| undefined;

@@ -9,11 +9,13 @@ export const nodes = [
 export const server_loads = [];
 
 export const dictionary = {
-		"/": [2]
-	};
+	'/': [2]
+};
 
 export const hooks = {
-	handleError: (({ error }) => { console.error(error) }),
+	handleError: ({ error }) => {
+		console.error(error);
+	}
 };
 
 export { default as root } from '../root.svelte';
