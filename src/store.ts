@@ -250,16 +250,16 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 };
 
 export {
-	filters,
+	addFilterElement,
+	changeFilterPersonOrComposer,
+	colorFilters,
+	entitiesForSearchBox,
+	fetchAndStoreEvents,
 	fetchedEvents,
 	filteredEvents,
 	filteredEventsForGraph,
-	entitiesForSearchBox,
-	colorFilters,
-	addFilterElement,
+	filters,
 	removeFilterElement,
-	changeFilterPersonOrComposer,
-	fetchAndStoreEvents,
-	updateFilteredEventsAndUdateDataForGraph,
-	updateEntitiesForSearchBox
+	updateEntitiesForSearchBox,
+	updateFilteredEventsAndUdateDataForGraph
 };
