@@ -1,7 +1,11 @@
 <script lang="ts">
-	import { autocomplete } from './dataMusiconn';
+	import { autocomplete } from '$lib/dataMusiconn';
 	import { slide } from 'svelte/transition';
-	import { addFilterElement, updateEntitiesForSearchBox, entitiesForSearchBox } from '../store';
+	import {
+		addFilterElement,
+		updateEntitiesForSearchBox,
+		entitiesForSearchBox
+	} from '$stores/storeGraph';
 
 	let suggestions: AutocompleteResult[] = [];
 	let inputValue = '';
@@ -26,7 +30,7 @@
 </script>
 
 <input
-	class="focus:shadow-outline h-10 w-full rounded-full border px-3 text-base placeholder-gray-600"
+	class="focus:shadow-outline text-secondary bg-primary placeholder-background h-10 w-full rounded-full px-3 text-base drop-shadow-lg"
 	type="text"
 	id="myInput"
 	bind:value={inputValue}
@@ -40,10 +44,10 @@
 				updateEntitiesForSearchBox(entity);
 				handleInput(inputValue);
 			}}
-			class={'rounded-full px-2 text-sm ' +
+			class={'rounded-full px-4 pb-[0.15rem] text-sm transition-shadow hover:drop-shadow-lg ' +
 				($entitiesForSearchBox.includes(entity)
-					? 'bg-white text-slate-800'
-					: 'bg-slate-800 text-white')}
+					? 'bg-primary text-secondary'
+					: 'bg-secondary text-primary')}
 		>
 			{entity}
 		</button>
@@ -52,12 +56,14 @@
 {#if suggestions && suggestions.length > 0}
 	<div
 		transition:slide
-		class="z-10 mt-2 grid max-h-64 w-full grid-cols-1 gap-y-2 overflow-auto overscroll-auto rounded-xl border bg-white p-2"
+		class="bg-background dark:bg-primary dark:text-secondary z-10 mt-2 grid max-h-64 w-full grid-cols-1 gap-y-2 overflow-auto overscroll-auto rounded-xl border p-2"
 	>
 		{#each suggestions as suggestion}
 			<div class="flex items-center gap-1">
 				{#if $entitiesForSearchBox.length > 1}
-					<div class="h-fit rounded-full border-2 border-black px-2 text-xs">
+					<div
+						class="border-primary dark:border-secondary h-fit rounded-full border-2 px-2 text-xs"
+					>
 						{suggestion[1]}
 					</div>
 				{/if}

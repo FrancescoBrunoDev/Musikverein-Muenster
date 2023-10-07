@@ -1,9 +1,19 @@
 <script lang="ts">
-	import '../app.css';
+	import '$tailwind';
+	import NavBar from '$components/NavBar.svelte';
+	import { checkIfThemeDataExists, setFirstThemeData } from '$stores/storeTheme';
+
+	// at first load, set dark mode if the user prefers it
+	const _checkIfThemeDataExists = checkIfThemeDataExists();
+
+	if (_checkIfThemeDataExists == 'dark' || _checkIfThemeDataExists == 'base') {
+		setFirstThemeData();
+	}
 </script>
 
-<div class="bg-black">
+<div class="">
 	<div class="grid h-screen justify-items-center">
+		<NavBar />
 		<slot />
 	</div>
 </div>

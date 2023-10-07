@@ -8,7 +8,7 @@
 		filters,
 		filteredEventsForGraph,
 		updateFilteredEventsAndUdateDataForGraph
-	} from '../store';
+	} from '$stores/storeGraph';
 
 	onMount(async () => {
 		await fetchAndStoreEvents().then(() => {
@@ -20,7 +20,7 @@
 
 	const x = (d: DataRecordCoordinates) => d.x;
 	let y;
-	let colorLine: string[] = [];
+	let colorLine: string[] | string = [] || '';
 
 	function getY(c: Filter): (d: DataRecord) => string {
 		return (d: DataRecord) => d.filters[c.name].count;
@@ -37,7 +37,7 @@
 	function tooltipTemplate(d: DataRecordCoordinates): string {
 		let arrayEventsPerFilter: [
 			{
-				text: string | undefined;
+				text: string | undefined | number;
 				color: string | undefined;
 			}
 		] = [];
@@ -51,13 +51,14 @@
 				});
 			});
 		}
+
 		return `
       <div class="w-fit">
         <div class="text-sm font-bold">${d.x}</div>
         <div class="text-sm">${arrayEventsPerFilter
 					.map((filter) => {
 						return `
-              <div class="flex items-center gap-1">
+              <div class="flex items-center gap-1 text-xs">
                 <div
                   style="background-color: ${filter.color}"
                   class="h-2 w-2 rounded-full"
@@ -75,7 +76,7 @@
 		async function updateGraph() {
 			if ($filters.length === 0) {
 				y = (d: DataRecordCoordinates) => d.eventCount;
-				colorLine = (d: DataRecordCoordinates) => d.color;
+				colorLine = 'hsl(var(--primary)';
 			} else {
 				y = $filters.map(getY);
 				colorLine = getArrayOfActiveFilterColors($filters);
@@ -88,9 +89,11 @@
 
 <div class="relative">
 	{#if data && data.length > 0}
-		<div class="absolute z-50 h-full w-32 bg-gradient-to-r from-black to-transparent" />
-		<div class="absolute right-0 z-50 h-full w-32 bg-gradient-to-l from-black to-transparent" />
-		<div class="z-10 w-screen">
+		<div class="from-background absolute z-10 ml-16 h-full w-32 bg-gradient-to-r to-transparent" />
+		<div
+			class="from-background absolute right-0 z-10 mr-16 h-full w-32 bg-gradient-to-l to-transparent"
+		/>
+		<div class="z-10 w-screen px-16">
 			<VisXYContainer
 				{data}
 				height={300}

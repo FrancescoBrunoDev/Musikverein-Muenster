@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { joinEventByYear } from './routes/dataMusiconn';
+import { joinEventByYear } from '$lib/dataMusiconn';
 
 const filters = writable<Filter[]>([]);
 const fetchedEvents = writable<Events[]>(undefined);

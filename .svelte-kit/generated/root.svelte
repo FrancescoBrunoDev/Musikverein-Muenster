@@ -12,6 +12,7 @@
 	export let form;
 	export let data_0 = null;
 	export let data_1 = null;
+	export let data_2 = null;
 
 	if (!browser) {
 		setContext('__svelte__', stores);
@@ -41,19 +42,20 @@
 
 {#if constructors[1]}
 	<svelte:component this={constructors[0]} bind:this={components[0]} data={data_0}>
-		<svelte:component this={constructors[1]} bind:this={components[1]} data={data_1} {form} />
+		{#if constructors[2]}
+			<svelte:component this={constructors[1]} bind:this={components[1]} data={data_1}>
+				<svelte:component this={constructors[2]} bind:this={components[2]} data={data_2} {form} />
+			</svelte:component>
+		{:else}
+			<svelte:component this={constructors[1]} bind:this={components[1]} data={data_1} {form} />
+		{/if}
 	</svelte:component>
 {:else}
 	<svelte:component this={constructors[0]} bind:this={components[0]} data={data_0} {form} />
 {/if}
 
 {#if mounted}
-	<div
-		id="svelte-announcer"
-		aria-live="assertive"
-		aria-atomic="true"
-		style="position: absolute; left: 0; top: 0; clip: rect(0 0 0 0); clip-path: inset(50%); overflow: hidden; white-space: nowrap; width: 1px; height: 1px"
-	>
+	<div id="svelte-announcer" aria-live="assertive" aria-atomic="true" style="position: absolute; left: 0; top: 0; clip: rect(0 0 0 0); clip-path: inset(50%); overflow: hidden; white-space: nowrap; width: 1px; height: 1px">
 		{#if navigated}
 			{title}
 		{/if}
