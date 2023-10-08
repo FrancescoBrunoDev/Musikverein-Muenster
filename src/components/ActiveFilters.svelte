@@ -23,7 +23,7 @@
 	$: {
 		groupedFiltersOR = groupFiltersByEntity($filters, 'or');
 		groupedFiltersNOT = groupFiltersByEntity($filters, 'not');
-		console.log(groupedFiltersOR, 'groupedFitersOR');
+		console.log(groupedFiltersOR, 'groupedFi tersOR');
 		console.log(groupedFiltersNOT, 'groupedFiltersNOT');
 	}
 </script>
@@ -56,7 +56,7 @@
 
 				<div class="flex flex-wrap gap-2">
 					{#each groupedFiltersNOT[entity] as filter}
-						<ActiveFilter {filter} method="or" />
+						<ActiveFilter {filter} method="not" />
 					{/each}
 				</div>
 			</div>
