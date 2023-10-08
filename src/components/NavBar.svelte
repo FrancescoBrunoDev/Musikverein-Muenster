@@ -1,8 +1,9 @@
 <script>
 	import { fly } from 'svelte/transition';
 	import { quintInOut } from 'svelte/easing';
-	import ArrowRight from 'svelte-material-icons/ArrowRight.svelte';
 	import { toggleDarkMode } from '$stores/storeTheme';
+	import { ArrowRight } from 'lucide-svelte';
+	import { Lightbulb } from 'lucide-svelte';
 
 	let isMenuActive = false;
 
@@ -33,10 +34,24 @@
 					<ArrowRight size={100} color="hsl(var(--primary)" /></button
 				>
 				<div class="flex h-full items-end justify-between">
-					<div class="flex h-full items-end gap-6 text-6xl font-bold">
+					<div class="flex h-full items-end gap-6 text-8xl font-bold">
 						<div class="grid grid-cols-1">
-							<a on:click={() => toggleMenu()} href="/timeline">Timeline</a>
-							<a on:click={() => toggleMenu()} href="/austellung">Austellung</a>
+							<a
+								class="transition-transform duration-75 hover:-translate-y-1"
+								on:click={() => toggleMenu()}
+								href="/timeline">Timeline</a
+							>
+
+							<a
+								class="group transition-transform duration-75 hover:-translate-y-1"
+								on:click={() => toggleMenu()}
+								href="/austellung">Austellung</a
+							>
+							<ul class="pl-5">
+								<li class="text-xl transition-transform duration-75 hover:-translate-y-1">
+									1# First Exibition
+								</li>
+							</ul>
 						</div>
 					</div>
 					<button
@@ -44,7 +59,11 @@
 							toggleDarkMode();
 							toggleMenu();
 						}}
-						class="mr-20 text-lg font-bold">toggle light</button
+						class="group mr-20 flex items-center gap-1 text-lg font-bold"
+						><Lightbulb
+							size={25}
+							class="opacity-0 transition-opacity duration-75 group-hover:opacity-100"
+						/><span class="group-hover:">toggle light</span></button
 					>
 				</div>
 			</div>

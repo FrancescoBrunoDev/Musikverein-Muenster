@@ -61,14 +61,13 @@ type Events = {
 };
 
 type Filters = {
-	[key: number]: Filter;
+	and: Filter[];
+	or: Filter[];
 };
 
-type Filter =
-	| {
-			name: string;
-			entity: string;
-			id: string;
-			color: string;
-	  }
-	| undefined;
+type Filter = {
+	name: string;
+	entity: string;
+	id: string;
+	color: string;
+};

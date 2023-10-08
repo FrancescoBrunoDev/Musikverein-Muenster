@@ -1,12 +1,16 @@
 <script lang="ts">
-	import { filters, removeFilterElement, changeFilterPersonOrComposer } from '$stores/storeGraph';
+	import { filters } from '$stores/storeFilters';
 	import { slide } from 'svelte/transition';
+	import ActiveFilter from '$components/ActiveFilter.svelte';
+
+	let groupedFiltersOR = {};
+	let groupedFiltersNOT = {};
 
 	// Create a function to group filters by their 'entity' property
-	function groupFiltersByEntity(filters) {
+	function groupFiltersByEntity(filters, method: string) {
 		const groupedFilters = {};
-
-		filters.forEach((filter) => {
+		filters[method]?.forEach((filter: Filter) => {
+			console.log('jasndasj');
 			if (!groupedFilters[filter.entity]) {
 				groupedFilters[filter.entity] = [];
 			}
@@ -16,41 +20,46 @@
 
 		return groupedFilters;
 	}
-
-	// Get the grouped filters
-	$: groupedFilters = groupFiltersByEntity($filters);
+	$: {
+		groupedFiltersOR = groupFiltersByEntity($filters, 'or');
+		groupedFiltersNOT = groupFiltersByEntity($filters, 'not');
+		console.log(groupedFiltersOR, 'groupedFitersOR');
+		console.log(groupedFiltersNOT, 'groupedFiltersNOT');
+	}
 </script>
 
 <div>
-	{#each Object.keys(groupedFilters) as entity}
+	{#each Object.keys(groupedFiltersOR) as entity}
 		<div class="mt-4 grid pl-2" transition:slide={{ axis: 'y', delay: 150 }}>
 			<h2 class="text-primary mb-2 text-sm font-bold">
 				{entity === 'person' ? 'perfomer' : entity}
 			</h2>
+
 			<div class="flex flex-wrap gap-2">
-				{#each groupedFilters[entity] as filter}
-					<div
-						id={filter.id}
-						class={'text-primary flex items-center gap-1 rounded-full border py-1 pl-1 text-xs' +
-							(filter.entity === 'person' || filter.entity === 'composer' ? ' pr-1' : ' pr-3')}
-					>
-						<div style={`background-color: ${filter.color}`} class="ml-1 h-2 w-2 rounded-full" />
-						<button
-							class="max-w-xs truncate hover:line-through"
-							on:click={() => removeFilterElement(filter.id)}
-						>
-							{filter.name}
-						</button>
-						{#if filter.entity === 'person' || filter.entity === 'composer'}
-							<button
-								on:click={() => changeFilterPersonOrComposer(filter.id, filter.entity)}
-								class="bg-foreground text-secondary rounded-full px-2 hover:animate-pulse"
-								>as a {#if filter.entity === 'person'}performer{:else if filter.entity === 'composer'}composer{/if}</button
-							>
-						{/if}
-					</div>
+				{#each groupedFiltersOR[entity] as filter}
+					<ActiveFilter {filter} method="or" />
 				{/each}
 			</div>
 		</div>
+	{/each}
+
+	{#each Object.keys(groupedFiltersOR) as entity}
+		{#if groupedFiltersNOT[entity]}
+			<div class="mt-4 ml-10 border-2 border-primary w-fit px-3 border-b-0 rounded-t-xl font-bold">NOT FILTER</div>
+			<div
+				class=" border-primary grid rounded-xl border-2 pb-2 pl-2 pt-1"
+				transition:slide={{ axis: 'y', delay: 150 }}
+			>
+				<h2 class="text-primary mb-2 text-sm font-bold">
+					{entity === 'person' ? 'perfomer' : entity}
+				</h2>
+
+				<div class="flex flex-wrap gap-2">
+					{#each groupedFiltersNOT[entity] as filter}
+						<ActiveFilter {filter} method="or" />
+					{/each}
+				</div>
+			</div>
+		{/if}
 	{/each}
 </div>

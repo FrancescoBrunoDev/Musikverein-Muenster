@@ -41,6 +41,8 @@
 	<div
 		on:mouseover={handleMouseOver}
 		on:mouseout={handleMouseOut}
+		on:blur={handleMouseOut}
+		on:focus={handleMouseOver}
 		style={`transform: scale(${scaleGraphSection}); bottom: ${bottomDistance}rem;`}
 		role="presentation"
 		class="absolute transition-all duration-500"

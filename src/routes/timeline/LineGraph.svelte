@@ -5,10 +5,10 @@
 	import { onMount } from 'svelte';
 	import {
 		fetchAndStoreEvents,
-		filters,
 		filteredEventsForGraph,
 		updateFilteredEventsAndUdateDataForGraph
 	} from '$stores/storeGraph';
+	import {filters} from "$stores/storeFilters"
 
 	onMount(async () => {
 		await fetchAndStoreEvents().then(() => {
@@ -41,10 +41,10 @@
 				color: string | undefined;
 			}
 		] = [];
-		if ($filters.length === 0) {
+		if ($filters.or && $filters.or.length === 0) {
 			arrayEventsPerFilter.push({ text: d.eventCount, color: d.color });
 		} else {
-			$filters.forEach((filter) => {
+			$filters.or.forEach((filter) => {
 				arrayEventsPerFilter.push({
 					text: `${filter.name}: ${d.filters[filter.name].count}`,
 					color: filter.color
@@ -74,12 +74,14 @@
 
 	$: {
 		async function updateGraph() {
-			if ($filters.length === 0) {
-				y = (d: DataRecordCoordinates) => d.eventCount;
-				colorLine = 'hsl(var(--primary)';
-			} else {
-				y = $filters.map(getY);
-				colorLine = getArrayOfActiveFilterColors($filters);
+			if ($filters.or) {
+				if ($filters.or.length === 0) {
+					y = (d: DataRecordCoordinates) => d.eventCount;
+					colorLine = 'hsl(var(--primary)';
+				} else {
+					y = $filters.or.map(getY);
+					colorLine = getArrayOfActiveFilterColors($filters.or);
+				}
 			}
 			data = $filteredEventsForGraph;
 		}
