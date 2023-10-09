@@ -3,14 +3,13 @@
 	import { slide } from 'svelte/transition';
 	import ActiveFilter from '$components/ActiveFilter.svelte';
 
-	let groupedFiltersOR = {};
-	let groupedFiltersNOT = {};
+	$: groupedFiltersOR = {};
+	$: groupedFiltersNOT = {};
 
 	// Create a function to group filters by their 'entity' property
 	function groupFiltersByEntity(filters, method: string) {
 		const groupedFilters = {};
 		filters[method]?.forEach((filter: Filter) => {
-			console.log('jasndasj');
 			if (!groupedFilters[filter.entity]) {
 				groupedFilters[filter.entity] = [];
 			}
@@ -23,43 +22,54 @@
 	$: {
 		groupedFiltersOR = groupFiltersByEntity($filters, 'or');
 		groupedFiltersNOT = groupFiltersByEntity($filters, 'not');
-		console.log(groupedFiltersOR, 'groupedFi tersOR');
-		console.log(groupedFiltersNOT, 'groupedFiltersNOT');
+		console.log(groupedFiltersOR, groupedFiltersNOT, 'filters');
 	}
 </script>
 
-<div>
-	{#each Object.keys(groupedFiltersOR) as entity}
-		<div class="mt-4 grid pl-2" transition:slide={{ axis: 'y', delay: 150 }}>
-			<h2 class="text-primary mb-2 text-sm font-bold">
-				{entity === 'person' ? 'perfomer' : entity}
-			</h2>
-
-			<div class="flex flex-wrap gap-2">
-				{#each groupedFiltersOR[entity] as filter}
-					<ActiveFilter {filter} method="or" />
-				{/each}
-			</div>
-		</div>
-	{/each}
-
-	{#each Object.keys(groupedFiltersOR) as entity}
-		{#if groupedFiltersNOT[entity]}
-			<div class="mt-4 ml-10 border-2 border-primary w-fit px-3 border-b-0 rounded-t-xl font-bold">NOT FILTER</div>
-			<div
-				class=" border-primary grid rounded-xl border-2 pb-2 pl-2 pt-1"
-				transition:slide={{ axis: 'y', delay: 150 }}
+<div class="mt-4 grid grid-cols-1 gap-y-8">
+	{#if groupedFiltersOR && Object.keys(groupedFiltersOR).length > 0}
+		<div class="border-l-4 border-primary pb-2 text-primary">
+			<span
+				class="absolute h-fit w-9 -translate-x-7 -rotate-90 pb-1 pr-2 text-end text-xs font-bold uppercase"
+				>or</span
 			>
-				<h2 class="text-primary mb-2 text-sm font-bold">
-					{entity === 'person' ? 'perfomer' : entity}
-				</h2>
+			{#each Object.keys(groupedFiltersOR) as entity}
+				<div class="grid pl-2" transition:slide={{ axis: 'y', delay: 150 }}>
+					<h2 class="mb-2 text-sm font-bold text-primary">
+						{entity === 'person' ? 'perfomer' : entity}
+					</h2>
 
-				<div class="flex flex-wrap gap-2">
-					{#each groupedFiltersNOT[entity] as filter}
-						<ActiveFilter {filter} method="not" />
-					{/each}
+					<div class="flex flex-wrap gap-2">
+						{#each groupedFiltersOR[entity] as filter}
+							<ActiveFilter {filter} method="or" />
+						{/each}
+					</div>
 				</div>
-			</div>
-		{/if}
-	{/each}
+			{/each}
+		</div>
+	{/if}
+
+	{#if groupedFiltersNOT && Object.keys(groupedFiltersNOT).length > 0}
+		<div class="border-l-4 border-destructive pb-2 text-destructive">
+			<span
+				class="absolute h-fit w-9 -translate-x-7 -rotate-90 pb-1 pr-2 text-end text-xs font-bold uppercase"
+				>not</span
+			>
+			{#each Object.keys(groupedFiltersNOT) as entity}
+				{#if groupedFiltersNOT[entity]}
+					<div class="grid pl-2" transition:slide={{ axis: 'y', delay: 150 }}>
+						<h2 class="mb-2 text-sm font-bold text-primary">
+							{entity === 'person' ? 'perfomer' : entity}
+						</h2>
+
+						<div class="flex flex-wrap gap-2">
+							{#each groupedFiltersNOT[entity] as filter}
+								<ActiveFilter {filter} method="not" />
+							{/each}
+						</div>
+					</div>
+				{/if}
+			{/each}
+		</div>
+	{/if}
 </div>

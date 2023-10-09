@@ -24,11 +24,11 @@
 
 <div class="flex w-full items-center gap-2">
 	<div
-		class="bg-primary focus:ring-secondary flex w-full items-center rounded-full drop-shadow-lg focus:outline-none focus:ring"
+		class="flex w-full items-center rounded-full bg-primary drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary"
 	>
 		<MethodSearch />
 		<input
-			class="text-secondary placeholder-background focus-none h-10 w-full cursor-text bg-transparent px-3 outline-none"
+			class="focus-none h-10 w-full cursor-text bg-transparent px-3 text-secondary placeholder-background outline-none"
 			type="text"
 			id="myInput"
 			bind:value={inputValue}
@@ -36,7 +36,7 @@
 			placeholder="Search"
 		/>
 	</div>
-	<Info size={30} />
+	<Info size={25} stroke-width={40} />
 </div>
 <div class="my-2 flex gap-2 pl-2">
 	{#each Entities as entity}

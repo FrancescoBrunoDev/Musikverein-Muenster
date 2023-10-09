@@ -1,6 +1,11 @@
 <script>
 	import LineGraph from './LineGraph.svelte';
 	import SearchSection from './SearchSection.svelte';
+	import { onMount } from 'svelte';
+	import {
+		fetchAndStoreEvents,
+		updateFilteredEventsAndUdateDataForGraph
+	} from '$stores/storeGraph';
 
 	let opacitySearchSection = 1;
 	let blurSearchSection = 0;
@@ -26,6 +31,13 @@
 		bottomDistance = 7;
 		fromGradient = 'transparent';
 	}
+
+	onMount(async () => {
+		await fetchAndStoreEvents().then(() => {
+			updateFilteredEventsAndUdateDataForGraph();
+		});
+	});
+
 </script>
 
 <div class="relative h-screen w-screen">

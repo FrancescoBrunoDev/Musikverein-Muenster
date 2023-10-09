@@ -2,19 +2,8 @@
 	import { Position } from '@unovis/ts';
 	import { fade } from 'svelte/transition';
 	import { VisXYContainer, VisLine, VisAxis, VisTooltip, VisCrosshair } from '@unovis/svelte';
-	import { onMount } from 'svelte';
-	import {
-		fetchAndStoreEvents,
-		filteredEventsForGraph,
-		updateFilteredEventsAndUdateDataForGraph
-	} from '$stores/storeGraph';
-	import {filters} from "$stores/storeFilters"
-
-	onMount(async () => {
-		await fetchAndStoreEvents().then(() => {
-			updateFilteredEventsAndUdateDataForGraph();
-		});
-	});
+	import { filteredEventsForGraph } from '$stores/storeGraph';
+	import { filters } from '$stores/storeFilters';
 
 	let data: DataRecordChart[] = []; // Declare data as a variable outside of onMount
 
@@ -91,9 +80,9 @@
 
 <div class="relative">
 	{#if data && data.length > 0}
-		<div class="from-background absolute z-10 ml-16 h-full w-32 bg-gradient-to-r to-transparent" />
+		<div class="absolute z-10 ml-16 h-full w-32 bg-gradient-to-r from-background to-transparent" />
 		<div
-			class="from-background absolute right-0 z-10 mr-16 h-full w-32 bg-gradient-to-l to-transparent"
+			class="absolute right-0 z-10 mr-16 h-full w-32 bg-gradient-to-l from-background to-transparent"
 		/>
 		<div class="z-10 w-screen px-16">
 			<VisXYContainer

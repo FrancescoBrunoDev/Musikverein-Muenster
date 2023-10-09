@@ -1,4 +1,5 @@
 let MuensterID = 307; //307 is the ID of Muenster in the musiconn database
+
 import { entitiesForSearchBox } from '$stores/storeGraph';
 
 const getMuensterEventsAndChildLocation = async () => {

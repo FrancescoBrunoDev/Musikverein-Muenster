@@ -7,7 +7,6 @@ const filteredEvents = writable([]);
 const filteredEventsForGraph = writable([]);
 const entitiesForSearchBox = writable<Entities[]>(['person', 'corporation', 'work']);
 
-
 const updateEntitiesForSearchBox = (selected: string) => {
 	entitiesForSearchBox.update((currentEntities) => {
 		if (currentEntities.includes(selected)) {
@@ -48,10 +47,23 @@ const fetchAndStoreEvents = async () => {
 	let eventsByYear;
 
 	if (eventsByYear === undefined) {
-		eventsByYear = await joinEventByYear().then((res: any) => {
-			fetchedEvents.set(res);
-			return res;
-		});
+		eventsByYear = await fetch('/api/musiconn', {
+			method: 'GET',
+			headers: {
+				'content-type': 'application/json'
+			}
+		}).then((response) =>
+			response
+				.json()
+				.then((data) => ({
+					data: data,
+					status: response.status
+				}))
+				.then((res) => {
+					fetchedEvents.set(res.data);
+					return res.status;
+				})
+		);
 	}
 };
 
