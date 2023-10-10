@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
-import { updateFilteredEventsAndUdateDataForGraph, fetchedEvents } from '$stores/storeGraph';
+import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
+import { fetchedEvents } from '$stores/storeEvents';
 
 const filters = writable<Filters[]>([]);
 const IsMethodFilterNOT = writable(false);
@@ -17,6 +18,8 @@ const colorFilters = writable([
 	'#a0d6e5',
 	'#f45a6d'
 ]);
+const filteredEvents = writable([]);
+const entitiesForSearchBox = writable<Entities[]>(['person', 'corporation', 'work']);
 
 const setFirstTimeFilter = () => {
 	let _filters;
@@ -138,11 +141,26 @@ const isMoreAPersonOrAComposer = (id: string) => {
 	}
 };
 
+const updateEntitiesForSearchBox = (selected: string) => {
+	entitiesForSearchBox.update((currentEntities) => {
+		if (currentEntities.includes(selected)) {
+			const index = currentEntities.indexOf(selected);
+			currentEntities.splice(index, 1);
+		} else {
+			currentEntities.push(selected);
+		}
+		return currentEntities;
+	});
+};
+
 export {
 	IsMethodFilterNOT,
 	colorFilters,
 	filters,
+	filteredEvents,
+	entitiesForSearchBox,
 	addFilterElement,
 	removeFilterElement,
-	setFirstTimeFilter
+	setFirstTimeFilter,
+	updateEntitiesForSearchBox
 };

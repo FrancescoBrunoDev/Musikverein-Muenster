@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { entitiesForSearchBox } from '$stores/storeGraph';
-	import { addFilterElement } from '$stores/storeFilters';
+	import { addFilterElement, entitiesForSearchBox } from '$stores/storeFilters';
 
 	export let suggestions: AutocompleteResult[];
 	export let inputValue;

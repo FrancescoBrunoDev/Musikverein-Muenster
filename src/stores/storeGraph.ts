@@ -1,23 +1,13 @@
 import { writable } from 'svelte/store';
-import { joinEventByYear } from '$lib/dataMusiconn';
-import { filters, setFirstTimeFilter } from '$stores/storeFilters';
 
-const fetchedEvents = writable<Events[]>(undefined);
-const filteredEvents = writable([]);
+import {
+	filters,
+	setFirstTimeFilter,
+	filteredEvents,
+} from '$stores/storeFilters';
+import { fetchedEvents } from '$stores/storeEvents';
+
 const filteredEventsForGraph = writable([]);
-const entitiesForSearchBox = writable<Entities[]>(['person', 'corporation', 'work']);
-
-const updateEntitiesForSearchBox = (selected: string) => {
-	entitiesForSearchBox.update((currentEntities) => {
-		if (currentEntities.includes(selected)) {
-			const index = currentEntities.indexOf(selected);
-			currentEntities.splice(index, 1);
-		} else {
-			currentEntities.push(selected);
-		}
-		return currentEntities;
-	});
-};
 
 const changeFilterPersonOrComposer = (selectedId: any, selectedEntity: any) => {
 	filters.update((currentFilters) => {
@@ -41,30 +31,6 @@ const changeFilterPersonOrComposer = (selectedId: any, selectedEntity: any) => {
 		return currentFilters;
 	});
 	updateFilteredEventsAndUdateDataForGraph();
-};
-
-const fetchAndStoreEvents = async () => {
-	let eventsByYear;
-
-	if (eventsByYear === undefined) {
-		eventsByYear = await fetch('/api/musiconn', {
-			method: 'GET',
-			headers: {
-				'content-type': 'application/json'
-			}
-		}).then((response) =>
-			response
-				.json()
-				.then((data) => ({
-					data: data,
-					status: response.status
-				}))
-				.then((res) => {
-					fetchedEvents.set(res.data);
-					return res.status;
-				})
-		);
-	}
 };
 
 const updateFilteredEventsAndUdateDataForGraph = async () => {
@@ -192,13 +158,7 @@ const hasMatchingPerformancesNOT = (event: Performance[], filter: Filter) => {
 };
 
 export {
-	changeFilterPersonOrComposer,
-	entitiesForSearchBox,
-	fetchAndStoreEvents,
-	fetchedEvents,
-	filteredEvents,
 	filteredEventsForGraph,
-	filters,
-	updateEntitiesForSearchBox,
+	changeFilterPersonOrComposer,
 	updateFilteredEventsAndUdateDataForGraph
 };

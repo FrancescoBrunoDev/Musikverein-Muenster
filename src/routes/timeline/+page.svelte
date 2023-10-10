@@ -2,10 +2,11 @@
 	import LineGraph from './LineGraph.svelte';
 	import SearchSection from './SearchSection.svelte';
 	import { onMount } from 'svelte';
-	import {
-		fetchAndStoreEvents,
-		updateFilteredEventsAndUdateDataForGraph
-	} from '$stores/storeGraph';
+	import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
+	import { filteredEvents } from '$stores/storeFilters';
+	import { fetchAndStoreEvents } from '$stores/storeEvents';
+
+	$: console.log($filteredEvents, 'filteredEvents');
 
 	let opacitySearchSection = 1;
 	let blurSearchSection = 0;
@@ -37,7 +38,6 @@
 			updateFilteredEventsAndUdateDataForGraph();
 		});
 	});
-
 </script>
 
 <div class="relative h-screen w-screen">

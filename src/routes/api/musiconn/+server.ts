@@ -3,6 +3,12 @@ import { joinEventByYear } from '$lib/dataMusiconn';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
-	const response = await joinEventByYear();
-	return json(response);
+	let response;
+	try {
+		response = await joinEventByYear();
+		return json(response);
+	} catch (error) {
+		console.error(error);
+		return json({ error: error.message });
+	}
 };
