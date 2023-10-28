@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { fetchedEvents } from '$stores/storeEvents';
 
-const filters = writable<Filters[]>([]);
+const filters = writable([]);
 const IsMethodFilterNOT = writable(false);
 const colorFilters = writable([
 	'#04c0c7',
@@ -26,7 +26,7 @@ const setFirstTimeFilter = () => {
 	filters.subscribe((res) => {
 		_filters = res;
 	});
-	if (_filters.or?.length > 0) {
+	if (_filters.or?.length > 0 || _filters.not?.length > 0) {
 		return;
 	} else {
 		filters.set({
@@ -85,16 +85,45 @@ const addFilterElement = (selected: any) => {
 	updateFilteredEventsAndUdateDataForGraph();
 };
 
-const removeFilterElement = (selected: string, method: string) => {
+const removeFilterElement = (selected: string, method: Method) => {
+	console.log(method, 'method');
 	let _colorFilters;
 	colorFilters.subscribe((res) => {
 		_colorFilters = res;
 	});
 	filters.update((currentFilters) => {
+		// console.log(currentFilters, "currentFilters");
 		const filterToRemove = currentFilters[method].find((f) => f.id === selected);
 		const index = currentFilters[method].indexOf(filterToRemove);
 		currentFilters[method].splice(index, 1);
 		_colorFilters.push(filterToRemove.color);
+		//if (currentFilters.or.length == 0) {
+		//	IsMethodFilterNOT.set(false); // if there are no more filters, the method is set to OR
+		//}
+		return currentFilters;
+	});
+	updateFilteredEventsAndUdateDataForGraph();
+};
+
+const changeFilterPersonOrComposer = (selectedId: any, selectedEntity: any, method: Method) => {
+	filters.update((currentFilters) => {
+		const filterToChange = currentFilters[method]?.find(
+			(f) => f.id === selectedId && f.entity === selectedEntity
+		);
+		const actualState = filterToChange.entity;
+		const newState = actualState === 'person' ? 'composer' : 'person';
+		const thereIsAnotherFilterWithSameIdAndEntity = currentFilters[method]?.some(
+			(f) => f.id === selectedId && f.entity === newState
+		);
+		if (thereIsAnotherFilterWithSameIdAndEntity) {
+			const filterToRemove = currentFilters[method]?.find(
+				(f) => f.id === selectedId && f.entity === actualState
+			);
+			const index = currentFilters[method]?.indexOf(filterToRemove);
+			currentFilters[method]?.splice(index, 1);
+		}
+
+		filterToChange.entity = newState;
 		return currentFilters;
 	});
 	updateFilteredEventsAndUdateDataForGraph();
@@ -162,5 +191,6 @@ export {
 	addFilterElement,
 	removeFilterElement,
 	setFirstTimeFilter,
-	updateEntitiesForSearchBox
+	updateEntitiesForSearchBox,
+	changeFilterPersonOrComposer
 };

@@ -9,7 +9,6 @@
 	});
 </script>
 
-{#if $filters.or && $filters.or.length > 0}
 	<button
 		use:melt={$root}
 		aria-label="Toggle italic"
@@ -23,4 +22,3 @@
 			>NOT</span
 		>
 	</button>
-{/if}

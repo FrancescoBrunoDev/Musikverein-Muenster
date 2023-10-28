@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { changeFilterPersonOrComposer } from '$stores/storeGraph';
-	import { removeFilterElement } from '$stores/storeFilters';
+	import { removeFilterElement, changeFilterPersonOrComposer} from '$stores/storeFilters';
 	import { createTooltip, melt } from '@melt-ui/svelte';
 	import { fade } from 'svelte/transition';
 	import { Circle } from 'lucide-svelte';
@@ -44,7 +43,7 @@
 			{#if filter.entity === 'person' || filter.entity === 'composer'}
 				<li>
 					<button
-						on:click={() => changeFilterPersonOrComposer(filter.id, filter.entity)}
+						on:click={() => changeFilterPersonOrComposer(filter.id, filter.entity, method)}
 						class="rounded-full bg-foreground px-2 pb-[0.13rem] text-secondary transition-transform duration-100 hover:scale-[1.03] hover:shadow-lg"
 						>as a {#if filter.entity === 'person'}performer{:else if filter.entity === 'composer'}composer{/if}</button
 					>

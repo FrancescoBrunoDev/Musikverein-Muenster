@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { autocomplete } from '$lib/dataMusiconn';
 	import { Info } from 'lucide-svelte';
-	import MethodSearch from '$components/MethodSearch.svelte';
-	import SuggestionSearch from './SuggestionSearch.svelte';
+	import MethodSearch from '$components/searchAndFilters/MethodSearch.svelte';
+	import SuggestionSearch from '$components/searchAndFilters/SuggestionSearch.svelte';
 	import { entitiesForSearchBox, updateEntitiesForSearchBox } from '$stores/storeFilters';
 
 	let suggestions: AutocompleteResult[] = [];

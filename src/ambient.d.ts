@@ -65,9 +65,24 @@ type Filters = {
 	or: Filter[];
 };
 
+type Method = 'or' | 'not';
+
 type Filter = {
 	name: string;
 	entity: string;
 	id: string;
 	color: string;
 };
+
+type ItemFilterForGraph = {
+	x: number;
+	filters: {
+	  [key: string]: {
+		count: number;
+		color: string;
+	  };
+	};
+	eventCount: number;
+  };
+
+  type FilteredEventsForGraph = ItemFilterForGraph[];

@@ -1,37 +1,9 @@
 import { writable } from 'svelte/store';
 
-import {
-	filters,
-	setFirstTimeFilter,
-	filteredEvents,
-} from '$stores/storeFilters';
+import { filters, setFirstTimeFilter, filteredEvents } from '$stores/storeFilters';
 import { fetchedEvents } from '$stores/storeEvents';
 
-const filteredEventsForGraph = writable([]);
-
-const changeFilterPersonOrComposer = (selectedId: any, selectedEntity: any) => {
-	filters.update((currentFilters) => {
-		const filterToChange = currentFilters.or?.find(
-			(f) => f.id === selectedId && f.entity === selectedEntity
-		);
-		const actualState = filterToChange.entity;
-		const newState = actualState === 'person' ? 'composer' : 'person';
-		const thereIsAnotherFilterWithSameIdAndEntity = currentFilters.or?.some(
-			(f) => f.id === selectedId && f.entity === newState
-		);
-		if (thereIsAnotherFilterWithSameIdAndEntity) {
-			const filterToRemove = currentFilters.or?.find(
-				(f) => f.id === selectedId && f.entity === actualState
-			);
-			const index = currentFilters.or?.indexOf(filterToRemove);
-			currentFilters.or?.splice(index, 1);
-		}
-
-		filterToChange.entity = newState;
-		return currentFilters;
-	});
-	updateFilteredEventsAndUdateDataForGraph();
-};
+const filteredEventsForGraph = writable<FilteredEventsForGraph>([]);
 
 const updateFilteredEventsAndUdateDataForGraph = async () => {
 	setFirstTimeFilter();
@@ -46,7 +18,11 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 	});
 
 	filteredEventsForGraph.set([]);
-	filteredEvents.set([]);
+	if (_filters.or.length === 0) {
+		filteredEvents.set(_fetchedEvents);
+	} else {
+		filteredEvents.set([]);
+	}
 
 	for (const key in _fetchedEvents) {
 		const year = Number(key);
@@ -58,36 +34,65 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 			eventCount: eventCount
 		};
 
-		for (const filter of _filters.or) {
-			let filterCount = 0;
+		if (_filters.or.length === 0) {
+			for (const filter of _filters.not) {
 
-			for (const event of events) {
-				const hasMatchingPerformanceOR = hasMatchingPerformancesOR(event, filter);
-				if (hasMatchingPerformanceOR) {
-					filterCount++;
-					filteredEvents.update((currentEvents) => {
-						currentEvents[year] = currentEvents[year] || [];
-						currentEvents[year].push(event);
-						return { ...currentEvents }; // Return a copy of the modified object
-					});
+				for (const event of events) {
+					const hasMatchingPerformanceNOT = hasMatchingPerformances(event, filter);
+					if (hasMatchingPerformanceNOT) {
+						
+						yearObj.eventCount--;
+						filteredEvents.update((currentEvents) => {
+							currentEvents[year] = currentEvents[year].filter((e) => e.uid !== event.uid);
+							if (currentEvents[year].length === 0) {
+								delete currentEvents[year];
+							}
+							return { ...currentEvents };
+						});
+					}
 				}
-			}
 
-			yearObj.filters[filter.name] = {
-				count: filterCount,
-				color: filter.color
-			};
+				yearObj.filters[filter.name] = {
+					// count: filterCount,
+					color: filter.color
+				};
+			}
 		}
-		// console.log(yearObj);
+		if (_filters.or.length > 0) {
+			for (const filter of _filters.or) {
+				let filterCount = 0;
+
+				for (const event of events) {
+					const hasMatchingPerformanceOR = hasMatchingPerformances(event, filter);
+
+					if (hasMatchingPerformanceOR) {
+						filterCount++;
+						filteredEvents.update((currentEvents) => {
+							currentEvents[year] = currentEvents[year] || [];
+							currentEvents[year].push(event);
+							return { ...currentEvents }; // Return a copy of the modified object
+						});
+					}
+				}
+
+				yearObj.filters[filter.name] = {
+					count: filterCount,
+					color: filter.color
+				};
+			}
+		}
+
 		filteredEventsForGraph.update((currentEvents) => {
 			return [...currentEvents, yearObj];
 		});
 	}
 };
 
-const hasMatchingPerformancesOR = (event: Performance[], filter: Filter) => {
+const hasMatchingPerformances = (event: Performance[], filter: Filter) => {
 	const performances = event.performances || [];
-	if (performances.length > 0) {
+	// manage the case in witch event.performances does not exist
+
+	if (event.performances) {
 		for (const performance of performances) {
 			// se composers esiste controlla se hasMatchingPerformance
 			if (performance.composers) {
@@ -111,10 +116,18 @@ const hasMatchingPerformancesOR = (event: Performance[], filter: Filter) => {
 					}
 				}
 			}
+			if (performance.persons) {
+				for (const person of event.persons) {
+					if (filter.entity === 'person' && filter.id === person.person.toString()) {
+						return true;
+					}
+				}
+			}
 		}
-
+	}
+	if (filter.entity === 'person') {
 		for (const person of event.persons) {
-			if (filter.entity === 'person' && filter.id === person.person.toString()) {
+			if (filter.id === person.person.toString()) {
 				return true;
 			}
 		}
@@ -122,43 +135,4 @@ const hasMatchingPerformancesOR = (event: Performance[], filter: Filter) => {
 	return false;
 };
 
-const hasMatchingPerformancesNOT = (event: Performance[], filter: Filter) => {
-	const performances = event.performances || [];
-	for (const performance of performances) {
-		// se composers esiste controlla se hasMatchingPerformance
-		if (performance.composers) {
-			for (const composer of performance.composers) {
-				if (filter.entity === 'composer' && filter.id === composer.person.toString()) {
-					return false;
-				}
-			}
-		}
-
-		// controlla se work hasMatchingPerformance
-		if (filter.entity === 'work' && filter.id === performance.work.toString()) {
-			return false;
-		}
-
-		// controlla se corporations esiste e controlla se hasMatchingPerformance
-		if (performance.corporations) {
-			for (const corporation of performance.corporations) {
-				if (filter.entity === 'corporation' && filter.id === corporation.corporation.toString()) {
-					return false;
-				}
-			}
-		}
-	}
-
-	for (const person of event.persons) {
-		if (filter.entity === 'person' && filter.id === person.person.toString()) {
-			return false;
-		}
-	}
-	return true;
-};
-
-export {
-	filteredEventsForGraph,
-	changeFilterPersonOrComposer,
-	updateFilteredEventsAndUdateDataForGraph
-};
+export { filteredEvents, filteredEventsForGraph, updateFilteredEventsAndUdateDataForGraph };

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { filters } from '$stores/storeFilters';
 	import { slide } from 'svelte/transition';
-	import ActiveFilter from '$components/ActiveFilter.svelte';
+	import ActiveFilter from '$components/searchAndFilters/ActiveFilter.svelte';
 
 	$: groupedFiltersOR = {};
 	$: groupedFiltersNOT = {};
 
 	// Create a function to group filters by their 'entity' property
-	function groupFiltersByEntity(filters, method: string) {
+	function groupFiltersByEntity(filters: Filters[], method: string) {
 		const groupedFilters = {};
 		filters[method]?.forEach((filter: Filter) => {
 			if (!groupedFilters[filter.entity]) {
@@ -20,9 +20,10 @@
 		return groupedFilters;
 	}
 	$: {
-		groupedFiltersOR = groupFiltersByEntity($filters, 'or');
 		groupedFiltersNOT = groupFiltersByEntity($filters, 'not');
+		groupedFiltersOR = groupFiltersByEntity($filters, 'or');
 	}
+
 </script>
 
 <div class="mt-4 grid grid-cols-1 gap-y-8">
@@ -40,7 +41,7 @@
 						{entity === 'person' ? 'perfomer' : entity}
 					</h2>
 
-					<div class="gap- flex flex-wrap">
+					<div class="flex flex-wrap gap-2">
 						{#each groupedFiltersOR[entity] as filter}
 							<ActiveFilter {filter} method="or" />
 						{/each}

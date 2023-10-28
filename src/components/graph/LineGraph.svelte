@@ -2,20 +2,24 @@
 	import { Position } from '@unovis/ts';
 	import { fade } from 'svelte/transition';
 	import { VisXYContainer, VisLine, VisAxis, VisTooltip, VisCrosshair } from '@unovis/svelte';
-	import { filteredEventsForGraph } from '$stores/storeGraph';
+	import { filteredEventsForGraph, filteredEvents } from '$stores/storeGraph';
 	import { filters } from '$stores/storeFilters';
+	import { shortcut } from '@svelte-put/shortcut';
+	import { ChevronUpSquare } from 'lucide-svelte';
 
-	let data: DataRecordChart[] = []; // Declare data as a variable outside of onMount
+	let data: FilteredEventsForGraph = []; // Declare data as a variable outside of onMount
 
 	const x = (d: DataRecordCoordinates) => d.x;
-	let y;
+	let y: ItemFilterForGraph;
 	let colorLine: string[] | string = [] || '';
+	let yearForZoom: number | null = null;
 
 	function getY(c: Filter): (d: DataRecord) => string {
 		return (d: DataRecord) => d.filters[c.name].count;
 	}
 
 	function getArrayOfActiveFilterColors(filters: Filter[]): string[] {
+		// console.log(filters, "filter in color")
 		let array: string[] = [];
 		filters.forEach((filter) => {
 			array.push(filter.color);
@@ -40,10 +44,13 @@
 				});
 			});
 		}
+		yearForZoom = d.x;
 
 		return `
       <div class="w-fit">
-        <div class="text-sm font-bold">${d.x}</div>
+        <div class="text-sm font-bold"><span>${
+					d.x
+				}</span><span class="text-xs font-normal"> ctrl + y to navigate to the year</span></div>
         <div class="text-sm">${arrayEventsPerFilter
 					.map((filter) => {
 						return `
@@ -60,23 +67,40 @@
       </div>
     `;
 	}
-
+	$: console.log($filteredEventsForGraph, 'filteredEvents');
 	$: {
 		async function updateGraph() {
-			if ($filters.or) {
+			if ($filters.or || $filters.not) {
 				if ($filters.or.length === 0) {
 					y = (d: DataRecordCoordinates) => d.eventCount;
 					colorLine = 'hsl(var(--primary)';
-				} else {
+				} else if ($filters.or.length > 0) {
 					y = $filters.or.map(getY);
 					colorLine = getArrayOfActiveFilterColors($filters.or);
+				} else {
+					y = (d: DataRecordCoordinates) => d.eventCount;
+					colorLine = 'hsl(var(--primary)';
 				}
 			}
 			data = $filteredEventsForGraph;
 		}
 		updateGraph();
 	}
+
+	function navigateToEvent() {
+		window.location.href = `/timeline/${yearForZoom}`;
+	}
 </script>
+
+<svelte:window
+	use:shortcut={{
+		trigger: {
+			key: 'y',
+			modifier: ['ctrl', 'meta'],
+			callback: navigateToEvent
+		}
+	}}
+/>
 
 <div class="relative">
 	{#if data && data.length > 0}

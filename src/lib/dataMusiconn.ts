@@ -90,7 +90,7 @@ const getAllEvents = async () => {
 
 		const fetchPromises = batches.map(async (batch) => {
 			const joinedEventIds = batch.join('|');
-			const url = `https://performance.musiconn.de/api?action=get&event=${joinedEventIds}&props=dates|corporations|performances|persons&format=json`;
+			const url = `https://performance.musiconn.de/api?action=get&event=${joinedEventIds}&props=uid|dates|corporations|performances|persons&format=json`;
 			const res = await fetch(url);
 			return res.json();
 		});
