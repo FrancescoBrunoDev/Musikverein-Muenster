@@ -2,10 +2,9 @@
 	import { Position } from '@unovis/ts';
 	import { fade } from 'svelte/transition';
 	import { VisXYContainer, VisLine, VisAxis, VisTooltip, VisCrosshair } from '@unovis/svelte';
-	import { filteredEventsForGraph, filteredEvents } from '$stores/storeGraph';
+	import { filteredEventsForGraph } from '$stores/storeGraph';
 	import { filters } from '$stores/storeFilters';
 	import { shortcut } from '@svelte-put/shortcut';
-	import { ChevronUpSquare } from 'lucide-svelte';
 
 	let data: FilteredEventsForGraph = []; // Declare data as a variable outside of onMount
 
@@ -67,7 +66,7 @@
       </div>
     `;
 	}
-	$: console.log($filteredEventsForGraph, 'filteredEvents');
+	//$: console.log($filteredEventsForGraph, 'filteredEvents');
 	$: {
 		async function updateGraph() {
 			if ($filters.or || $filters.not) {

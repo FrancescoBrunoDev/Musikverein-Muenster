@@ -12,7 +12,7 @@
 	}
 </script>
 
-<div class="fixed top-0 z-50 flex h-10 w-full items-center justify-center">
+<div class="fixed bg-background top-0 z-50 flex h-10 w-full items-center justify-center">
 	<div class="text-foreground container flex justify-between text-lg">
 		<ul class="flex items-center">
 			<li>

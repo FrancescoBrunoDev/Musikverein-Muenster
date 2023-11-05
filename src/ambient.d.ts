@@ -7,7 +7,7 @@ type MuensterEventsAndChildLocation = {
 		};
 	};
 };
-ƒ;
+
 type DataRecordChart = [
 	{
 		name: string;
@@ -77,12 +77,24 @@ type Filter = {
 type ItemFilterForGraph = {
 	x: number;
 	filters: {
-	  [key: string]: {
-		count: number;
-		color: string;
-	  };
+		[key: string]: {
+			count: number;
+			color: string;
+		};
 	};
 	eventCount: number;
-  };
+};
 
-  type FilteredEventsForGraph = ItemFilterForGraph[];
+type workTitles = {
+	title: string;
+};
+
+type personTitles = {
+	title: string;
+};
+
+type locationTitles = {
+	title: string;
+};
+
+type FilteredEventsForGraph = ItemFilterForGraph[];
