@@ -19,16 +19,16 @@
 	}
 </script>
 
-<div class={isEventOpen ? 'flex h-fit w-80 flex-shrink-0 flex-col border-2 border-primary' : ''}>
+<div class={isEventOpen ? 'flex h-fit w-80 flex-shrink-0 flex-col border-2 border-primary dark:border-secondary' : ''}>
 	<button
 		on:click={() => handleClickEvent()}
-		class={`flex-shrink-0 flex-grow-0 border-primary font-bold ${
-			isEventOpen ? 'relative left-0 right-0 top-0 h-fit border-b-2' : 'h-32 w-24 border-2'
+		class={`flex-shrink-0 flex-grow-0 border-primary dark:border-secondary font-bold ${
+			isEventOpen ? 'relative left-0 right-0 top-0 h-fit border-b-2 py-2' : 'h-32 w-24 border-2'
 		}`}
 		>{date}
 		{#if isEventOpen}
 			<br />
-			<span class="text-sm">
+			<span class="text-sm dark:font-semibold">
 				{#if event.locations}
 					{#each event.locations as location}
 						{#await getTitleLocation(location.location) then title}
@@ -43,9 +43,9 @@
 	</button>
 	{#if isEventOpen}
 		<div class="p-2">
-			<div class="text-lg font-bold">Performances</div>
+			<div class="text-lg font-bold dark:font-semibold">Performances</div>
 			{#if event.performances}
-				<div class="flex flex-col gap-1 divide-y-2 divide-primary">
+				<div class="flex flex-col gap-1 divide-y-2 divide-primary dark:divide-secondary">
 					<EventPerformances {event} />
 				</div>
 			{/if}

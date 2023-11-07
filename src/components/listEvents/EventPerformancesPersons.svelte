@@ -25,7 +25,7 @@
 	}
 </script>
 
-<button on:click={() => (isPersonOpen = !isPersonOpen)} class="font-bold hover:scale-[1.01]">performed by</button>
+<button on:click={() => (isPersonOpen = !isPersonOpen)} class="font-bold hover:scale-[1.01] dark:font-semibold">performed by</button>
 {#if isPersonOpen}
 	<span class="text-sm">{joinPersons(performance.persons)}</span>
 {/if}
