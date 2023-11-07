@@ -5,7 +5,6 @@
 	import EventPerformancesPersons from '$components/listEvents/EventPerformancesPersons.svelte';
 	export let event;
 
-    $: console.log(event)
 	async function getTitleComposition(uid) {
 		const { title } = $workTitles[uid];
 		return title;

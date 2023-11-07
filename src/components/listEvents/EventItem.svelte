@@ -19,18 +19,14 @@
 	}
 </script>
 
-{#if !isEventOpen}
+<div class={isEventOpen ? 'flex h-fit w-80 flex-shrink-0 flex-col border-2 border-primary' : ''}>
 	<button
 		on:click={() => handleClickEvent()}
-		class="h-32 w-24 flex-shrink-0 flex-grow-0 border-2 border-primary font-bold">{date}</button
-	>
-{/if}
-{#if isEventOpen}
-	<div key={event.uid} class="flex h-fit w-80 flex-shrink-0 flex-col border-2 border-primary">
-		<button
-			on:click={() => handleClickEvent()}
-			class="relative left-0 right-0 top-0 h-fit flex-shrink-0 flex-grow-0 border-b-2 border-primary font-bold"
-			>{date}
+		class={`flex-shrink-0 flex-grow-0 border-primary font-bold ${
+			isEventOpen ? 'relative left-0 right-0 top-0 h-fit border-b-2' : 'h-32 w-24 border-2'
+		}`}
+		>{date}
+		{#if isEventOpen}
 			<br />
 			<span class="text-sm">
 				{#if event.locations}
@@ -42,16 +38,17 @@
 						{/await}
 					{/each}
 				{/if}
-			</span></button
-		>
-
+			</span>
+		{/if}
+	</button>
+	{#if isEventOpen}
 		<div class="p-2">
-			<div class="font-bold text-lg">Performances</div>
+			<div class="text-lg font-bold">Performances</div>
 			{#if event.performances}
 				<div class="flex flex-col gap-1 divide-y-2 divide-primary">
 					<EventPerformances {event} />
 				</div>
 			{/if}
 		</div>
-	</div>
-{/if}
+	{/if}
+</div>
