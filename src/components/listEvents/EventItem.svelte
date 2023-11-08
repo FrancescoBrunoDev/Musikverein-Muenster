@@ -2,6 +2,7 @@
 	import EventPerformances from './EventPerformances.svelte';
 	import { locationTitles } from '$stores/storeEvents';
 	import { filters } from '$stores/storeFilters';
+	import { Circle } from 'lucide-svelte';
 	export let event;
 	let isEventOpen = false;
 
@@ -35,7 +36,7 @@
 				: 'h-32 w-24 border-2'
 		}`}
 		>{date}
-	
+		<div>
 			{#each event.performances as performance}
 			{#if $filters.or.some((filter) => filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person) || $filters.or.some((filter) => filter.entity === 'work' && filter.id == performance.work) || $filters.or.some((filter) => filter.entity === 'location' && filter.id == performance.location) || $filters.or.some((filter) => filter.entity === 'person' && performance.persons.some((person) => filter.id == person.person))}
 				<div class="flex items-center gap-1">
@@ -61,7 +62,7 @@
 			
 				</div>
 			{/if}
-		
+		</div>
 		{#if isEventOpen}
 			<br />
 			<span class="text-sm dark:font-semibold">
