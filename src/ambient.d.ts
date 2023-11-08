@@ -97,4 +97,8 @@ type locationTitles = {
 	title: string;
 };
 
+type corporationTitles = {
+	title: string;
+};
+
 type FilteredEventsForGraph = ItemFilterForGraph[];

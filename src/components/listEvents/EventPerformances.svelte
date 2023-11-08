@@ -31,9 +31,6 @@
 						{#if filter.entity === 'work' && filter.id == performance.work}
 							<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
 						{/if}
-						{#if filter.entity === 'location' && filter.id == performance.location}
-							<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
-						{/if}
 						{#if filter.entity === 'person'}
 							{#each performance.persons as person}
 								{#if filter.id == person.person}

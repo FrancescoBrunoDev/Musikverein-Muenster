@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
 	import { personTitles } from '$stores/storeEvents';
 
-	export let performance;
+	export let performance: Performance;
 
 	let isPersonOpen = false;
 

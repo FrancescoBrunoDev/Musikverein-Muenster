@@ -5,6 +5,7 @@ const fetchedEvents = writable<Events[]>(undefined);
 const workTitles = writable<workTitles[]>([]);
 const personTitles = writable<personTitles[]>([]);
 const locationTitles = writable<locationTitles[]>([]);
+const corporationTitles = writable<corporationTitles[]>([]);
 
 const fetchAndStoreEvents = async () => {
 	let eventsByYear;
@@ -34,66 +35,78 @@ const fetchAndStoreEvents = async () => {
 };
 
 const getTitles = async () => {
-	const uids = await getUids("workUid").then((res) => res.join('|'));
-	const uids2 = await getUids("personUid").then((res) => res.join('|'));
-	const uid3 = await getUids("locationUid").then((res) => res.join('|'));
-
+	const uidTypes = [
+		{ type: 'workUid', api: 'work' },
+		{ type: 'personUid', api: 'person' },
+		{ type: 'locationUid', api: 'location' },
+		{ type: 'corporationUid', api: 'corporation' }
+	];
+	console.log(uidTypes);
 	try {
-		const res = await fetch(
-			`https://performance.musiconn.de/api?action=get&work=${uids}&props=title&format=json`
+		await Promise.all(
+			uidTypes.map(async ({ type, api }) => {
+				const uids = await getUids(type).then((res) => res.join('|'));
+				const res = await fetch(
+					`https://performance.musiconn.de/api?action=get&${api}=${uids}&props=title&format=json`
+				);
+				const json = await res.json();
+				if (type === 'workUid') {
+					const { work } = json;
+					workTitles.set(work);
+				} else if (type === 'personUid') {
+					const { person } = json;
+					personTitles.set(person);
+				} else if (type === 'locationUid') {
+					const { location } = json;
+					locationTitles.set(location);
+				} else if (type === 'corporationUid') {
+					const { corporation } = json;
+					corporationTitles.set(corporation);
+				}
+			})
 		);
-		const { work } = await res.json();
-		workTitles.set(work);
-		const res2 = await fetch(
-			`https://performance.musiconn.de/api?action=get&person=${uids2}&props=title&format=json`
-		);
-		const { person } = await res2.json();
-		personTitles.set(person);
-		const res3 = await fetch(
-			`https://performance.musiconn.de/api?action=get&location=${uid3}&props=title&format=json`
-		);
-		const { location } = await res3.json();
-		locationTitles.set(location);
 	} catch (error) {
 		console.log(error);
 	}
 };
 
 const getUids = async (kind) => {
-	let _filteredEvents;
-	const uids = new Set();
+    let _filteredEvents;
+    const uids = new Set();
+    const kindMapping = {
+        'workUid': { key: 'performances', uid: 'work' },
+        'personUid': { key: 'persons', uid: 'person' },
+        'locationUid': { key: 'locations', uid: 'location' },
+        'corporationUid': { key: 'corporations', uid: 'corporation' }
+    };
 
-	filteredEvents.subscribe((res) => {
-		_filteredEvents = res;
-	});
+    filteredEvents.subscribe((res) => {
+        _filteredEvents = res;
+    });
 
-	for (const key in _filteredEvents) {
-		const year = Number(key);
-		const events = _filteredEvents[year];
-		for (const event of events) {
-			if (kind === 'workUid') {
-				if (event.performances) {
-					event.performances.forEach((performance) => {
-						uids.add(performance.work);
-					});
-				}
-			} else if (kind === 'personUid') {
-				if (event.persons) {
-					event.persons.forEach((person) => {
-						uids.add(person.person);
-					});
-				}
-			} else if (kind === 'locationUid') {
-				if (event.locations) {
-					event.locations.forEach((location) => {
-						uids.add(location.location);
-					});
-				}
-			}
-		}
-	}
+    for (const key in _filteredEvents) {
+        const year = Number(key);
+        const events = _filteredEvents[year];
+        for (const event of events) {
+            const kindKey = kindMapping[kind]?.key;
+            const uidKey = kindMapping[kind]?.uid;
+            if (kindKey && uidKey && event[kindKey]) {
+                event[kindKey].forEach((item) => {
+                    uids.add(item[uidKey]);
+                });
+            }
+        }
+    }
 
-	return Array.from(uids);
+    return Array.from(uids);
 };
 
-export { fetchedEvents, workTitles, personTitles, locationTitles, fetchAndStoreEvents, getTitles };
+export {
+	fetchedEvents,
+	workTitles,
+	personTitles,
+	locationTitles,
+	corporationTitles,
+	fetchAndStoreEvents,
+	getTitles
+};

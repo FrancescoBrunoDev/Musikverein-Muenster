@@ -11,7 +11,7 @@
 					<div class="text-2xl">{year}</div>
 					<div>{$filteredEvents[year].length}</div>
 				</div>
-				<div class="flex flex-row gap-2 overflow-x-scroll pb-4 leading-tight">
+				<div class="flex items-start flex-row gap-2 overflow-x-scroll pb-4 leading-tight">
 					{#each $filteredEvents[year] as event}
 						<EventItem {event} />
 					{/each}
