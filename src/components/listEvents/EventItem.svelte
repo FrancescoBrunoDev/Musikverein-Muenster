@@ -60,9 +60,7 @@
 						{/each}
 			
 				</div>
-			{:catch error}
-				<div>Error: {error.message}</div>
-			{/each}
+			{/if}
 		</div>
 		{#if isEventOpen}
 			<br />
