@@ -38,30 +38,31 @@
 		>{date}
 		<div>
 			{#each event.performances as performance}
-			{#if $filters.or.some((filter) => filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person) || $filters.or.some((filter) => filter.entity === 'work' && filter.id == performance.work) || $filters.or.some((filter) => filter.entity === 'location' && filter.id == performance.location) || $filters.or.some((filter) => filter.entity === 'person' && performance.persons.some((person) => filter.id == person.person))}
-				<div class="flex items-center gap-1">
+				{#if $filters.or.some((filter) => filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person) || $filters.or.some((filter) => filter.entity === 'work' && filter.id == performance.work) || $filters.or.some((filter) => filter.entity === 'location' && filter.id == performance.location) || $filters.or.some((filter) => filter.entity === 'person' && performance.persons.some((person) => filter.id == person.person))}
+					<div class="flex items-center gap-1">
 
-						{#each $filters.or as filter}
-							{#if filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person}
-								<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
-							{/if}
-							{#if filter.entity === 'work' && filter.id == performance.work}
-								<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
-							{/if}
-							{#if filter.entity === 'location' && filter.id == performance.location}
-								<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
-							{/if}
-							{#if filter.entity === 'person'}
-								{#each performance.persons as person}
-									{#if filter.id == person.person}
-										<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
-									{/if}
-								{/each}
-							{/if}
-						{/each}
-			
-				</div>
-			{/if}
+							{#each $filters.or as filter}
+								{#if filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person}
+									<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
+								{/if}
+								{#if filter.entity === 'work' && filter.id == performance.work}
+									<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
+								{/if}
+								{#if filter.entity === 'location' && filter.id == performance.location}
+									<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
+								{/if}
+								{#if filter.entity === 'person'}
+									{#each performance.persons as person}
+										{#if filter.id == person.person}
+											<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
+										{/if}
+									{/each}
+								{/if}
+							{/each}
+				
+					</div>
+				{/if}
+			{/each}
 		</div>
 		{#if isEventOpen}
 			<br />
