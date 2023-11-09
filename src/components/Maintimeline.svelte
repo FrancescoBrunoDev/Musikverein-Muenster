@@ -2,7 +2,6 @@
 	import LineGraph from '$components/graph/LineGraph.svelte';
 	import SearchSection from '$components/searchAndFilters/SearchSection.svelte';
 
-
 	let opacitySearchSection = 1;
 	let blurSearchSection = 0;
 	let scaleSearchSection = 1;

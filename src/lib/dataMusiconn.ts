@@ -1,6 +1,7 @@
-let MuensterID = 307; //307 is the ID of Muenster in the musiconn database
-
 import { entitiesForSearchBox } from '$stores/storeFilters';
+
+const MuensterID = 307; //307 is the ID of Muenster in the musiconn database
+const API_URL = 'https://performance.musiconn.de/api';
 
 const getMuensterEventsAndChildLocation = async () => {
 	try {
@@ -27,8 +28,12 @@ const getMuensterChildEvents = async (
 				.join('|');
 
 			const res = await fetch(
-				`https://performance.musiconn.de/api?action=get&location=${childLocationIds}&props=events&format=json`
+				`${API_URL}?action=get&location=${childLocationIds}&props=events&format=json`
 			);
+
+			if (!res.ok) {
+				throw new Error(`HTTP error! status: ${res.status}`);
+			}
 
 			const childEvents = await res.json();
 			return childEvents;
@@ -56,11 +61,16 @@ const joinMuensterEventAndChildEvents = async () => {
 	}
 };
 
-function extractEventIds(obj: number | object) {
-	const eventIds: any[] = [];
+interface LocationObj {
+	event: number;
+	[key: string]: number | LocationObj;
+}
 
-	function recursiveExtract(obj: number | object) {
-		if (obj && typeof obj === 'object') {
+function extractEventIds(obj: number | LocationObj) {
+	const eventIds: number[] = [];
+
+	function recursiveExtract(obj: number | LocationObj) {
+		if (obj instanceof Object) {
 			if (obj.event) {
 				eventIds.push(obj.event);
 			}
@@ -80,18 +90,21 @@ const getAllEvents = async () => {
 		const allEventIds = extractEventIds(muensterWithAllEventAndAllChildsEvent.location[MuensterID]);
 
 		const batchSize = 1000;
-		const batches = [];
 
 		// Split the event IDs into batches of size batchSize
-		for (let i = 0; i < allEventIds.length; i += batchSize) {
-			const batch = allEventIds.slice(i, i + batchSize);
-			batches.push(batch);
-		}
+		const batches = Array.from({ length: Math.ceil(allEventIds.length / batchSize) }, (_, i) =>
+			allEventIds.slice(i * batchSize, i * batchSize + batchSize)
+		);
 
 		const fetchPromises = batches.map(async (batch) => {
 			const joinedEventIds = batch.join('|');
-			const url = `https://performance.musiconn.de/api?action=get&event=${joinedEventIds}&props=uid|dates|corporations|performances|persons|locations&format=json`;
+			const url = `${API_URL}?action=get&event=${joinedEventIds}&props=uid|dates|corporations|performances|persons|locations&format=json`;
 			const res = await fetch(url);
+
+			if (!res.ok) {
+				throw new Error(`HTTP error! status: ${res.status}`);
+			}
+
 			return res.json();
 		});
 
@@ -105,7 +118,7 @@ const getAllEvents = async () => {
 
 const joinEventByYear = async () => {
 	const allEvents = await getAllEvents();
-	const eventsByYear = {};
+	const eventsByYear: Events = {};
 	for (const batch of allEvents) {
 		const allEvents = batch.event;
 		for (const key in allEvents) {
@@ -128,9 +141,10 @@ const joinEventByYear = async () => {
 };
 
 const autocomplete = async (query: string) => {
-	let _entitiesForSearchBox;
-	entitiesForSearchBox.subscribe((res) => {
-		_entitiesForSearchBox = res;
+	let _entitiesForSearchBox: string[] = await new Promise<string[]>((resolve) => {
+		entitiesForSearchBox.subscribe((res: string[]) => {
+			resolve(res);
+		});
 	});
 	const entities = _entitiesForSearchBox.join('|');
 	if (entities.length !== 0) {

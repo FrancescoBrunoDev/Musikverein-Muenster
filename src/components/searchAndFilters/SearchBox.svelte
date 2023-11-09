@@ -18,7 +18,7 @@
 		}
 	};
 
-	const Entities: Entities[] = ['person', 'work', 'corporation'];
+	const Entities: Entities[] = ['person', 'work', 'corporation', 'location'];
 </script>
 
 <div class="flex w-full items-center gap-2">

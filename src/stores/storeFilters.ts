@@ -23,7 +23,7 @@ const colorFilters = writable([
 	'#f45a6d'
 ]);
 const filteredEvents = writable<Events>({});
-const entitiesForSearchBox = writable<Entities[]>(['person', 'corporation', 'work']);
+const entitiesForSearchBox = writable<Entities[]>(['person', 'corporation', 'work', 'location']);
 
 const setFirstTimeFilter = () => {
 	let _filters;

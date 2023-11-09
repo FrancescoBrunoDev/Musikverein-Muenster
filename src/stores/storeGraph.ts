@@ -143,6 +143,14 @@ const hasMatchingPerformances = (event: EventItem, filter: Filter) => {
 			}
 		}
 	}
+
+	if (filter.entity === 'location') {
+		for (const location of event.locations) {
+			if (filter.id === location.location) {
+				return true;
+			}
+		}
+	}
 	return false;
 };
 
