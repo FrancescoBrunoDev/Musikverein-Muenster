@@ -28,9 +28,9 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 		filteredEvents.set({});
 	}
 
-	for (const key in _fetchedEvents) {
-		const year = Number(key);
-		const events = _fetchedEvents[key as keyof Events];
+	// there should be an yearObj for each year from 1850 to 1900
+	for (let year = 1840; year <= 1910; year++) {
+		const events = _fetchedEvents[year as keyof Events] || [];
 		const eventCount = events.length; // questo è da cambiare con la somma dei risultati dei filtri
 		const yearObj: DataRecordCoordinates = {
 			x: year,
@@ -38,35 +38,42 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 			eventCount: eventCount
 		};
 
-		if (_filters.or.length === 0) {
+		if (_filters.and.length > 0) {
 			for (const filter of _filters.not) {
+				let filterCount = 0;
 				for (const event of events) {
 					const hasMatchingPerformanceNOT = hasMatchingPerformances(event, filter);
 					if (hasMatchingPerformanceNOT) {
-						yearObj.eventCount--;
 						filteredEvents.update((currentEvents) => {
 							currentEvents[year] = currentEvents[year].filter((e) => e.uid !== event.uid);
 							if (currentEvents[year].length === 0) {
 								delete currentEvents[year];
 							}
+							filterCount = currentEvents[year] ? currentEvents[year].length : 0;
 							return { ...currentEvents };
 						});
 					}
 				}
 
 				yearObj.filters[filter.name] = {
-					// count: filterCount,
+					count: filterCount,
 					color: filter.color
 				};
 			}
 		}
+
 		if (_filters.or.length > 0) {
 			for (const filter of _filters.or) {
 				let filterCount = 0;
 
 				for (const event of events) {
-					const hasMatchingPerformanceOR = hasMatchingPerformances(event, filter);
-
+					let hasMatchingPerformanceOR = hasMatchingPerformances(event, filter);
+					for (const filter of _filters.not) {
+						const hasMatchingPerformanceNOT = hasMatchingPerformances(event, filter);
+						if (hasMatchingPerformanceNOT) {
+							hasMatchingPerformanceOR = false;
+						}
+					}
 					if (hasMatchingPerformanceOR) {
 						filterCount++;
 						filteredEvents.update((currentEvents) => {
@@ -84,6 +91,7 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 			}
 		}
 
+		
 		filteredEventsForGraph.update((currentEvents) => {
 			return [...currentEvents, yearObj];
 		});

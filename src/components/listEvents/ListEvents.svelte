@@ -1,7 +1,6 @@
 <script>
 	import { filteredEvents } from '$stores/storeFilters';
 	import EventItem from '$components/listEvents/EventItem.svelte';
-	$: console.log($filteredEvents, 'filteredEvents');
 </script>
 
 <div class="container w-screen overflow-x-hidden">
@@ -13,13 +12,9 @@
 					<div>{$filteredEvents[year].length}</div>
 				</div>
 				<div class="flex flex-row items-start gap-2 overflow-x-scroll pb-4 leading-tight">
-					{#if $filteredEvents.length === 0}
-						<div class="text-sm">Caricamento</div>
-					{:else}
-						{#each $filteredEvents[year] as event}
-							<EventItem eventUid={event.uid} />
-						{/each}
-					{/if}
+					{#each $filteredEvents[year] as event}
+						<EventItem eventUid={event.uid} />
+					{/each}
 				</div>
 			</div>
 		{/each}

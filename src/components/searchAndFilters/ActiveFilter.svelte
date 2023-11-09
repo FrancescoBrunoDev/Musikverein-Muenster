@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { removeFilterElement, changeFilterPersonOrComposer} from '$stores/storeFilters';
+	import { removeFilterElement, changeFilterPersonOrComposer } from '$stores/storeFilters';
 	import { createTooltip, melt } from '@melt-ui/svelte';
 	import { fade } from 'svelte/transition';
 	import { Circle } from 'lucide-svelte';
 
 	export let filter: Filter;
-	export let method: string;
+	export let method: Method;
 
 	const {
 		elements: { trigger, content },
@@ -23,12 +23,13 @@
 
 <div
 	use:melt={$trigger}
-	class="flex items-center gap-1 rounded-full border border-primary py-1 pl-1 pr-3 text-xs text-primary hover:z-20 hover:drop-shadow-lg"
+	class="flex items-center gap-1 rounded-full border border-primary py-1 px-3 text-xs text-primary hover:z-20 hover:drop-shadow-lg"
 >
-	<Circle class="ml-1" fill={filter.color} size={10} stroke-opacity={0} />
+	{#if method === 'or'}
+		<Circle class="-ml-1" fill={filter.color} size={10} stroke-opacity={0} />
+	{/if}
 	<button
 		type="button"
-		id={filter.id}
 		class="max-w-xs truncate hover:line-through"
 		on:click={() => removeFilterElement(filter.id, method)}
 	>

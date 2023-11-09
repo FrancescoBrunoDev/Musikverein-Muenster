@@ -4,7 +4,6 @@
 	import { VisXYContainer, VisLine, VisAxis, VisTooltip, VisCrosshair } from '@unovis/svelte';
 	import { filteredEventsForGraph } from '$stores/storeGraph';
 	import { filters } from '$stores/storeFilters';
-	import { shortcut } from '@svelte-put/shortcut';
 
 	let data: FilteredEventsForGraph = []; // Declare data as a variable outside of onMount
 
@@ -49,7 +48,7 @@
       <div class="w-fit">
         <div class="text-sm font-bold"><span>${
 					d.x
-				}</span><span class="text-xs font-normal"> ctrl + y to navigate to the year</span></div>
+				}</span></div>
         <div class="text-sm">${arrayEventsPerFilter
 					.map((filter) => {
 						return `
@@ -86,33 +85,20 @@
 		updateGraph();
 	}
 
-	function navigateToEvent() {
-		window.location.href = `/timeline/${yearForZoom}`;
-	}
 </script>
-
-<svelte:window
-	use:shortcut={{
-		trigger: {
-			key: 'y',
-			modifier: ['ctrl', 'meta'],
-			callback: navigateToEvent
-		}
-	}}
-/>
 
 <div class="relative">
 	{#if data && data.length > 0}
-		<div class="absolute z-10 ml-16 h-full w-32 bg-gradient-to-r from-background to-transparent" />
+		<div class="absolute z-10 ml-8 h-full w-32 bg-gradient-to-r from-background from-10% to-transparent" />
 		<div
-			class="absolute right-0 z-10 mr-16 h-full w-32 bg-gradient-to-l from-background to-transparent"
+			class="absolute right-0 z-10 mr-8 h-full w-32 bg-gradient-to-l from-background from-10% to-transparent"
 		/>
-		<div class="z-10 w-screen px-16">
+		<div class="z-10 w-screen px-8">
 			<VisXYContainer
 				{data}
 				height={300}
 				scaleByDomain={true}
-				xDomain={[1850, 1910]}
+				xDomain={[1840, 1910]}
 				yDomain={[0, 30]}
 			>
 				<VisLine {x} {y} color={colorLine} fallbackValue={0} />

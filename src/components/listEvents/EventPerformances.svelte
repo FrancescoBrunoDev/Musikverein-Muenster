@@ -12,10 +12,10 @@
 </script>
 
 {#each event.performances as performance}
-	{#await getTitle(performance.work, "work") then title}
+	{#await getTitle(performance.work, 'work') then title}
 		{#if $filters.or.length === 0}
 			<span>{title} <EventPerformancesPersons {performance} /></span>
-		{:else if $filters.or.some((filter) => filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person) || $filters.or.some((filter) => filter.entity === 'work' && filter.id == performance.work) || $filters.or.some((filter) => filter.entity === 'person' && performance.persons.some((person) => filter.id == person.person))}
+		{:else if $filters.or.some((filter) => filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person) || $filters.or.some((filter) => filter.entity === 'work' && filter.id == performance.work) || $filters.or.some((filter) => filter.entity === 'person' && performance.persons && performance.persons.some((person) => filter.id == person.person))}
 			<div class="flex items-center gap-1">
 				<div class="flex flex-col gap-1">
 					{#each $filters.or as filter}

@@ -14,6 +14,7 @@
 			color: string;
 		};
 	} = {};
+	
 	$: {
 		if ($filteredEvents) {
 			Object.keys($filteredEvents).forEach((year) => {
@@ -142,16 +143,30 @@
 		{/if}
 	</button>
 	{#if isEventOpen}
-		<div class="p-2">
+		<div class="flex flex-col gap-4 p-2">
 			{#if event.corporations}
-				<div class="flex">
-					<div class="w-full text-base font-bold dark:font-semibold">Corporations</div>
+				<div>
+					<div class="text-base font-bold dark:font-semibold">Corporations</div>
 					{#each event.corporations as corporation}
-						{#await getTitle(corporation.corporation, 'corporation') then title}
-							<span class="text-sm">{title}</span>
-						{:catch error}
-							<div>Error: {error.message}</div>
-						{/await}
+						{#if corporation.subject == 2}
+							{#await getTitle(corporation.corporation, 'corporation') then title}
+								<div class="flex items-center gap-1">
+									{#each $filters.or as filter}
+										{#if filter.entity === 'corporation' && filter.id == corporation.corporation}
+											<Circle
+												class="flex-shrink-0"
+												fill={filter.color}
+												size={10}
+												stroke-opacity={0}
+											/>
+										{/if}
+									{/each}
+									<span class="text-sm">{title}</span>
+								</div>
+							{:catch error}
+								<div>Error: {error.message}</div>
+							{/await}
+						{/if}
 					{/each}
 				</div>
 			{/if}

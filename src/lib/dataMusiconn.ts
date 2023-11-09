@@ -110,6 +110,10 @@ const joinEventByYear = async () => {
 		const allEvents = batch.event;
 		for (const key in allEvents) {
 			const event = allEvents[key];
+			// se la data è antecedente al 1850 o successiva la 1900 non la considero
+			if (event.dates[0].date.split('-')[0] < 1850 || event.dates[0].date.split('-')[0] > 1900) {
+				continue;
+			}
 			const year = event.dates[0].date.split('-')[0];
 
 			if (eventsByYear[year]) {
