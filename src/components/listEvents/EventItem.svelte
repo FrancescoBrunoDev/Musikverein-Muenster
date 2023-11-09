@@ -143,7 +143,7 @@
 		{/if}
 	</button>
 	{#if isEventOpen}
-		<div class="flex flex-col gap-4 p-2">
+		<div class="flex w-80 flex-col gap-4 p-2">
 			{#if event.corporations}
 				<div>
 					<div class="text-base font-bold dark:font-semibold">Corporations</div>
@@ -170,7 +170,7 @@
 					{/each}
 				</div>
 			{/if}
-			<div class="w-80">
+			<div>
 				<div class="w-full text-base font-bold dark:font-semibold">Performances</div>
 				{#if event.performances}
 					<div class="flex flex-col gap-1 divide-y-2 divide-primary dark:divide-secondary">

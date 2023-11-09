@@ -5,15 +5,16 @@
 	import { filteredEventsForGraph } from '$stores/storeGraph';
 	import { filters } from '$stores/storeFilters';
 
-	let data: FilteredEventsForGraph = []; // Declare data as a variable outside of onMount
+	let data: DataRecordCoordinates[] = []; // Declare data as a variable outside of onMount
+	$: console.log(data, 'data');
 
 	const x = (d: DataRecordCoordinates) => d.x;
-	let y: ItemFilterForGraph;
+	let y: number;
 	let colorLine: string[] | string = [] || '';
 	let yearForZoom: number | null = null;
 
-	function getY(c: Filter): (d: DataRecord) => string {
-		return (d: DataRecord) => d.filters[c.name].count;
+	function getY(c: Filter): (d: DataRecordCoordinates) => number {
+		return (d: DataRecordCoordinates) => d.filters[c.name].count;
 	}
 
 	function getArrayOfActiveFilterColors(filters: Filter[]): string[] {
@@ -65,10 +66,10 @@
       </div>
     `;
 	}
-	//$: console.log($filteredEventsForGraph, 'filteredEvents');
+
 	$: {
 		async function updateGraph() {
-			if ($filters.or || $filters.not) {
+			if ($filters.or || $filters.and) {
 				if ($filters.or.length === 0) {
 					y = (d: DataRecordCoordinates) => d.eventCount;
 					colorLine = 'hsl(var(--primary)';

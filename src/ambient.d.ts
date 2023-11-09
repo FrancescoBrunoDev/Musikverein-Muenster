@@ -18,10 +18,12 @@ type DataRecordChart = [
 type DataRecordCoordinates = { x: number; filters: FiltersForGraph; eventCount: number };
 
 type FiltersForGraph = {
-	[key: string]: {
-		count: number;
-		color: string;
-	};
+	[key: string]: FilterForGraph;
+};
+
+type FilterForGraph = {
+	count?: number;
+	color: string;
 };
 
 type filtersCount = {
@@ -89,17 +91,6 @@ type Filter = {
 	color: string;
 };
 
-type ItemFilterForGraph = {
-	x: number;
-	filters: {
-		[key: string]: {
-			count: number;
-			color: string;
-		};
-	};
-	eventCount: number;
-};
-
 type Titles = {
 	title: string;
 };
@@ -112,5 +103,3 @@ type allTitles = {
 	location: Titles[];
 	corporation: Titles[];
 };
-
-type FilteredEventsForGraph = ItemFilterForGraph[];

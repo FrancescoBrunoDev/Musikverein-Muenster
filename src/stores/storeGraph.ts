@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 import { filters, setFirstTimeFilter, filteredEvents } from '$stores/storeFilters';
 import { fetchedEvents } from '$stores/storeEvents';
 
-const filteredEventsForGraph = writable<FilteredEventsForGraph>([]);
+const filteredEventsForGraph = writable<DataRecordCoordinates[]>([]);
 
 const updateFilteredEventsAndUdateDataForGraph = async () => {
 	setFirstTimeFilter();
@@ -22,7 +22,10 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 	});
 
 	filteredEventsForGraph.set([]);
-	if (_filters.or.length === 0) {
+
+	if (_filters.or.length === 0 && _filters.not.length === 0) {
+		filteredEvents.set(_fetchedEvents);
+	} else if (_filters.or.length === 0 && _filters.not.length > 0) {
 		filteredEvents.set(_fetchedEvents);
 	} else {
 		filteredEvents.set({});
@@ -31,34 +34,34 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 	// there should be an yearObj for each year from 1850 to 1900
 	for (let year = 1840; year <= 1910; year++) {
 		const events = _fetchedEvents[year as keyof Events] || [];
-		const eventCount = events.length; // questo è da cambiare con la somma dei risultati dei filtri
+		let eventCount = events.length; // questo è da cambiare con la somma dei risultati dei filtri
 		const yearObj: DataRecordCoordinates = {
 			x: year,
 			filters: {},
 			eventCount: eventCount
 		};
 
-		if (_filters.and.length > 0) {
+		if (_filters.or.length === 0) {
 			for (const filter of _filters.not) {
-				let filterCount = 0;
 				for (const event of events) {
 					const hasMatchingPerformanceNOT = hasMatchingPerformances(event, filter);
 					if (hasMatchingPerformanceNOT) {
 						filteredEvents.update((currentEvents) => {
-							currentEvents[year] = currentEvents[year].filter((e) => e.uid !== event.uid);
+							currentEvents[year] = currentEvents[year].filter((item) => item.uid !== event.uid);
+
 							if (currentEvents[year].length === 0) {
 								delete currentEvents[year];
 							}
-							filterCount = currentEvents[year] ? currentEvents[year].length : 0;
+							eventCount = currentEvents[year] ? currentEvents[year].length : 0;
 							return { ...currentEvents };
 						});
 					}
 				}
 
 				yearObj.filters[filter.name] = {
-					count: filterCount,
 					color: filter.color
 				};
+				yearObj.eventCount = eventCount;
 			}
 		}
 
@@ -91,7 +94,6 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 			}
 		}
 
-		
 		filteredEventsForGraph.update((currentEvents) => {
 			return [...currentEvents, yearObj];
 		});
