@@ -6,15 +6,16 @@
 	import { filters } from '$stores/storeFilters';
 
 	let data: DataRecordCoordinates[] = []; // Declare data as a variable outside of onMount
-	$: console.log(data, 'data');
 
 	const x = (d: DataRecordCoordinates) => d.x;
-	let y: number;
+	let y:
+		| ((d: DataRecordCoordinates) => number | undefined)
+		| ((d: DataRecordCoordinates) => number | undefined)[];
 	let colorLine: string[] | string = [] || '';
 	let yearForZoom: number | null = null;
 
-	function getY(c: Filter): (d: DataRecordCoordinates) => number {
-		return (d: DataRecordCoordinates) => d.filters[c.name].count;
+	function getY(c: Filter): (d: DataRecordCoordinates) => number | undefined {
+		return (d: DataRecordCoordinates) => d.filters[c.name]?.count;
 	}
 
 	function getArrayOfActiveFilterColors(filters: Filter[]): string[] {
@@ -27,14 +28,12 @@
 	}
 
 	function tooltipTemplate(d: DataRecordCoordinates): string {
-		let arrayEventsPerFilter: [
-			{
-				text: string | undefined | number;
-				color: string | undefined;
-			}
-		] = [];
+		let arrayEventsPerFilter: {
+			text: string | undefined | number;
+			color: string | undefined;
+		}[] = [];
 		if ($filters.or && $filters.or.length === 0) {
-			arrayEventsPerFilter.push({ text: d.eventCount, color: d.color });
+			arrayEventsPerFilter.push({ text: d.eventCount, color: 'hsl(var(--primary)' });
 		} else {
 			$filters.or.forEach((filter) => {
 				arrayEventsPerFilter.push({
@@ -47,9 +46,7 @@
 
 		return `
       <div class="w-fit">
-        <div class="text-sm font-bold"><span>${
-					d.x
-				}</span></div>
+        <div class="text-sm font-bold"><span>${d.x}</span></div>
         <div class="text-sm">${arrayEventsPerFilter
 					.map((filter) => {
 						return `
@@ -85,12 +82,13 @@
 		}
 		updateGraph();
 	}
-
 </script>
 
 <div class="relative">
 	{#if data && data.length > 0}
-		<div class="absolute z-10 ml-8 h-full w-32 bg-gradient-to-r from-background from-10% to-transparent" />
+		<div
+			class="absolute z-10 ml-8 h-full w-32 bg-gradient-to-r from-background from-10% to-transparent"
+		/>
 		<div
 			class="absolute right-0 z-10 mr-8 h-full w-32 bg-gradient-to-l from-background from-10% to-transparent"
 		/>

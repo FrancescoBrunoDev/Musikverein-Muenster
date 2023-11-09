@@ -3,12 +3,14 @@
 	import { slide } from 'svelte/transition';
 	import ActiveFilter from '$components/searchAndFilters/ActiveFilter.svelte';
 
-	$: groupedFiltersOR = {};
-	$: groupedFiltersNOT = {};
+	type GroupedFilters = { [key: string]: Filter[] };
+
+	let groupedFiltersOR: GroupedFilters = {};
+	let groupedFiltersNOT: GroupedFilters = {};
 
 	// Create a function to group filters by their 'entity' property
-	function groupFiltersByEntity(filters: Filters[], method: string) {
-		const groupedFilters = {};
+	function groupFiltersByEntity(filters: Filters, method: Method): GroupedFilters {
+		const groupedFilters: GroupedFilters = {};
 		filters[method]?.forEach((filter: Filter) => {
 			if (!groupedFilters[filter.entity]) {
 				groupedFilters[filter.entity] = [];
@@ -23,7 +25,6 @@
 		groupedFiltersNOT = groupFiltersByEntity($filters, 'not');
 		groupedFiltersOR = groupFiltersByEntity($filters, 'or');
 	}
-
 </script>
 
 <div class="mt-4 grid grid-cols-1 gap-y-8">

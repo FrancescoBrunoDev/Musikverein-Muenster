@@ -126,9 +126,10 @@ const changeFilterPersonOrComposer = (selectedId: any, selectedEntity: any, meth
 
 const isMoreAPersonOrAComposer = async (id: number) => {
 	const personId = id;
-	let _fetchedEvents: Events;
-	fetchedEvents.subscribe((res) => {
-		_fetchedEvents = res;
+	let _fetchedEvents: Events = await new Promise((resolve) => {
+		fetchedEvents.subscribe((res) => {
+			resolve(res);
+		});
 	});
 	let countPerson = 0;
 	let countComposer = 0;

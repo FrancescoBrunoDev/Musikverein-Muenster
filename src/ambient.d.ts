@@ -95,6 +95,8 @@ type Titles = {
 	title: string;
 };
 
+type KindKey = 'performances' | 'persons' | 'locations' | 'corporations';
+
 type KindType = 'work' | 'person' | 'location' | 'corporation';
 
 type allTitles = {

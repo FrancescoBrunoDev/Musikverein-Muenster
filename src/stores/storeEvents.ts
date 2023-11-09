@@ -76,19 +76,20 @@ const kindMapping: { [key in KindType]: { key: string; uid: string } } = {
 };
 
 const getUids = async (kind: KindType) => {
-	let _filteredEvents: Events;
 	const uids = new Set();
 
-	filteredEvents.subscribe((res) => {
-		_filteredEvents = res;
+	let _filteredEvents: Events = await new Promise((resolve) => {
+		filteredEvents.subscribe((res) => {
+			resolve(res);
+		});
 	});
 
 	for (const key in _filteredEvents) {
 		const year = Number(key);
 		const events = _filteredEvents[year as keyof Events];
 		for (const event of events) {
-			const kindKey = kindMapping[kind]?.key;
-			const uidKey = kindMapping[kind]?.uid;
+			const kindKey = kindMapping[kind] ? (kindMapping[kind].key as KindKey) : undefined;
+			const uidKey = kindMapping[kind] ? (kindMapping[kind]?.uid as KindType) : undefined;
 			if (kindKey && uidKey && event[kindKey]) {
 				event[kindKey].forEach((item) => {
 					uids.add(item[uidKey]);
