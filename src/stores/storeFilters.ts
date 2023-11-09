@@ -2,7 +2,11 @@ import { writable } from 'svelte/store';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { fetchedEvents } from '$stores/storeEvents';
 
-const filters = writable([]);
+const filters = writable<Filters>({
+	and: [],
+	or: [],
+	not: []
+});
 const IsMethodFilterNOT = writable(false);
 const colorFilters = writable([
 	'#04c0c7',
@@ -18,7 +22,7 @@ const colorFilters = writable([
 	'#a0d6e5',
 	'#f45a6d'
 ]);
-const filteredEvents = writable([]);
+const filteredEvents = writable<Events>({});
 const entitiesForSearchBox = writable<Entities[]>(['person', 'corporation', 'work']);
 
 const setFirstTimeFilter = () => {
@@ -26,18 +30,10 @@ const setFirstTimeFilter = () => {
 	filters.subscribe((res) => {
 		_filters = res;
 	});
-	if (_filters.or?.length > 0 || _filters.not?.length > 0) {
-		return;
-	} else {
-		filters.set({
-			or: [],
-			not: []
-		});
-	}
 };
 
 const pickColor = () => {
-	let _colorFilters;
+	let _colorFilters: string[] = [];
 	colorFilters.subscribe((res) => {
 		_colorFilters = res;
 	});
@@ -47,7 +43,7 @@ const pickColor = () => {
 	return color;
 };
 
-const addFilterElement = (selected: any) => {
+const addFilterElement = async (selected: any) => {
 	let method: string;
 	let _isMethodFilterNOT;
 	IsMethodFilterNOT.subscribe((res) => {
@@ -61,23 +57,23 @@ const addFilterElement = (selected: any) => {
 	const filter: Filter = {
 		name: selected.suggestion[0],
 		entity: selected.suggestion[1],
-		id: selected.suggestion[2],
+		id: Number(selected.suggestion[2]),
 		color: pickColor()
 	};
 
 	if (filter.entity == 'person') {
-		filter.entity = isMoreAPersonOrAComposer(filter.id);
+		filter.entity = await isMoreAPersonOrAComposer(filter.id);
 	}
 
 	filters.update((currentFilters) => {
-		const filterExists = currentFilters[method]?.some(
+		const filterExists = currentFilters[method as keyof Filters]?.some(
 			(f) => f.id === filter.id && f.entity === filter.entity
 		);
 		if (filterExists) {
 			return currentFilters;
 		} else {
 			const updatedFilters = { ...currentFilters };
-			updatedFilters[method].push(filter);
+			updatedFilters[method as keyof Filters].push(filter);
 			return updatedFilters;
 		}
 	});
@@ -85,21 +81,19 @@ const addFilterElement = (selected: any) => {
 	updateFilteredEventsAndUdateDataForGraph();
 };
 
-const removeFilterElement = (selected: string, method: Method) => {
-	console.log(method, 'method');
+const removeFilterElement = (selected: number, method: Method) => {
 	let _colorFilters;
 	colorFilters.subscribe((res) => {
 		_colorFilters = res;
 	});
 	filters.update((currentFilters) => {
-		// console.log(currentFilters, "currentFilters");
-		const filterToRemove = currentFilters[method].find((f) => f.id === selected);
-		const index = currentFilters[method].indexOf(filterToRemove);
+		const index = currentFilters[method].findIndex((f) => f.id === selected);
+		if (index === -1) {
+			return currentFilters;
+		}
+		const filterToRemove = currentFilters[method][index];
 		currentFilters[method].splice(index, 1);
 		_colorFilters.push(filterToRemove.color);
-		//if (currentFilters.or.length == 0) {
-		//	IsMethodFilterNOT.set(false); // if there are no more filters, the method is set to OR
-		//}
 		return currentFilters;
 	});
 	updateFilteredEventsAndUdateDataForGraph();
@@ -107,31 +101,32 @@ const removeFilterElement = (selected: string, method: Method) => {
 
 const changeFilterPersonOrComposer = (selectedId: any, selectedEntity: any, method: Method) => {
 	filters.update((currentFilters) => {
-		const filterToChange = currentFilters[method]?.find(
+		const methodFilters = currentFilters[method];
+		if (!methodFilters) return currentFilters;
+
+		const filterToChange = methodFilters.find(
 			(f) => f.id === selectedId && f.entity === selectedEntity
 		);
-		const actualState = filterToChange.entity;
-		const newState = actualState === 'person' ? 'composer' : 'person';
-		const thereIsAnotherFilterWithSameIdAndEntity = currentFilters[method]?.some(
-			(f) => f.id === selectedId && f.entity === newState
-		);
-		if (thereIsAnotherFilterWithSameIdAndEntity) {
-			const filterToRemove = currentFilters[method]?.find(
-				(f) => f.id === selectedId && f.entity === actualState
+		if (!filterToChange) return currentFilters;
+
+		const newState = filterToChange.entity === 'person' ? 'composer' : 'person';
+		filterToChange.entity = newState;
+
+		if (methodFilters.some((f) => f.id === selectedId && f.entity === newState)) {
+			const index = methodFilters.findIndex(
+				(f) => f.id === selectedId && f.entity === selectedEntity
 			);
-			const index = currentFilters[method]?.indexOf(filterToRemove);
-			currentFilters[method]?.splice(index, 1);
+			if (index !== -1) methodFilters.splice(index, 1);
 		}
 
-		filterToChange.entity = newState;
 		return currentFilters;
 	});
 	updateFilteredEventsAndUdateDataForGraph();
 };
 
-const isMoreAPersonOrAComposer = (id: string) => {
-	const personId = id.toString();
-	let _fetchedEvents: Events[] = [];
+const isMoreAPersonOrAComposer = async (id: number) => {
+	const personId = id;
+	let _fetchedEvents: Events;
 	fetchedEvents.subscribe((res) => {
 		_fetchedEvents = res;
 	});
@@ -143,7 +138,7 @@ const isMoreAPersonOrAComposer = (id: string) => {
 			const persons = event.persons;
 			if (persons.length > 0) {
 				for (const person of persons) {
-					if (person.person.toString() === personId) {
+					if (person.person === personId) {
 						countPerson++;
 					}
 				}
@@ -154,7 +149,7 @@ const isMoreAPersonOrAComposer = (id: string) => {
 					const composers = performance.composers;
 					if (composers) {
 						for (const composer of composers) {
-							if (composer.person.toString() === personId) {
+							if (composer.person === personId) {
 								countComposer++;
 							}
 						}
@@ -170,8 +165,8 @@ const isMoreAPersonOrAComposer = (id: string) => {
 	}
 };
 
-const updateEntitiesForSearchBox = (selected: string) => {
-	entitiesForSearchBox.update((currentEntities) => {
+const updateEntitiesForSearchBox = (selected: Entities) => {
+	entitiesForSearchBox.update((currentEntities: Entities[]) => {
 		if (currentEntities.includes(selected)) {
 			const index = currentEntities.indexOf(selected);
 			currentEntities.splice(index, 1);

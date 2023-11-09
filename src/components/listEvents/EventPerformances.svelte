@@ -1,15 +1,9 @@
 <script lang="ts">
 	import { Circle, ChevronUp } from 'lucide-svelte';
 	import { filters } from '$stores/storeFilters';
-	import { workTitles } from '$stores/storeEvents';
+	import { getTitle } from '$stores/storeEvents';
 	import EventPerformancesPersons from '$components/listEvents/EventPerformancesPersons.svelte';
-	export let event;
-
-	async function getTitleComposition(uid) {
-		const { title } = $workTitles[uid];
-		return title;
-	}
-
+	export let event: EventItem;
 	let isPerformanceOpen = false;
 
 	function handleClickAllPerformances() {
@@ -18,10 +12,10 @@
 </script>
 
 {#each event.performances as performance}
-	{#await getTitleComposition(performance.work) then title}
+	{#await getTitle(performance.work, "work") then title}
 		{#if $filters.or.length === 0}
-			<span key={performance.work}>{title} <EventPerformancesPersons {performance} /></span>
-		{:else if $filters.or.some((filter) => filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person) || $filters.or.some((filter) => filter.entity === 'work' && filter.id == performance.work) || $filters.or.some((filter) => filter.entity === 'location' && filter.id == performance.location) || $filters.or.some((filter) => filter.entity === 'person' && performance.persons.some((person) => filter.id == person.person))}
+			<span>{title} <EventPerformancesPersons {performance} /></span>
+		{:else if $filters.or.some((filter) => filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person) || $filters.or.some((filter) => filter.entity === 'work' && filter.id == performance.work) || $filters.or.some((filter) => filter.entity === 'person' && performance.persons.some((person) => filter.id == person.person))}
 			<div class="flex items-center gap-1">
 				<div class="flex flex-col gap-1">
 					{#each $filters.or as filter}

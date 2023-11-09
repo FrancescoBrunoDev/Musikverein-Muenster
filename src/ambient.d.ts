@@ -15,7 +15,14 @@ type DataRecordChart = [
 	}
 ];
 
-type DataRecordCoordinates = { x: number; filters: {}; eventCount: number };
+type DataRecordCoordinates = { x: number; filters: FiltersForGraph; eventCount: number };
+
+type FiltersForGraph = {
+	[key: string]: {
+		count: number;
+		color: string;
+	};
+};
 
 type filtersCount = {
 	[key: string]: number;
@@ -43,17 +50,24 @@ type Medium = {
 	subject: number;
 };
 
-type Performance = {
+type EventPerformance = {
 	work: number;
 	order: number;
 	composers: Composer[];
 	persons: (Person & { mediums?: Medium[] })[]; // Person with optional mediums
 };
 
+type EventLocation = {
+	location: number;
+};
+
 type EventItem = {
+	uid: number;
+	locations: EventLocation[];
 	dates: DateObject[];
 	persons: Person[];
-	performances: Performance[];
+	performances: EventPerformance[];
+	corporations: Corporation[];
 };
 
 type Events = {
@@ -63,6 +77,7 @@ type Events = {
 type Filters = {
 	and: Filter[];
 	or: Filter[];
+	not: Filter[];
 };
 
 type Method = 'or' | 'not';
@@ -70,7 +85,7 @@ type Method = 'or' | 'not';
 type Filter = {
 	name: string;
 	entity: string;
-	id: string;
+	id: number;
 	color: string;
 };
 
@@ -85,20 +100,17 @@ type ItemFilterForGraph = {
 	eventCount: number;
 };
 
-type workTitles = {
+type Titles = {
 	title: string;
 };
 
-type personTitles = {
-	title: string;
-};
+type KindType = 'work' | 'person' | 'location' | 'corporation';
 
-type locationTitles = {
-	title: string;
-};
-
-type corporationTitles = {
-	title: string;
+type allTitles = {
+	work: Titles[];
+	person: Titles[];
+	location: Titles[];
+	corporation: Titles[];
 };
 
 type FilteredEventsForGraph = ItemFilterForGraph[];

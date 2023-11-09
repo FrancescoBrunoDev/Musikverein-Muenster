@@ -1,20 +1,15 @@
 <script lang="ts">
-	import { personTitles } from '$stores/storeEvents';
+	import { getTitle } from '$stores/storeEvents';
 
-	export let performance: Performance;
+	export let performance: EventPerformance;
 
 	let isPersonOpen = false;
 
-	function getTitlePerson(uid) {
-		const { title } = $personTitles[uid];
-		return title;
-	}
-
 	// make a function that join all the persons in a string with |
-	function joinPersons(persons) {
+	function joinPersons(persons: Person[]) {
 		let personsString = '';
 		persons.forEach((person, index) => {
-            const personTitle = getTitlePerson(person.person);
+			const personTitle = getTitle(person.person, 'person');
 			if (index === 0) {
 				personsString += personTitle;
 			} else {
@@ -25,7 +20,10 @@
 	}
 </script>
 
-<button on:click={() => (isPersonOpen = !isPersonOpen)} class="font-bold hover:scale-[1.01] dark:font-semibold">performed by</button>
+<button
+	on:click={() => (isPersonOpen = !isPersonOpen)}
+	class="font-bold hover:scale-[1.01] dark:font-semibold">performed by</button
+>
 {#if isPersonOpen}
 	<span class="text-sm">{joinPersons(performance.persons)}</span>
 {/if}

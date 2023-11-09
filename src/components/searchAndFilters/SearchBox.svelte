@@ -6,10 +6,11 @@
 	import { entitiesForSearchBox, updateEntitiesForSearchBox } from '$stores/storeFilters';
 
 	let suggestions: AutocompleteResult[] = [];
-	let inputValue = '';
+	$: inputValue = '';
 
-	const handleInput = (query: string) => {
-		const value = query;
+	const handleInput = (event: Event) => {
+		const target = event.target as HTMLInputElement;
+		const value = target.value;
 		if (value.length > 0) {
 			autocomplete(value).then((response) => {
 				suggestions = response;
@@ -19,7 +20,7 @@
 		}
 	};
 
-	const Entities = ['person', 'work', 'corporation'];
+	const Entities: Entities[] = ['person', 'work', 'corporation'];
 </script>
 
 <div class="flex w-full items-center gap-2">
@@ -32,7 +33,7 @@
 			type="text"
 			id="myInput"
 			bind:value={inputValue}
-			on:input={(input) => handleInput(input.target.value)}
+			on:input={handleInput}
 			placeholder="Search"
 		/>
 	</div>
@@ -43,7 +44,7 @@
 		<button
 			on:click={() => {
 				updateEntitiesForSearchBox(entity);
-				handleInput(inputValue);
+				inputValue = '';
 			}}
 			class={'rounded-full px-4 pb-[0.15rem] text-sm transition-shadow hover:drop-shadow-lg ' +
 				($entitiesForSearchBox.includes(entity)

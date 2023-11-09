@@ -1,38 +1,48 @@
 <script lang="ts">
 	import EventPerformances from './EventPerformances.svelte';
-	import { locationTitles, corporationTitles } from '$stores/storeEvents';
-	import { filters } from '$stores/storeFilters';
+	import { getTitle } from '$stores/storeEvents';
+	import { filters, filteredEvents } from '$stores/storeFilters';
 	import { Circle } from 'lucide-svelte';
-	export let event: EventItem;
-	let isEventOpen = false;
-	$: console.log(event, 'event');
-	$: console.log($locationTitles, 'locationTitles');
-	async function getTitleLocation(uid) {
-		const { title } = $locationTitles[uid];
-		return title;
-	}
+	export let eventUid: number;
 
-	async function getTitleCorporation(uid) {
-		const { title } = $corporationTitles[uid];
-		return title;
+	let event: EventItem;
+	let date: string;
+	let isEventOpen = false;
+	let filtersArrayWithCounter: {
+		[key: string]: {
+			counter: number;
+			color: string;
+		};
+	} = {};
+	$: {
+		if ($filteredEvents) {
+			Object.keys($filteredEvents).forEach((year) => {
+				$filteredEvents[year as keyof Events].forEach((eventItem: EventItem) => {
+					if (eventItem.uid === eventUid) {
+						event = eventItem;
+					}
+				});
+			});
+			date = event?.dates[0].date.slice(5).replaceAll('-', '.') || '';
+			if (date.slice(0, 5) === '00.00') {
+				date = date.replaceAll('00.00', '?');
+			}
+		}
+		// clean the filtersArrayWithCounter
+		filtersArrayWithCounter = {};
+		countFilters();
 	}
 
 	function handleClickEvent() {
 		isEventOpen = !isEventOpen;
 	}
 
-	let date = event.dates[0].date.slice(5).replaceAll('-', '.');
-	if (date.slice(0, 5) === '00.00') {
-		date = date.replaceAll('00.00', '?');
-	}
-
 	function countFilters() {
-		const filtersArrayWithCounter: {
-			[key: string]: {
-				counter: number;
-				color: string;
-			};
-		} = {};
+		const incrementCounter = (id: number, condition: boolean) => {
+			if (condition) {
+				filtersArrayWithCounter[id].counter++;
+			}
+		};
 
 		$filters.or.forEach((filter) => {
 			if (!filtersArrayWithCounter.hasOwnProperty(filter.id)) {
@@ -41,41 +51,44 @@
 					color: filter.color
 				};
 			}
+
 			if (!event.performances) return;
-			if (filter.entity === 'composer') {
-				event.performances.forEach((performance) => {
-					if (performance.composers && filter.id == performance.composers[0].person) {
-						filtersArrayWithCounter[filter.id].counter++;
-					}
-				});
-			} else if (filter.entity === 'work') {
-				event.performances.forEach((performance) => {
-					if (performance.work && filter.id == performance.work) {
-						filtersArrayWithCounter[filter.id].counter++;
-					}
-				});
-			} else if (event.corporations && filter.entity === 'corporation') {
-				event.corporations.forEach((corporation) => {
-					if (filter.id == corporation.corporation) {
-						filtersArrayWithCounter[filter.id].counter++;
-					}
-				});
-			} else if (filter.entity === 'person') {
-				event.performances.forEach((performance) => {
-					if (performance.persons) {
-						performance.persons.forEach((person) => {
-							if (filter.id == person.person) {
-								filtersArrayWithCounter[filter.id].counter++;
-							}
+
+			switch (filter.entity) {
+				case 'composer':
+					event.performances.forEach((performance) => {
+						incrementCounter(
+							filter.id,
+							performance.composers && filter.id == performance.composers[0].person
+						);
+					});
+					break;
+				case 'work':
+					event.performances.forEach((performance) => {
+						incrementCounter(filter.id, performance && filter.id == performance.work);
+					});
+					break;
+				case 'corporation':
+					if (event.corporations) {
+						event.corporations.forEach((corporation) => {
+							incrementCounter(filter.id, filter.id == corporation.corporation);
 						});
 					}
-				});
+					break;
+				case 'person':
+					event.performances.forEach((performance) => {
+						if (performance.persons) {
+							performance.persons.forEach((person) => {
+								incrementCounter(filter.id, filter.id == person.person);
+							});
+						}
+					});
+					break;
 			}
 		});
 
-		return filtersArrayWithCounter;
+		filtersArrayWithCounter;
 	}
-	$: filtersArrayWithCounter = countFilters();
 </script>
 
 <div
@@ -118,7 +131,7 @@
 			<span class="text-sm dark:font-semibold">
 				{#if event.locations}
 					{#each event.locations as location}
-						{#await getTitleLocation(location.location) then title}
+						{#await getTitle(location.location, 'location') then title}
 							{title}
 						{:catch error}
 							<div>Error: {error.message}</div>
@@ -134,7 +147,7 @@
 				<div class="flex">
 					<div class="w-full text-base font-bold dark:font-semibold">Corporations</div>
 					{#each event.corporations as corporation}
-						{#await getTitleCorporation(corporation.corporation) then title}
+						{#await getTitle(corporation.corporation, 'corporation') then title}
 							<span class="text-sm">{title}</span>
 						{:catch error}
 							<div>Error: {error.message}</div>

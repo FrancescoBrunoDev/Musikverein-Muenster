@@ -7,12 +7,16 @@ const filteredEventsForGraph = writable<FilteredEventsForGraph>([]);
 
 const updateFilteredEventsAndUdateDataForGraph = async () => {
 	setFirstTimeFilter();
-	let _filters;
+	let _filters: Filters = {
+		and: [],
+		or: [],
+		not: []
+	};
 	filters.subscribe((res) => {
 		_filters = res;
 	});
 
-	let _fetchedEvents: Events[] = [];
+	let _fetchedEvents: Events = {};
 	fetchedEvents.subscribe((res) => {
 		_fetchedEvents = res;
 	});
@@ -21,12 +25,12 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 	if (_filters.or.length === 0) {
 		filteredEvents.set(_fetchedEvents);
 	} else {
-		filteredEvents.set([]);
+		filteredEvents.set({});
 	}
 
 	for (const key in _fetchedEvents) {
 		const year = Number(key);
-		const events = _fetchedEvents[key];
+		const events = _fetchedEvents[key as keyof Events];
 		const eventCount = events.length; // questo è da cambiare con la somma dei risultati dei filtri
 		const yearObj: DataRecordCoordinates = {
 			x: year,
@@ -36,11 +40,9 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 
 		if (_filters.or.length === 0) {
 			for (const filter of _filters.not) {
-
 				for (const event of events) {
 					const hasMatchingPerformanceNOT = hasMatchingPerformances(event, filter);
 					if (hasMatchingPerformanceNOT) {
-						
 						yearObj.eventCount--;
 						filteredEvents.update((currentEvents) => {
 							currentEvents[year] = currentEvents[year].filter((e) => e.uid !== event.uid);
@@ -88,7 +90,7 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 	}
 };
 
-const hasMatchingPerformances = (event: Performance[], filter: Filter) => {
+const hasMatchingPerformances = (event: EventItem, filter: Filter) => {
 	const performances = event.performances || [];
 	// manage the case in witch event.performances does not exist
 
@@ -97,28 +99,20 @@ const hasMatchingPerformances = (event: Performance[], filter: Filter) => {
 			// se composers esiste controlla se hasMatchingPerformance
 			if (performance.composers) {
 				for (const composer of performance.composers) {
-					if (filter.entity === 'composer' && filter.id === composer.person.toString()) {
+					if (filter.entity === 'composer' && filter.id === composer.person) {
 						return true;
 					}
 				}
 			}
 
 			// controlla se work hasMatchingPerformance
-			if (filter.entity === 'work' && filter.id === performance.work.toString()) {
+			if (filter.entity === 'work' && filter.id === performance.work) {
 				return true;
 			}
 
-			// controlla se corporations esiste e controlla se hasMatchingPerformance
-			if (performance.corporations) {
-				for (const corporation of performance.corporations) {
-					if (filter.entity === 'corporation' && filter.id === corporation.corporation.toString()) {
-						return true;
-					}
-				}
-			}
 			if (performance.persons) {
 				for (const person of event.persons) {
-					if (filter.entity === 'person' && filter.id === person.person.toString()) {
+					if (filter.entity === 'person' && filter.id === person.person) {
 						return true;
 					}
 				}
@@ -127,7 +121,14 @@ const hasMatchingPerformances = (event: Performance[], filter: Filter) => {
 	}
 	if (filter.entity === 'person') {
 		for (const person of event.persons) {
-			if (filter.id === person.person.toString()) {
+			if (filter.id === person.person) {
+				return true;
+			}
+		}
+	}
+	if (filter.entity === 'corporation') {
+		for (const corporation of event.corporations) {
+			if (filter.id === corporation.corporation) {
 				return true;
 			}
 		}

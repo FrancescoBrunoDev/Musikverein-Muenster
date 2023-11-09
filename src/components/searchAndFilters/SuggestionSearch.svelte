@@ -15,13 +15,13 @@
 {#if suggestions && suggestions.length > 0}
 	<div
 		transition:slide
-		class="bg-background dark:bg-primary dark:text-secondary z-10 mt-2 grid max-h-64 w-full grid-cols-1 gap-y-2 overflow-auto overscroll-auto rounded-xl border p-2"
+		class="z-10 mt-2 grid max-h-64 w-full grid-cols-1 gap-y-2 overflow-auto overscroll-auto rounded-xl border bg-background p-2 dark:bg-primary dark:text-secondary"
 	>
 		{#each suggestions as suggestion}
 			<div class="flex items-center gap-1">
 				{#if $entitiesForSearchBox.length > 1}
 					<div
-						class="border-primary dark:border-secondary h-fit rounded-full border-2 px-2 text-xs"
+						class="h-fit rounded-full border-2 border-primary px-2 text-xs dark:border-secondary"
 					>
 						{suggestion[1]}
 					</div>
@@ -29,7 +29,7 @@
 
 				<button
 					class="text-left"
-					on:click={handleFilterFromSuggestion({ suggestion })}
+					on:click={() => handleFilterFromSuggestion({ suggestion })}
 					id={suggestion[2]}>{suggestion[0]}</button
 				>
 			</div>
