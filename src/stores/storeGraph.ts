@@ -1,12 +1,11 @@
 import { writable } from 'svelte/store';
 
-import { filters, setFirstTimeFilter, filteredEvents } from '$stores/storeFilters';
+import { filters, filteredEvents } from '$stores/storeFilters';
 import { fetchedEvents } from '$stores/storeEvents';
 
 const filteredEventsForGraph = writable<DataRecordCoordinates[]>([]);
 
 const updateFilteredEventsAndUdateDataForGraph = async () => {
-	setFirstTimeFilter();
 	let _filters: Filters = {
 		and: [],
 		or: [],
@@ -23,9 +22,9 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 
 	filteredEventsForGraph.set([]);
 
-	if (_filters.or.length === 0 && _filters.not.length === 0) {
+	if (_filters.or.length === 0 && _filters.not.length === 0 && _filters.and.length === 0) {
 		filteredEvents.set(_fetchedEvents);
-	} else if (_filters.or.length === 0 && _filters.not.length > 0) {
+	} else if (_filters.or.length === 0 && _filters.and.length === 0 && _filters.not.length > 0) {
 		filteredEvents.set(_fetchedEvents);
 	} else {
 		filteredEvents.set({});
@@ -63,6 +62,29 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 				};
 				yearObj.eventCount = eventCount;
 			}
+
+			// for the and filter we need to check if the event has all the performances that match the filter
+			if (_filters.and.length > 0) {
+				let filterCount = 0;
+				for (const event of events) {
+					let hasMatchingPerformanceAND = true;
+					for (const filter of _filters.and) {
+						const hasMatchingPerformance = hasMatchingPerformances(event, filter);
+						if (!hasMatchingPerformance) {
+							hasMatchingPerformanceAND = false;
+						}
+					}
+					if (hasMatchingPerformanceAND) {
+						filterCount++;
+						filteredEvents.update((currentEvents) => {
+							currentEvents[year] = currentEvents[year] || [];
+							currentEvents[year].push(event);
+							return { ...currentEvents }; // Return a copy of the modified object
+						});
+					}
+				}
+				yearObj.eventCount = filterCount;
+			}
 		}
 
 		if (_filters.or.length > 0) {
@@ -71,12 +93,14 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 
 				for (const event of events) {
 					let hasMatchingPerformanceOR = hasMatchingPerformances(event, filter);
+
 					for (const filter of _filters.not) {
 						const hasMatchingPerformanceNOT = hasMatchingPerformances(event, filter);
 						if (hasMatchingPerformanceNOT) {
 							hasMatchingPerformanceOR = false;
 						}
 					}
+
 					if (hasMatchingPerformanceOR) {
 						filterCount++;
 						filteredEvents.update((currentEvents) => {

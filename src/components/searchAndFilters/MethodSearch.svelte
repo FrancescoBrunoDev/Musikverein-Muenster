@@ -1,24 +1,44 @@
 <script lang="ts">
-	import { createToggle, melt } from '@melt-ui/svelte';
-	import { IsMethodFilterNOT, filters } from '$stores/storeFilters';
+	import { createToggleGroup, melt } from '@melt-ui/svelte';
+	import { UpdateSelectedMethodFilter, filters } from '$stores/storeFilters';
+	import { disabledAttr } from '@melt-ui/svelte/internal/helpers';
+
+	let isDisabled = false;
 
 	const {
-		elements: { root }
-	} = createToggle({
-		pressed: IsMethodFilterNOT
+		elements: { root, item },
+		states: { value },
+		options: { disabled }
+	} = createToggleGroup({
+		type: 'single',
+		defaultValue: 'or',
 	});
+	$: {
+		UpdateSelectedMethodFilter($value as Method);
+		isDisabled = $filters.and.length > 0;
+		disabled.set(isDisabled);
+	}
 </script>
 
+<div
+	use:melt={$root}
+	class="group flex place-items-center items-center justify-center gap-1 pl-5 font-bold"
+>
 	<button
-		use:melt={$root}
-		aria-label="Toggle italic"
-		class="group flex place-items-center items-center justify-center gap-1 pl-5 font-bold data-[disabled]:cursor-not-allowed"
+		use:melt={$item('or')}
+		class="undeline text-secondary disabled:opacity-50 {$value === 'or'
+			? 'underline'
+			: 'no-underline'} decoration-4">OR</button
 	>
-		<span class="text-secondary group-data-[state=on]:decoration-primary underline decoration-4"
-			>OR</span
-		>
-
-		<span class="text-secondary group-data-[state=off]:decoration-primary underline decoration-4"
-			>NOT</span
-		>
-	</button>
+	<button
+		use:melt={$item('and')}
+		class="undeline text-secondary {$value === 'and' ? 'underline' : 'no-underline'} decoration-4"
+		>AND</button
+	>
+	<button
+		use:melt={$item('not')}
+		class="undeline text-secondary disabled:opacity-50 {$value === 'not'
+			? 'underline'
+			: 'no-underline'} decoration-4">NOT</button
+	>
+</div>

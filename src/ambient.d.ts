@@ -82,7 +82,7 @@ type Filters = {
 	not: Filter[];
 };
 
-type Method = 'or' | 'not';
+type Method = 'or' | 'not' | 'and';
 
 type Filter = {
 	name: string;

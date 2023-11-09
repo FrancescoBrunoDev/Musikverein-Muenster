@@ -7,7 +7,8 @@ const filters = writable<Filters>({
 	or: [],
 	not: []
 });
-const IsMethodFilterNOT = writable(false);
+
+const SelectedMethodFilter = writable<Method>('or');
 const colorFilters = writable([
 	'#04c0c7',
 	'#e7871a',
@@ -25,11 +26,8 @@ const colorFilters = writable([
 const filteredEvents = writable<Events>({});
 const entitiesForSearchBox = writable<Entities[]>(['person', 'corporation', 'work', 'location']);
 
-const setFirstTimeFilter = () => {
-	let _filters;
-	filters.subscribe((res) => {
-		_filters = res;
-	});
+const UpdateSelectedMethodFilter = (method: Method) => {
+	SelectedMethodFilter.set(method);
 };
 
 const pickColor = () => {
@@ -45,15 +43,9 @@ const pickColor = () => {
 
 const addFilterElement = async (selected: any) => {
 	let method: string;
-	let _isMethodFilterNOT;
-	IsMethodFilterNOT.subscribe((res) => {
-		_isMethodFilterNOT = res;
+	SelectedMethodFilter.subscribe((res) => {
+		method = res;
 	});
-	if (_isMethodFilterNOT == false) {
-		method = 'or';
-	} else if (_isMethodFilterNOT == true) {
-		method = 'not';
-	}
 	const filter: Filter = {
 		name: selected.suggestion[0],
 		entity: selected.suggestion[1],
@@ -179,14 +171,13 @@ const updateEntitiesForSearchBox = (selected: Entities) => {
 };
 
 export {
-	IsMethodFilterNOT,
 	colorFilters,
 	filters,
 	filteredEvents,
 	entitiesForSearchBox,
+	UpdateSelectedMethodFilter,
 	addFilterElement,
 	removeFilterElement,
-	setFirstTimeFilter,
 	updateEntitiesForSearchBox,
 	changeFilterPersonOrComposer
 };
