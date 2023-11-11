@@ -7,7 +7,6 @@
 
 	export let y = $isSearchSectionInEventsList ? 200 : -200;
 
-	$: console.log($heightSearchSection);
 </script>
 
 <div

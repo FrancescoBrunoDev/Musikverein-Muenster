@@ -37,13 +37,25 @@ const fetchAndStoreEvents = async () => {
 						status: response.status
 					}))
 					.then((res) => {
-						fetchedEvents.set(res.data);
-						return res.status;
+						const dataWithTimestamp = {
+							...res.data,
+							timestamp: new Date().toISOString()
+						};
+						fetchedEvents.set(dataWithTimestamp);
 					})
 			);
 		}
 	} catch (error) {
-		console.log(error);
+		console.error(
+			'An error occurred while fetching events, I will try to use the stored Events:',
+			error
+		);
+		try {
+			const perFetchedEvents = await import('$dataPrefetched/fetchedEvents.json');
+			fetchedEvents.set(perFetchedEvents.default);
+		} catch (error) {
+			console.error('An error occurred while fetching prefetched events:', error);
+		}
 	}
 };
 
@@ -59,12 +71,21 @@ const getTitles = async () => {
 				const json = await res.json();
 				const titles = json[kind];
 				allTitles.update((current) => {
-					return { ...current, [kind]: titles };
+					return { ...current, [kind]: titles, timestamp: new Date().toISOString() };
 				});
 			})
 		);
 	} catch (error) {
-		console.log(error);
+		console.error(
+			'An error occurred while fetching titles, I will try to use the stored Titles:',
+			error
+		);
+		try {
+			const perAllTitles = await import('$dataPrefetched/allTitles.json');
+			allTitles.set(perAllTitles.default);
+		} catch (error) {
+			console.error('An error occurred while fetching prefetched titles:', error);
+		}
 	}
 };
 

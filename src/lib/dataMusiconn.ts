@@ -150,14 +150,24 @@ const autocomplete = async (query: string) => {
 	if (entities.length !== 0) {
 		try {
 			const res = await fetch(
-				`https://performance.musiconn.de/api?action=autocomplete&title=${query}&entities=${entities}&project=26&format=json`
+				`https://performance.musiconn.de/api?action=autocomplete&title=${query}&entities=${entities}&max=20&project=26&format=json`
 			);
 			const results = await res.json();
-
+			console.log('results', results);
 			return results;
 		} catch (error) {
-			console.error('Error fetching all events:', error);
-			return [];
+			console.error('Error fetching all events with the project id:', error);
+			try {
+				const res = await fetch(
+					`https://performance.musiconn.de/api?action=autocomplete&title=${query}&entities=${entities}&max=20&format=json`
+				);
+				const results = await res.json();
+				console.log('results', results);
+				return results;
+			} catch (error) {
+				console.error('Error fetching all events with the project id:', error);
+				return [];
+			}
 		}
 	}
 };

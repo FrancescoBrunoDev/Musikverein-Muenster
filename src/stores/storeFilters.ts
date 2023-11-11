@@ -129,12 +129,16 @@ const isMoreAPersonOrAComposer = async (id: number) => {
 		const events = _fetchedEvents[key];
 		for (const event of events) {
 			const persons = event.persons;
-			if (persons.length > 0) {
-				for (const person of persons) {
-					if (person.person === personId) {
-						countPerson++;
+			try {
+				if (persons.length > 0) {
+					for (const person of persons) {
+						if (person.person === personId) {
+							countPerson++;
+						}
 					}
 				}
+			} catch (error) {
+				console.error('Si è verificato un errore:', error);
 			}
 			const performances = event.performances;
 			if (performances) {

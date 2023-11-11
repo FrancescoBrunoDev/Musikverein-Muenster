@@ -45,7 +45,7 @@
 			<SearchSection />
 		{/if}
 	</div>
-	<div class="container absolute left-0 right-0 z-50 flex w-screen max-w-5xl justify-end">
+	<div class="container absolute left-0 right-0 z-20 flex w-screen max-w-5xl justify-end">
 		<CheckBox title="or filter per performance" on:change={handleCheckboxChange} />
 	</div>
 	<div

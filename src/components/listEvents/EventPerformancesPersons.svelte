@@ -6,7 +6,7 @@
 	let isPersonOpen = false;
 
 	// make a function that join all the persons in a string with |
-	function joinPersons(persons: Person[]) {
+	function joinPersons(persons: { person: number; mediums: { subject: number; }[]; }[]) {
 		let personsString = '';
 		persons.forEach((person, index) => {
 			const personTitle = getTitle(person.person, 'person');

@@ -55,8 +55,8 @@ type Medium = {
 type EventPerformance = {
 	work: number;
 	order: number;
-	composers: Composer[];
-	persons: (Person & { mediums?: Medium[] })[]; // Person with optional mediums
+	composers?: Composer[];
+	persons: ({ person: number; mediums: { subject: number; }[]; } | { person: number; mediums?: undefined; })[];
 };
 
 type EventLocation = {
@@ -75,6 +75,7 @@ type EventItem = {
 
 type Events = {
 	[key: string]: EventItem[];
+	timestamp?: string;
 };
 
 type Filters = {
@@ -101,8 +102,9 @@ type KindKey = 'performances' | 'persons' | 'locations' | 'corporations';
 type KindType = 'work' | 'person' | 'location' | 'corporation';
 
 type allTitles = {
-	work: Titles[];
-	person: Titles[];
-	location: Titles[];
-	corporation: Titles[];
+    corporation: { [key: string]: { title: string; } };
+    timestamp: string;
+    work: { [key: string]: { title: string; } };
+    person: { [key: string]: { title: string; } };
+    location: { [key: string]: { title: string; } };
 };

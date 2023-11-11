@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { createRadioGroup, melt } from '@melt-ui/svelte';
-	import { UpdateSelectedMethodFilter, filters } from '$stores/storeFilters';
+	import { UpdateSelectedMethodFilter } from '$stores/storeFilters';
 
 	const {
 		elements: { root, item },
-		states: { value },
+		states: { value }
 	} = createRadioGroup({
-		defaultValue: 'or',
+		defaultValue: 'or'
 	});
 	$: {
 		UpdateSelectedMethodFilter($value as Method);

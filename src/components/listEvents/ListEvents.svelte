@@ -33,7 +33,6 @@
 
 		observer.observe(container);
 	});
-	$: console.log(marginButtonListEvents, $heightSearchSection, 'marginButtonListEvents');
 </script>
 
 <div
@@ -63,11 +62,15 @@
 		transition:fade={{ duration: 400, easing: cubicOut }}
 		class="fixed bottom-0 flex h-fit w-screen flex-col justify-center rounded-tl-xl rounded-tr-xl bg-secondary/90 backdrop-blur-sm dark:bg-background/90"
 	>
-		<button on:click={toggleSearchSection} class=" flex h-7 w-screen justify-center">
-			<ChevronUp size={30} stroke-width={40} />
+		<button on:click={toggleSearchSection} class=" flex h-10 w-screen items-center justify-center">
+			<ChevronUp
+				class={isSearchSectionInEventsListOpen ? 'rotate-180' : ''}
+				size={30}
+				stroke-width={40}
+			/>
 		</button>
 		{#if isSearchSectionInEventsListOpen}
-			<div class="w-screen flex justify-center pb-5">
+			<div class="flex w-screen justify-center pb-5">
 				<SearchSection />
 			</div>
 		{/if}

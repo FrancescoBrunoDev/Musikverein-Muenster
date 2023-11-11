@@ -13,7 +13,8 @@ const config = {
 			$stores: 'src/stores',
 			$utils: 'src/utils',
 			$components: 'src/components',
-			$tailwind: 'src/globals.css'
+			$tailwind: 'src/globals.css',
+			$dataPrefetched: 'src/JsonDataMusiconnWorstCaseScenario',
 		}
 	},
 	preprocess: sequence([vitePreprocess(), preprocessMeltUI()])
