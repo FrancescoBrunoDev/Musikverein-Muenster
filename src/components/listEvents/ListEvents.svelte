@@ -1,6 +1,35 @@
-<script>
-	import { filteredEvents } from '$stores/storeFilters';
+<script lang="ts">
+	import { filteredEvents, filters } from '$stores/storeFilters';
 	import EventItem from '$components/listEvents/EventItem.svelte';
+
+	// use the filters to group the events toghether if they have have the same metchAnd uid and entity
+	let filteredEventsGrouped: {
+		[key: string]: {
+			[key: string]: {
+				[key: string]: EventItem[];
+			};
+		};
+	} = {};
+
+	$: {
+		if ($filteredEvents && $filters.and.length > 0) {
+			Object.keys($filteredEvents).forEach((year) => {
+				filteredEventsGrouped[year] = $filteredEvents[year].reduce(
+					(groupedEvents, eventItem) => {
+						const key = eventItem.metchAnd ? 'and' : 'notAnd';
+						if (!groupedEvents[key][eventItem.uid]) {
+							groupedEvents[key][eventItem.uid] = [];
+						}
+						groupedEvents[key][eventItem.uid].push(eventItem);
+						return groupedEvents;
+					},
+					{ and: {}, notAnd: {} }
+				);
+			});
+		}
+	}
+
+	$: console.log(filteredEventsGrouped, 'filteredEventsGrouped');
 </script>
 
 <div class="container w-screen overflow-x-hidden">

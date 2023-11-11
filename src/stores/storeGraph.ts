@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 
 import { filters, filteredEvents } from '$stores/storeFilters';
 import { fetchedEvents } from '$stores/storeEvents';
+import { _ } from '$env/static/private';
 
 const filteredEventsForGraph = writable<DataRecordCoordinates[]>([]);
 
@@ -22,103 +23,90 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 
 	filteredEventsForGraph.set([]);
 
-	if (_filters.or.length === 0 && _filters.not.length === 0 && _filters.and.length === 0) {
-		filteredEvents.set(_fetchedEvents);
-	} else if (_filters.or.length === 0 && _filters.and.length === 0 && _filters.not.length > 0) {
-		filteredEvents.set(_fetchedEvents);
-	} else {
-		filteredEvents.set({});
-	}
+	filteredEvents.set({});
 
 	// there should be an yearObj for each year from 1850 to 1900
 	for (let year = 1840; year <= 1910; year++) {
 		const events = _fetchedEvents[year as keyof Events] || [];
-		let eventCount = events.length; // questo è da cambiare con la somma dei risultati dei filtri
+		let eventCount = 0;
 		const yearObj: DataRecordCoordinates = {
 			x: year,
 			filters: {},
 			eventCount: eventCount
 		};
 
-		if (_filters.or.length === 0) {
-			for (const filter of _filters.not) {
-				for (const event of events) {
-					const hasMatchingPerformanceNOT = hasMatchingPerformances(event, filter);
-					if (hasMatchingPerformanceNOT) {
-						filteredEvents.update((currentEvents) => {
-							currentEvents[year] = currentEvents[year].filter((item) => item.uid !== event.uid);
+		if (_filters.or.length > 0 || _filters.not.length > 0 || _filters.and.length > 0) {
+			for (const event of events) {
+				let pushEventInFilteredEventsNOT = true;
+				let pushEventInFilteredEvents = true;
+				let pushEventInFilteredEventsAND = true;
 
-							if (currentEvents[year].length === 0) {
-								delete currentEvents[year];
-							}
-							eventCount = currentEvents[year] ? currentEvents[year].length : 0;
-							return { ...currentEvents };
-						});
+				// filtro NOT
+				for (const filter of _filters.not) {
+					if (hasMatchingPerformances(event, filter)) {
+						pushEventInFilteredEventsNOT = false;
 					}
 				}
 
-				yearObj.filters[filter.name] = {
-					color: filter.color
-				};
-				yearObj.eventCount = eventCount;
-			}
-
-			// for the and filter we need to check if the event has all the performances that match the filter
-			if (_filters.and.length > 0) {
-				let filterCount = 0;
-				for (const event of events) {
-					let hasMatchingPerformanceAND = true;
-					for (const filter of _filters.and) {
-						const hasMatchingPerformance = hasMatchingPerformances(event, filter);
-						if (!hasMatchingPerformance) {
-							hasMatchingPerformanceAND = false;
+				// filtro OR
+				for (const filter of _filters.or) {
+					if (hasMatchingPerformances(event, filter)) {
+						pushEventInFilteredEvents = true;
+						if (pushEventInFilteredEventsNOT) {
+							yearObj.filters[filter.name] = {
+								count: (yearObj.filters[filter.name]?.count || 0) + 1,
+								color: filter.color
+							};
 						}
-					}
-					if (hasMatchingPerformanceAND) {
-						filterCount++;
-						filteredEvents.update((currentEvents) => {
-							currentEvents[year] = currentEvents[year] || [];
-							currentEvents[year].push(event);
-							return { ...currentEvents }; // Return a copy of the modified object
-						});
-					}
-				}
-				yearObj.eventCount = filterCount;
-			}
-		}
-
-		if (_filters.or.length > 0) {
-			for (const filter of _filters.or) {
-				let filterCount = 0;
-
-				for (const event of events) {
-					let hasMatchingPerformanceOR = hasMatchingPerformances(event, filter);
-
-					for (const filter of _filters.not) {
-						const hasMatchingPerformanceNOT = hasMatchingPerformances(event, filter);
-						if (hasMatchingPerformanceNOT) {
-							hasMatchingPerformanceOR = false;
-						}
-					}
-
-					if (hasMatchingPerformanceOR) {
-						filterCount++;
-						filteredEvents.update((currentEvents) => {
-							currentEvents[year] = currentEvents[year] || [];
-							currentEvents[year].push(event);
-							return { ...currentEvents }; // Return a copy of the modified object
-						});
+					} else {
+						pushEventInFilteredEvents = false;
 					}
 				}
 
-				yearObj.filters[filter.name] = {
-					count: filterCount,
-					color: filter.color
-				};
-			}
-		}
+				// filtro AND
+				for (const filter of _filters.and) {
+					if (!hasMatchingPerformances(event, filter)) {
+						pushEventInFilteredEventsAND = false;
+						break;
+					}
+				}
+				if (pushEventInFilteredEventsAND) {
+					if (_filters.and.length > 0 && _filters.or.length > 0) {
+						pushEventInFilteredEvents = true;
+					}
+					event.metchAnd = true;
+					if (pushEventInFilteredEventsNOT) {
+						yearObj.filters['and']?.count
+							? yearObj.filters['and'].count++
+							: (yearObj.filters['and'] = { count: 1 });
+					}
+				} else {
+					event.metchAnd = false;
+				}
 
+				if (pushEventInFilteredEventsNOT && pushEventInFilteredEvents) {
+					filteredEvents.update((currentEvents) => {
+						currentEvents[year] = currentEvents[year] || [];
+						currentEvents[year].push(event);
+						yearObj.eventCount = currentEvents[year].length;
+						return { ...currentEvents }; // Return a copy of the modified object
+					});
+				}
+			}
+		} else {
+			filteredEvents.update((currentEvents) => {
+				currentEvents[year] = events;
+				// eliminate the year if there are no events
+				if (events.length === 0) {
+					delete currentEvents[year];
+				}
+				return { ...currentEvents }; // Return a copy of the modified object
+			});
+		}
 		filteredEventsForGraph.update((currentEvents) => {
+			if (_filters.or.length === 0 && _filters.not.length === 0 && _filters.and.length === 0) {
+				yearObj.eventCount = events.length;
+			}
 			return [...currentEvents, yearObj];
 		});
 	}

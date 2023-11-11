@@ -23,7 +23,7 @@ type FiltersForGraph = {
 
 type FilterForGraph = {
 	count?: number;
-	color: string;
+	color?: string;
 };
 
 type filtersCount = {
@@ -70,6 +70,7 @@ type EventItem = {
 	persons: Person[];
 	performances: EventPerformance[];
 	corporations: Corporation[];
+	metchAnd?: boolean;
 };
 
 type Events = {

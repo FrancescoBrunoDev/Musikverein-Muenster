@@ -4,7 +4,25 @@
 	import { getTitle } from '$stores/storeEvents';
 	import EventPerformancesPersons from '$components/listEvents/EventPerformancesPersons.svelte';
 	export let event: EventItem;
+	
 	let isPerformanceOpen = false;
+	const methods: Array<keyof typeof $filters> = ['and', 'or', 'not'];
+
+	const hasMatchingFilter = (performance: any) =>
+		methods.some((method) =>
+			$filters[method].some(
+				(filter) =>
+					(filter.entity === 'composer' &&
+						performance.composers &&
+						filter.id == performance.composers[0].person) ||
+					(filter.entity === 'work' && filter.id == performance.work) ||
+					(filter.entity === 'person' &&
+						performance.persons &&
+						performance.persons.some(
+							(person: { person: typeof filter.id }) => filter.id == person.person
+						))
+			)
+		);
 
 	function handleClickAllPerformances() {
 		isPerformanceOpen = !isPerformanceOpen;
@@ -13,12 +31,12 @@
 
 {#each event.performances as performance}
 	{#await getTitle(performance.work, 'work') then title}
-		{#if $filters.or.length === 0}
+		{#if $filters.or.length === 0 && $filters.and.length === 0 && $filters.not.length === 0}
 			<span>{title} <EventPerformancesPersons {performance} /></span>
-		{:else if $filters.or.some((filter) => filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person) || $filters.or.some((filter) => filter.entity === 'work' && filter.id == performance.work) || $filters.or.some((filter) => filter.entity === 'person' && performance.persons && performance.persons.some((person) => filter.id == person.person))}
+		{:else if hasMatchingFilter(performance)}
 			<div class="flex items-center gap-1">
 				<div class="flex flex-col gap-1">
-					{#each $filters.or as filter}
+					{#each Object.values($filters).flat() as filter}
 						{#if filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person}
 							<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
 						{/if}
@@ -43,7 +61,7 @@
 		<div>Error: {error.message}</div>
 	{/await}
 {/each}
-{#if $filters.or.length > 0}
+{#if $filters.or.length > 0 || $filters.and.length > 0 || $filters.not.length > 0}
 	<button on:click={() => handleClickAllPerformances()}>
 		{#if isPerformanceOpen}
 			<ChevronUp class="h-8 w-full items-center" />

@@ -1,22 +1,15 @@
 <script lang="ts">
-	import { createToggleGroup, melt } from '@melt-ui/svelte';
+	import { createRadioGroup, melt } from '@melt-ui/svelte';
 	import { UpdateSelectedMethodFilter, filters } from '$stores/storeFilters';
-	import { disabledAttr } from '@melt-ui/svelte/internal/helpers';
-
-	let isDisabled = false;
 
 	const {
 		elements: { root, item },
 		states: { value },
-		options: { disabled }
-	} = createToggleGroup({
-		type: 'single',
+	} = createRadioGroup({
 		defaultValue: 'or',
 	});
 	$: {
 		UpdateSelectedMethodFilter($value as Method);
-		isDisabled = $filters.and.length > 0;
-		disabled.set(isDisabled);
 	}
 </script>
 

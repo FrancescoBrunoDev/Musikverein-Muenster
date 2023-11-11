@@ -45,47 +45,45 @@
 			}
 		};
 
-		$filters.or.forEach((filter) => {
-			if (!filtersArrayWithCounter.hasOwnProperty(filter.id)) {
-				filtersArrayWithCounter[filter.id] = {
-					counter: 0,
-					color: filter.color
-				};
-			}
+		Object.values($filters).forEach((method) => {
+			method.forEach((filter) => {
+				if (!filtersArrayWithCounter.hasOwnProperty(filter.id)) {
+					filtersArrayWithCounter[filter.id] = {
+						counter: 0,
+						color: filter.color
+					};
+				}
 
-			if (!event.performances) return;
+				if (!event.performances) return;
 
-			switch (filter.entity) {
-				case 'composer':
-					event.performances.forEach((performance) => {
-						incrementCounter(
-							filter.id,
-							performance.composers && filter.id == performance.composers[0].person
-						);
-					});
-					break;
-				case 'work':
-					event.performances.forEach((performance) => {
-						incrementCounter(filter.id, performance && filter.id == performance.work);
-					});
-					break;
-				case 'corporation':
-					if (event.corporations) {
-						event.corporations.forEach((corporation) => {
-							incrementCounter(filter.id, filter.id == corporation.corporation);
+				switch (filter.entity) {
+					case 'composer':
+					case 'work':
+					case 'person':
+						event.performances.forEach((performance) => {
+							if (filter.entity === 'composer') {
+								incrementCounter(
+									filter.id,
+									performance.composers && filter.id == performance.composers[0].person
+								);
+							} else if (filter.entity === 'work') {
+								incrementCounter(filter.id, performance && filter.id == performance.work);
+							} else if (filter.entity === 'person' && performance.persons) {
+								performance.persons.forEach((person) => {
+									incrementCounter(filter.id, filter.id == person.person);
+								});
+							}
 						});
-					}
-					break;
-				case 'person':
-					event.performances.forEach((performance) => {
-						if (performance.persons) {
-							performance.persons.forEach((person) => {
-								incrementCounter(filter.id, filter.id == person.person);
+						break;
+					case 'corporation':
+						if (event.corporations) {
+							event.corporations.forEach((corporation) => {
+								incrementCounter(filter.id, filter.id == corporation.corporation);
 							});
 						}
-					});
-					break;
-			}
+						break;
+				}
+			});
 		});
 
 		filtersArrayWithCounter;
@@ -151,7 +149,7 @@
 						{#if corporation.subject == 2}
 							{#await getTitle(corporation.corporation, 'corporation') then title}
 								<div class="flex items-center gap-1">
-									{#each $filters.or as filter}
+									{#each Object.values($filters).flat() as filter}
 										{#if filter.entity === 'corporation' && filter.id == corporation.corporation}
 											<Circle
 												class="flex-shrink-0"

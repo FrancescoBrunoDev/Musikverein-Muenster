@@ -7,19 +7,18 @@
 
 	let data: DataRecordCoordinates[] = []; // Declare data as a variable outside of onMount
 
-	const x = (d: DataRecordCoordinates) => d.x;
+	const x = (dataSingleYear: DataRecordCoordinates) => dataSingleYear.x;
 	let y:
-		| ((d: DataRecordCoordinates) => number | undefined)
-		| ((d: DataRecordCoordinates) => number | undefined)[];
+		| ((dataSingleYear: DataRecordCoordinates) => number | undefined)
+		| ((dataSingleYear: DataRecordCoordinates) => number | undefined)[];
 	let colorLine: string[] | string = [] || '';
 	let yearForZoom: number | null = null;
 
-	function getY(c: Filter): (d: DataRecordCoordinates) => number | undefined {
-		return (d: DataRecordCoordinates) => d.filters[c.name]?.count;
+	function getY(filter: Filter): (dataSingleYear: DataRecordCoordinates) => number | undefined {
+		return (dataSingleYear: DataRecordCoordinates) => dataSingleYear.filters[filter.name]?.count;
 	}
 
 	function getArrayOfActiveFilterColors(filters: Filter[]): string[] {
-		// console.log(filters, "filter in color")
 		let array: string[] = [];
 		filters.forEach((filter) => {
 			array.push(filter.color);
@@ -27,26 +26,37 @@
 		return array;
 	}
 
-	function tooltipTemplate(d: DataRecordCoordinates): string {
+	function tooltipTemplate(dataSingleYear: DataRecordCoordinates): string {
 		let arrayEventsPerFilter: {
 			text: string | undefined | number;
 			color: string | undefined;
 		}[] = [];
-		if ($filters.or && $filters.or.length === 0) {
-			arrayEventsPerFilter.push({ text: d.eventCount, color: 'hsl(var(--primary)' });
-		} else {
-			$filters.or.forEach((filter) => {
-				arrayEventsPerFilter.push({
-					text: `${filter.name}: ${d.filters[filter.name].count}`,
-					color: filter.color
-				});
+		if ($filters.or && $filters.or.length === 0 && $filters.and && $filters.and.length === 0) {
+			arrayEventsPerFilter.push({
+				text: `All Events: ${dataSingleYear.eventCount}`,
+				color: 'hsl(var(--primary)'
 			});
+		} else {
+			if ($filters.or.length > 0) {
+				$filters.or.forEach((filter) => {
+					arrayEventsPerFilter.push({
+						text: `${filter.name}: ${dataSingleYear.filters[filter.name].count}`,
+						color: filter.color
+					});
+				});
+			}
+			if ($filters.and.length > 0) {
+				arrayEventsPerFilter.push({
+					text: `And Filter: ${dataSingleYear.filters['and'].count}`,
+					color: 'hsl(var(--primary)'
+				});
+			}
 		}
-		yearForZoom = d.x;
+		yearForZoom = dataSingleYear.x;
 
 		return `
       <div class="w-fit">
-        <div class="text-sm font-bold"><span>${d.x}</span></div>
+        <div class="text-sm font-bold"><span>${dataSingleYear.x}</span></div>
         <div class="text-sm">${arrayEventsPerFilter
 					.map((filter) => {
 						return `
@@ -66,18 +76,25 @@
 
 	$: {
 		async function updateGraph() {
-			if ($filters.or || $filters.and) {
-				if ($filters.or.length === 0) {
-					y = (d: DataRecordCoordinates) => d.eventCount;
-					colorLine = 'hsl(var(--primary)';
-				} else if ($filters.or.length > 0) {
-					y = $filters.or.map(getY);
-					colorLine = getArrayOfActiveFilterColors($filters.or);
-				} else {
-					y = (d: DataRecordCoordinates) => d.eventCount;
-					colorLine = 'hsl(var(--primary)';
+			if ($filters.or.length > 0 || $filters.and.length > 0) {
+				// subscribe to the store, and make a const with it and push a filter in it with name "and"
+				let _filters = [...$filters.or];
+				if ($filters.and.length > 0) {
+					const andFilter = {
+						name: 'and',
+						color: 'hsl(var(--primary)',
+						id: 0,
+						entity: 'and'
+					};
+					_filters.push(andFilter);
 				}
+				y = _filters.map(getY);
+				colorLine = getArrayOfActiveFilterColors(_filters);
+			} else {
+				y = (dataSingleYear: DataRecordCoordinates) => dataSingleYear.eventCount;
+				colorLine = 'hsl(var(--primary)';
 			}
+
 			data = $filteredEventsForGraph;
 		}
 		updateGraph();
