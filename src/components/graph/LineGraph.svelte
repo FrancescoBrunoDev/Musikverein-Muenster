@@ -4,6 +4,7 @@
 	import { VisXYContainer, VisLine, VisAxis, VisTooltip, VisCrosshair } from '@unovis/svelte';
 	import { filteredEventsForGraph } from '$stores/storeGraph';
 	import { filters } from '$stores/storeFilters';
+	import { showLinesAsPerformances } from '$stores/storeGraph';
 
 	let data: DataRecordCoordinates[] = []; // Declare data as a variable outside of onMount
 
@@ -44,6 +45,10 @@
 						color: filter.color
 					});
 				});
+				arrayEventsPerFilter.push({
+					text: `Or Filter: ${dataSingleYear.filters['or'].count}`,
+					color: 'hsl(var(--primary)'
+				});
 			}
 			if ($filters.and.length > 0) {
 				arrayEventsPerFilter.push({
@@ -77,19 +82,42 @@
 	$: {
 		async function updateGraph() {
 			if ($filters.or.length > 0 || $filters.and.length > 0) {
-				// subscribe to the store, and make a const with it and push a filter in it with name "and"
-				let _filters = [...$filters.or];
-				if ($filters.and.length > 0) {
-					const andFilter = {
-						name: 'and',
-						color: 'hsl(var(--primary)',
-						id: 0,
-						entity: 'and'
-					};
-					_filters.push(andFilter);
+				if ($showLinesAsPerformances) {
+					let _filters = [...$filters.or];
+					if ($filters.and.length > 0) {
+						const andFilter = {
+							name: 'and',
+							color: 'hsl(var(--primary)',
+							id: 0,
+							entity: 'and'
+						};
+						_filters.push(andFilter);
+					}
+					y = _filters.map(getY);
+					colorLine = getArrayOfActiveFilterColors(_filters);
+				} else {
+					let _filters = [];
+					if ($filters.or.length > 0) {
+						const orFilter = {
+							name: 'or',
+							color: 'hsl(var(--primary)',
+							id: 0,
+							entity: 'or'
+						};
+						_filters.push(orFilter);
+					}
+					if ($filters.and.length > 0) {
+						const andFilter = {
+							name: 'and',
+							color: 'hsl(var(--primary)',
+							id: 0,
+							entity: 'and'
+						};
+						_filters.push(andFilter);
+					}
+					y = _filters.map(getY);
+					colorLine = getArrayOfActiveFilterColors(_filters);
 				}
-				y = _filters.map(getY);
-				colorLine = getArrayOfActiveFilterColors(_filters);
 			} else {
 				y = (dataSingleYear: DataRecordCoordinates) => dataSingleYear.eventCount;
 				colorLine = 'hsl(var(--primary)';
@@ -109,7 +137,7 @@
 		<div
 			class="absolute right-0 z-10 mr-8 h-full w-32 bg-gradient-to-l from-background from-10% to-transparent"
 		/>
-		<div class="z-10 w-screen px-8">
+		<div class="z-10 w-screen max-w-5xl px-8">
 			<VisXYContainer
 				{data}
 				height={300}

@@ -4,21 +4,22 @@
 	import MethodSearch from '$components/searchAndFilters/MethodSearch.svelte';
 	import SuggestionSearch from '$components/searchAndFilters/SuggestionSearch.svelte';
 	import { entitiesForSearchBox, updateEntitiesForSearchBox } from '$stores/storeFilters';
-
-	let suggestions: AutocompleteResult[] = [];
-	let inputValue = '';
-	const handleInput = () => {
-		const value = inputValue;
-		if (value.length > 0) {
-			autocomplete(value).then((response) => {
-				suggestions = response;
-			});
-		} else {
-			suggestions = [];
-		}
-	};
+	import { suggestions, inputValue } from '$stores/storeSearchSection';
 
 	const Entities: Entities[] = ['person', 'work', 'corporation', 'location'];
+
+	//let suggestions: AutocompleteResult[] = $suggestions;
+
+	const handleInput = () => {
+		const value = $inputValue;
+		if (value.length > 0) {
+			autocomplete(value).then((response) => {
+				$suggestions = response;
+			});
+		} else {
+			$suggestions = [];
+		}
+	};
 </script>
 
 <div class="flex w-full items-center gap-2">
@@ -30,7 +31,7 @@
 			class="focus-none h-10 w-full cursor-text bg-transparent px-3 text-secondary placeholder-background outline-none"
 			type="text"
 			id="myInput"
-			bind:value={inputValue}
+			bind:value={$inputValue}
 			on:input={handleInput}
 			placeholder="Search"
 		/>
@@ -42,9 +43,9 @@
 		<button
 			on:click={() => {
 				updateEntitiesForSearchBox(entity);
-				autocomplete(inputValue).then((response) => {
-				suggestions = response;
-			});
+				autocomplete($inputValue).then((response) => {
+					$suggestions = response;
+				});
 			}}
 			class={'rounded-full px-4 pb-[0.15rem] text-sm transition-shadow hover:drop-shadow-lg ' +
 				($entitiesForSearchBox.includes(entity)
@@ -55,4 +56,4 @@
 		</button>
 	{/each}
 </div>
-<SuggestionSearch {suggestions} {inputValue} />
+<SuggestionSearch />

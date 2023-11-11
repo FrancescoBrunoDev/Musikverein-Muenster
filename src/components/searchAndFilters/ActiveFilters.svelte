@@ -3,8 +3,6 @@
 	import { slide } from 'svelte/transition';
 	import ActiveFilter from '$components/searchAndFilters/ActiveFilter.svelte';
 
-	$: console.log($filters, 'filters');
-
 	type GroupedFilters = { [key: string]: Filter[] };
 
 	let groupedFiltersOR: GroupedFilters = {};
