@@ -34,7 +34,7 @@
 					x: 1500,
 					easing: quintInOut
 				}}
-				class="absolute bottom-0 left-0 right-0 top-0 z-50 flex h-screen flex-col bg-background/90 pb-10 pl-10 text-primary drop-shadow backdrop-blur-md"
+				class="absolute bottom-0 left-50 left-0 right-0 top-0 z-50 flex h-screen flex-col bg-background pb-10 pl-10 text-primary"
 			>
 				<button on:click={() => toggleMenu()} class="mr-20 mt-20 self-end hover:scale-105">
 					<ArrowRight size={100} color="hsl(var(--primary)" /></button
