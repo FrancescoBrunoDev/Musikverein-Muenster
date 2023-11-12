@@ -75,6 +75,7 @@ type EventItem = {
 
 type Events = {
 	[key: string]: EventItem[];
+	timestamp?: string;
 };
 
 type Filters = {
@@ -105,4 +106,5 @@ type allTitles = {
 	person: Titles[];
 	location: Titles[];
 	corporation: Titles[];
+	timestamp?: string;
 };

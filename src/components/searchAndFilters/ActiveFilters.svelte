@@ -33,9 +33,9 @@
 	{#if groupedFiltersOR && Object.keys(groupedFiltersOR).length > 0}
 		<div class="relative pb-2 text-primary">
 			<div
-				class="absolute flex h-full w-10 -translate-x-7 items-center text-end text-xs font-bold uppercase"
+				class="absolute bottom-0 left-0 top-0 flex h-full -translate-x-5 items-center text-xs font-bold uppercase"
 			>
-				<span class="w-10 -rotate-90 text-center">or</span>
+				<span style="writing-mode: vertical-rl;" class="rotate-180">or</span>
 			</div>
 			<div class="absolute h-full w-1 rounded-full bg-primary"></div>
 			{#each Object.keys(groupedFiltersOR) as entity}
@@ -57,9 +57,9 @@
 	{#if groupedFiltersAND && Object.keys(groupedFiltersAND).length > 0}
 		<div class="relative pb-2 text-primary">
 			<div
-				class="absolute flex h-full w-10 -translate-x-7 items-center text-end text-xs font-bold uppercase"
+				class="absolute bottom-0 left-0 top-0 flex h-full -translate-x-5 items-center text-xs font-bold uppercase"
 			>
-				<span class="w-10 -rotate-90 text-center">and</span>
+				<span style="writing-mode: vertical-rl;" class="rotate-180">and</span>
 			</div>
 			<div class="absolute h-full w-1 rounded-full bg-primary"></div>
 			{#each Object.keys(groupedFiltersAND) as entity}
@@ -83,9 +83,9 @@
 	{#if groupedFiltersNOT && Object.keys(groupedFiltersNOT).length > 0}
 		<div class="relative pb-2 text-destructive">
 			<div
-				class="absolute flex h-full w-10 -translate-x-7 items-center text-end text-xs font-bold uppercase"
+				class="absolute bottom-0 left-0 top-0 flex h-full -translate-x-5 items-center text-xs font-bold uppercase"
 			>
-				<span class="w-10 -rotate-90 text-center">not</span>
+				<span style="writing-mode: vertical-rl;" class="rotate-180">not</span>
 			</div>
 			<div class="absolute h-full w-1 rounded-full bg-destructive"></div>
 			{#each Object.keys(groupedFiltersNOT) as entity}
