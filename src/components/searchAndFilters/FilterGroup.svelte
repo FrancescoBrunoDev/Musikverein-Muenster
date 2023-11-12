@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LL from '$lib/i18n/i18n-svelte';
 	import { slide } from 'svelte/transition';
 	import ActiveFilter from '$components/searchAndFilters/ActiveFilter.svelte';
 
@@ -7,6 +8,11 @@
 	export let groupedFilters: GroupedFilters;
 	export let method: Method;
 	export let color = '';
+	const tradMethod = {
+		or: $LL.orMethod(),
+		and: $LL.andMethod(),
+		not: $LL.notMethod(),
+	};
 </script>
 
 {#if Object.keys(groupedFilters).length > 0}
@@ -14,9 +20,9 @@
 		<div
 			class="absolute bottom-0 left-0 top-0 flex h-full -translate-x-5 items-center text-xs font-bold uppercase"
 		>
-			<span style="writing-mode: vertical-rl;" class="rotate-180">{method}</span>
+			<span style="writing-mode: vertical-rl;" class="rotate-180">{tradMethod[method]}</span>
 		</div>
-		<div class="absolute h-full w-1 rounded-full bg-{color}" ></div>
+		<div class="absolute h-full w-1 rounded-full bg-{color}"></div>
 		{#each Object.keys(groupedFilters) as entity}
 			<div class="grid pl-3" transition:slide={{ axis: 'y', delay: 150 }}>
 				<h2 class="mb-2 text-sm font-bold text-primary">

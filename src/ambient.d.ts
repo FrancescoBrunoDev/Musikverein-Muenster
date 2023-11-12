@@ -108,3 +108,7 @@ type allTitles = {
 	corporation: Titles[];
 	timestamp?: string;
 };
+
+type Locales = Locales;
+
+type ThemeKind = 'base' | 'dark';

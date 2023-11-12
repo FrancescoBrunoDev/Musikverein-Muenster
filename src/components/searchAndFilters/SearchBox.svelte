@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LL from '$lib/i18n/i18n-svelte';
 	import { autocomplete } from '$lib/dataMusiconn';
 	import { Info } from 'lucide-svelte';
 	import MethodSearch from '$components/searchAndFilters/MethodSearch.svelte';
@@ -33,7 +34,7 @@
 			id="myInput"
 			bind:value={$inputValue}
 			on:input={handleInput}
-			placeholder="Search"
+			placeholder={$LL.search()}
 		/>
 	</div>
 	<Info size={25} stroke-width={40} />

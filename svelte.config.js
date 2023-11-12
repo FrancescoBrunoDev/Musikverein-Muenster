@@ -13,7 +13,9 @@ const config = {
 			$stores: 'src/stores',
 			$utils: 'src/utils',
 			$components: 'src/components',
-			$tailwind: 'src/globals.css'
+			$tailwind: 'src/globals.css',
+			$lib: 'src/lib',
+			$i18n: 'src/i18n',
 		}
 	},
 	preprocess: sequence([vitePreprocess(), preprocessMeltUI()])

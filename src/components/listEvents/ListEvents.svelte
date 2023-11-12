@@ -46,7 +46,7 @@
 
 <div
 	style={$isSearchSectionInEventsList ? `margin-bottom: ${marginButtonListEvents}` : ''}
-	class="container w-screen overflow-x-hidden"
+	class="container max-w-6xl w-screen overflow-x-hidden"
 	bind:this={container}
 >
 	<div class="flex flex-col overflow-x-hidden">
@@ -56,7 +56,7 @@
 					<div class="text-2xl">{year}</div>
 					<div>{$filteredEvents[year].length}</div>
 				</div>
-				<div class="flex flex-row items-start gap-2 overflow-x-scroll pb-4 leading-tight">
+				<div class="flex items-start gap-2 flex-wrap pb-4 leading-tight">
 					{#each $filteredEvents[year] as event}
 						<Event eventUid={event.uid} />
 					{/each}
