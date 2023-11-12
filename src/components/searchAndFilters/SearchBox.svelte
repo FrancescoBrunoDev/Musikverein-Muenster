@@ -23,7 +23,7 @@
 
 <div class="flex w-full items-center gap-2">
 	<div
-		class="flex w-full items-center rounded-full bg-primary drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary"
+		class="flex w-full items-center rounded-full bg-secondary drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary"
 	>
 		<MethodSearch />
 		<input
@@ -42,12 +42,18 @@
 		<button
 			on:click={() => {
 				updateEntitiesForSearchBox(entity);
-				autocomplete($inputValue).then((response) => {
-					$suggestions = response;
-				});
+				if ($inputValue.length > 0) {
+					autocomplete($inputValue).then((response) => {
+						$suggestions = response;
+					});
+				} else {
+					$suggestions = [];
+				}
 			}}
 			class={'hover:scale-hover rounded-full px-4 pb-[0.15rem] text-sm transition-shadow hover:drop-shadow-lg ' +
-				($entitiesForSearchBox.includes(entity) ? 'bg-accent text-background' : 'bg-primary text-text')}
+				($entitiesForSearchBox.includes(entity)
+					? 'bg-primary text-background'
+					: 'text-text bg-secondary')}
 		>
 			{$LL.filters.entities[entity]()}
 		</button>

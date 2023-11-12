@@ -164,7 +164,7 @@ const isMoreAPersonOrAComposer = async (id: number) => {
 
 const updateEntitiesForSearchBox = (selected: Entity) => {
 	entitiesForSearchBox.update((currentEntities: Entity[]) => {
-		if (currentEntities.includes(selected)) {
+		if (currentEntities.includes(selected) && currentEntities.length > 1) {
 			const index = currentEntities.indexOf(selected);
 			currentEntities.splice(index, 1);
 		} else {
