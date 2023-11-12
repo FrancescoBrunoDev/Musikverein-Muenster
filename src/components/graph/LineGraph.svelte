@@ -13,7 +13,6 @@
 		| ((dataSingleYear: DataRecordCoordinates) => number | undefined)
 		| ((dataSingleYear: DataRecordCoordinates) => number | undefined)[];
 	let colorLine: string[] | string = [] || '';
-	let yearForZoom: number | null = null;
 
 	function getY(filter: Filter): (dataSingleYear: DataRecordCoordinates) => number | undefined {
 		return (dataSingleYear: DataRecordCoordinates) => dataSingleYear.filters[filter.name]?.count;
@@ -27,6 +26,7 @@
 		return array;
 	}
 
+	// ricordati di guardare se puoi fare questo https://unovis.dev/docs/auxiliary/Tooltip#components
 	function tooltipTemplate(dataSingleYear: DataRecordCoordinates): string {
 		let arrayEventsPerFilter: {
 			text: string | undefined | number;
@@ -57,7 +57,6 @@
 				});
 			}
 		}
-		yearForZoom = dataSingleYear.x;
 
 		return `
       <div class="w-fit">

@@ -50,12 +50,6 @@ const fetchAndStoreEvents = async () => {
 			'An error occurred while fetching events, I will try to use the stored Events:',
 			error
 		);
-		try {
-			const perFetchedEvents = await import('$dataPrefetched/fetchedEvents.json');
-			fetchedEvents.set(perFetchedEvents.default);
-		} catch (error) {
-			console.error('An error occurred while fetching prefetched events:', error);
-		}
 	}
 };
 
@@ -80,12 +74,6 @@ const getTitles = async () => {
 			'An error occurred while fetching titles, I will try to use the stored Titles:',
 			error
 		);
-		try {
-			const perAllTitles = await import('$dataPrefetched/allTitles.json');
-			allTitles.set(perAllTitles.default);
-		} catch (error) {
-			console.error('An error occurred while fetching prefetched titles:', error);
-		}
 	}
 };
 
