@@ -76,6 +76,7 @@ type EventItem = {
 type Events = {
 	[key: string]: EventItem[];
 	timestamp?: string;
+	timestamp?: string;
 };
 
 type Filters = {
@@ -102,9 +103,13 @@ type KindKey = 'performances' | 'persons' | 'locations' | 'corporations';
 type KindType = 'work' | 'person' | 'location' | 'corporation';
 
 type allTitles = {
-    corporation: { [key: string]: { title: string; } };
-    timestamp: string;
-    work: { [key: string]: { title: string; } };
-    person: { [key: string]: { title: string; } };
-    location: { [key: string]: { title: string; } };
+	work: Titles[];
+	person: Titles[];
+	location: Titles[];
+	corporation: Titles[];
+	timestamp?: string;
 };
+
+type Locales = Locales;
+
+type ThemeKind = 'base' | 'dark';

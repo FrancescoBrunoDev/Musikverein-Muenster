@@ -14,7 +14,7 @@ const config = {
 			$utils: 'src/utils',
 			$components: 'src/components',
 			$tailwind: 'src/globals.css',
-			$dataPrefetched: 'src/JsonDataMusiconnWorstCaseScenario',
+			$lib: 'src/lib',
 		}
 	},
 	preprocess: sequence([vitePreprocess(), preprocessMeltUI()])
