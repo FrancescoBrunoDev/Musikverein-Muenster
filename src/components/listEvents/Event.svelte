@@ -92,18 +92,16 @@
 </script>
 
 <div
-	class={`w-fit ${
-		isEventOpen
-			? 'flex h-fit flex-shrink-0 flex-col border-2 border-primary dark:border-secondary'
-			: 'flex flex-col justify-center gap-2'
+	class={`w-fit rounded-xl bg-secondary  ${
+		isEventOpen ? 'flex h-fit flex-shrink-0 flex-col' : 'flex flex-col justify-center gap-2 transition-all duration-100 hover:scale-hover'
 	}`}
 >
 	<button
 		on:click={() => handleClickEvent()}
-		class={`flex-shrink-0 flex-grow-0 border-primary font-bold dark:border-secondary ${
+		class={`flex-shrink-0 flex-grow-0  font-bold ${
 			isEventOpen
-				? 'relative left-0 right-0 top-0 h-fit w-80 border-b-2 py-2'
-				: 'h-32 w-24 border-2'
+				? 'border-text relative left-0 right-0 top-0 h-fit w-80 border-b-2 py-2'
+				: 'h-32 w-24'
 		}`}
 		>{date}
 		{#if !isEventOpen}
@@ -145,7 +143,9 @@
 		<div class="flex w-80 flex-col gap-4 p-2">
 			{#if event.corporations}
 				<div>
-					<div class="text-base font-bold dark:font-semibold">{$LL.filters.entities.corporation()}</div>
+					<div class="text-base font-bold dark:font-semibold">
+						{$LL.filters.entities.corporation()}
+					</div>
 					{#each event.corporations as corporation}
 						{#if corporation.subject == 2}
 							{#await getTitle(corporation.corporation, 'corporation') then title}
@@ -170,9 +170,13 @@
 				</div>
 			{/if}
 			<div>
-				<div class="w-full text-base font-bold dark:font-semibold">{$LL.filters.entities.performances()}</div>
+				<div class="w-full text-base font-bold dark:font-semibold">
+					{$LL.filters.entities.performances()}
+				</div>
 				{#if event.performances}
-					<div class="flex flex-col gap-1 divide-y-2 divide-primary dark:divide-secondary dark:font-light">
+					<div
+						class="flex flex-col gap-1 divide-y-2 divide-text dark:font-light"
+					>
 						<EventPerformances {event} />
 					</div>
 				{/if}

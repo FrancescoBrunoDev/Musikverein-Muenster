@@ -37,7 +37,7 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			scale: {
-				hover: '1.01'
+				hover: '1.03'
 			},
 			fontFamily: {
 				sans: ['Outfit', 'sans-serif']
