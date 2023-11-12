@@ -42,7 +42,9 @@
                 transform: scale(${scaleSearchSection});`}
 	>
 		{#if !$isSearchSectionInEventsList}
-			<SearchSection />
+			<div class="w-5/6 md:w-2/3 lg:w-1/2">
+				<SearchSection />
+			</div>
 		{/if}
 	</div>
 	<div class="container absolute left-0 right-0 z-20 flex w-screen max-w-5xl justify-end">
