@@ -20,9 +20,9 @@
 </script>
 
 <form class="justify-self-end">
-	<div class="flex items-center">
+	<div class="flex items-center rounded-xl bg-secondary p-2">
 		<label
-			class="pr-4 leading-none text-primary"
+			class="w-40 pr-4 text-right text-sm font-normal leading-none"
 			for={titleToId(title)}
 			id="{titleToId(title)}-label"
 		>
@@ -30,7 +30,7 @@
 		</label>
 		<button
 			use:melt={$root}
-			class="button-checkbox relative h-6 cursor-default rounded-full bg-primary transition-all duration-100 hover:cursor-pointer hover:shadow-lg data-[state=checked]:bg-primary-foreground"
+			class="button-checkbox relative h-6 cursor-default rounded-full bg-destructive dark:bg-red-900 transition-all duration-100 hover:cursor-pointer hover:shadow-lg data-[state=checked]:bg-green-600 dark:data-[state=checked]:bg-green-700"
 			id={titleToId(title)}
 			aria-labelledby="{titleToId(title)}-label"
 		>
@@ -44,13 +44,13 @@
 
 <style>
 	.button-checkbox {
-		--w: 2.75rem;
-		--padding: 0.125rem;
+		--w: 2rem;
+		--padding: 0.18rem;
 		width: var(--w);
 	}
 
 	.thumb {
-		--size: 1.25rem;
+		--size: 1rem;
 		width: var(--size);
 		height: var(--size);
 		transform: translateX(var(--padding));

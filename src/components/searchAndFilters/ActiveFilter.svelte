@@ -23,7 +23,7 @@
 
 <div
 	use:melt={$trigger}
-	class="flex items-center gap-1 rounded-full border border-primary py-1 px-3 text-xs text-primary hover:z-20 hover:drop-shadow-lg"
+	class="flex items-center gap-1 rounded-full border border-primary py-1 px-3 text-xs hover:z-20 hover:drop-shadow-lg"
 >
 	{#if method === 'or' || method === 'and'}
 		<Circle class="-ml-1" fill={filter.color} size={10} stroke-opacity={0} />
@@ -45,14 +45,14 @@
 				<li>
 					<button
 						on:click={() => changeFilterPersonOrComposer(filter.id, filter.entity, method)}
-						class="rounded-full bg-foreground px-2 pb-[0.13rem] text-secondary transition-transform duration-100 hover:scale-[1.03] hover:shadow-lg"
+						class="rounded-full px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-hover hover:shadow-lg"
 						>as a {#if filter.entity === 'person'}performer{:else if filter.entity === 'composer'}composer{/if}</button
 					>
 				</li>
 			{/if}
 			<li>
 				<button
-					class="rounded-full bg-destructive px-2 text-secondary transition-transform duration-100 hover:scale-[1.03] hover:shadow-lg dark:text-primary"
+					class="rounded-full bg-destructive px-2 transition-transform duration-100 hover:scale-hover hover:shadow-lg dark:text-primary"
 					>move to {method == 'or' ? 'not' : 'or'}</button
 				>
 			</li>

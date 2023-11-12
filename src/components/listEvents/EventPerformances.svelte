@@ -1,10 +1,11 @@
 <script lang="ts">
+	import LL from '$lib/i18n/i18n-svelte';
 	import { Circle, ChevronUp } from 'lucide-svelte';
 	import { filters } from '$stores/storeFilters';
 	import { getTitle } from '$stores/storeEvents';
 	import EventPerformancesPersons from '$components/listEvents/EventPerformancesPersons.svelte';
 	export let event: EventItem;
-	
+
 	let isPerformanceOpen = false;
 	const methods: Array<keyof typeof $filters> = ['and', 'or', 'not'];
 
@@ -66,7 +67,7 @@
 		{#if isPerformanceOpen}
 			<ChevronUp class="h-8 w-full items-center" />
 		{:else}
-			Show all performances
+			{$LL.events.showAllPerformances()}
 		{/if}
 	</button>
 {/if}

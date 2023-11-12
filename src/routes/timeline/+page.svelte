@@ -1,22 +1,18 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
-	import { fetchAndStoreEvents } from '$stores/storeEvents';
+	import { fetchedEvents, allTitles } from '$stores/storeEvents';
 	import Maintimeline from '$components/Maintimeline.svelte';
 	import ListeEvents from '$components/listEvents/ListEvents.svelte';
-	import { getTitles } from '$stores/storeEvents';
+	import type { PageData } from './$types';
 
-	onMount(async () => {
-		await fetchAndStoreEvents()
-			.then(() => {
-				updateFilteredEventsAndUdateDataForGraph();
-			})
-			.then(() => {
-				getTitles();
-			});
-	});
+	export let data: PageData;
+
+	fetchedEvents.set(data.props.events);
+	if (data.props.allTitles) {
+		allTitles.set(data.props.allTitles);
+	}
+	updateFilteredEventsAndUdateDataForGraph();
 </script>
-
 
 <Maintimeline />
 <ListeEvents />

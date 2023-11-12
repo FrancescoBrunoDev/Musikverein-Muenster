@@ -7,9 +7,7 @@
 	import { entitiesForSearchBox, updateEntitiesForSearchBox } from '$stores/storeFilters';
 	import { suggestions, inputValue } from '$stores/storeSearchSection';
 
-	const Entities: Entities[] = ['person', 'work', 'corporation', 'location'];
-
-	//let suggestions: AutocompleteResult[] = $suggestions;
+	const entities: Entity[] = ['person', 'work', 'corporation', 'location'];
 
 	const handleInput = () => {
 		const value = $inputValue;
@@ -29,18 +27,18 @@
 	>
 		<MethodSearch />
 		<input
-			class="focus-none h-10 w-full cursor-text bg-transparent px-3 text-secondary placeholder-background outline-none"
+			class="focus-none h-10 w-full cursor-text bg-transparent px-3 placeholder-background outline-none"
 			type="text"
 			id="myInput"
 			bind:value={$inputValue}
 			on:input={handleInput}
-			placeholder={$LL.search()}
+			placeholder={$LL.filters.search()}
 		/>
 	</div>
 	<Info size={25} stroke-width={40} />
 </div>
 <div class="my-2 flex gap-2 pl-2">
-	{#each Entities as entity}
+	{#each entities as entity}
 		<button
 			on:click={() => {
 				updateEntitiesForSearchBox(entity);
@@ -48,12 +46,10 @@
 					$suggestions = response;
 				});
 			}}
-			class={'rounded-full px-4 pb-[0.15rem] text-sm transition-shadow hover:drop-shadow-lg ' +
-				($entitiesForSearchBox.includes(entity)
-					? 'bg-primary text-secondary'
-					: 'bg-secondary text-primary')}
+			class={'hover:scale-hover rounded-full px-4 pb-[0.15rem] text-sm transition-shadow hover:drop-shadow-lg ' +
+				($entitiesForSearchBox.includes(entity) ? 'bg-accent text-background' : 'bg-primary text-text')}
 		>
-			{entity}
+			{$LL.filters.entities[entity]()}
 		</button>
 	{/each}
 </div>

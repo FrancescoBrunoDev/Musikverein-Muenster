@@ -70,6 +70,7 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 									count: 0,
 									color: filter.color
 								};
+
 								yearObj.filters[filter.name].count++;
 							}
 						});

@@ -13,13 +13,13 @@
 {#if $suggestions && $suggestions.length > 0}
 	<div
 		transition:slide
-		class="z-10 mt-2 grid max-h-64 w-full grid-cols-1 gap-y-2 overflow-auto overscroll-auto rounded-xl border bg-background p-2 dark:bg-primary dark:text-secondary"
+		class="z-10 mt-2 grid max-h-64 w-full grid-cols-1 gap-y-2 overflow-auto overscroll-auto rounded-xl border bg-background p-2 dark:bg-primary"
 	>
 		{#each $suggestions as suggestion}
 			<div class="flex items-center gap-1">
 				{#if $entitiesForSearchBox.length > 1}
 					<div
-						class="h-fit rounded-full border-2 border-primary px-2 text-xs dark:border-secondary"
+						class="h-fit rounded-full border-2 border-primary px-2 text-xs dark:border-text"
 					>
 						{suggestion[1]}
 					</div>

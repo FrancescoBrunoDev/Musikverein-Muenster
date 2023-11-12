@@ -14,7 +14,7 @@
 <button
 	use:melt={$root}
 	aria-label="Toggle italic"
-	class="h-10 w-10 rounded-xl bg-secondary text-primary transition-all hover:scale-105 hover:drop-shadow-xl dark:bg-primary dark:text-secondary"
+	class="hover:scale-hover h-10 w-10 rounded-xl bg-secondary transition-all hover:drop-shadow-xl dark:bg-primary"
 >
 	{value === 'en' ? 'de' : 'en'}
 </button>

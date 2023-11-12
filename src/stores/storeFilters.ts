@@ -24,7 +24,7 @@ const colorFilters = writable([
 	'#f45a6d'
 ]);
 const filteredEvents = writable<Events>({});
-const entitiesForSearchBox = writable<Entities[]>(['person', 'corporation', 'work', 'location']);
+const entitiesForSearchBox = writable<Entity[]>(['person', 'corporation', 'work', 'location']);
 
 const UpdateSelectedMethodFilter = (method: Method) => {
 	SelectedMethodFilter.set(method);
@@ -162,8 +162,8 @@ const isMoreAPersonOrAComposer = async (id: number) => {
 	}
 };
 
-const updateEntitiesForSearchBox = (selected: Entities) => {
-	entitiesForSearchBox.update((currentEntities: Entities[]) => {
+const updateEntitiesForSearchBox = (selected: Entity) => {
+	entitiesForSearchBox.update((currentEntities: Entity[]) => {
 		if (currentEntities.includes(selected)) {
 			const index = currentEntities.indexOf(selected);
 			currentEntities.splice(index, 1);

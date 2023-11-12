@@ -19,13 +19,15 @@
 </script>
 
 <div class="fixed top-0 z-50 flex h-10 w-full items-center justify-center bg-background">
-	<div class="container flex justify-between text-lg text-foreground">
+	<div class="container flex justify-between text-lg">
 		<ul class="flex items-center">
 			<li>
-				<a class="font-bold" href="/">{$LL.home()}</a>
+				<a class="font-bold" href="/">{$LL.navbar.home()}</a>
 			</li>
 		</ul>
-		<button on:click={() => toggleMenu()} class="flex gap-3 font-bold hover:scale-105">{$LL.menu()}</button>
+		<button on:click={() => toggleMenu()} class="flex gap-3 font-bold hover:scale-hover"
+			>{$LL.navbar.menu()}</button
+		>
 		{#if isMenuActive}
 			<div
 				transition:fly={{
@@ -34,28 +36,30 @@
 					x: 1500,
 					easing: quintInOut
 				}}
-				class="absolute bottom-0 left-50 left-0 right-0 top-0 z-50 flex h-screen flex-col bg-background pb-10 pl-10 text-primary"
+				class="left-50 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-screen flex-col bg-background pb-10 pl-10"
 			>
-				<button on:click={() => toggleMenu()} class="mr-20 mt-20 self-end hover:scale-105">
+				<button on:click={() => toggleMenu()} class="mr-10 mt-20 self-end hover:scale-hover md:mr-20">
 					<ArrowRight size={100} color="hsl(var(--primary)" /></button
 				>
-				<div class="flex h-full items-end justify-between pr-20">
-					<div class="flex h-full items-end gap-6 text-8xl font-bold">
+				<div class="flex h-full items-end justify-between pr-10 md:pr-20">
+					<div
+						class="flex h-full items-center gap-6 text-5xl font-bold sm:text-6xl md:items-end md:text-7xl lg:text-8xl"
+					>
 						<div class="grid grid-cols-1">
 							<a
 								class="transition-transform duration-75 hover:-translate-y-1"
 								on:click={() => toggleMenu()}
-								href="/timeline">Timeline</a
+								href="/timeline">{$LL.navbar.timeline()}</a
 							>
 
 							<a
 								class="group transition-transform duration-75 hover:-translate-y-1"
 								on:click={() => toggleMenu()}
-								href="/austellung">Austellung</a
+								href="/austellung">{$LL.navbar.exibitions()}</a
 							>
 							<ul class="pl-5">
 								<li class="text-xl transition-transform duration-75 hover:-translate-y-1">
-									1# First Exibition
+									{$LL.navbar.exibitionsNames.first()}
 								</li>
 							</ul>
 						</div>

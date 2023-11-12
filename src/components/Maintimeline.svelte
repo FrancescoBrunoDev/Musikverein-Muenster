@@ -1,8 +1,10 @@
 <script lang="ts">
+	import LL from '$lib/i18n/i18n-svelte';
 	import LineGraph from '$components/graph/LineGraph.svelte';
 	import SearchSection from '$components/searchAndFilters/SearchSection.svelte';
 	import CheckBox from '$components/CheckBox.svelte';
 	import { isSearchSectionInEventsList, suggestions } from '$stores/storeSearchSection';
+	import { filters } from '$stores/storeFilters';
 	import { showLinesAsPerformances } from '$stores/storeGraph';
 	import { fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
@@ -57,7 +59,12 @@
 			transition:fade={{ duration: 1000, delay: 1000, easing: cubicOut }}
 			class="container absolute left-0 right-0 z-20 flex w-screen max-w-5xl justify-end"
 		>
-			<CheckBox title="or filter per performance" on:change={handleCheckboxChange} />
+			{#if $filters.or.length > 1}
+				<CheckBox
+					title={$LL.filters.filter.checkboxPerformanceEvent()}
+					on:change={handleCheckboxChange}
+				/>
+			{/if}
 		</div>
 		<div
 			on:mouseover={handleMouseOver}

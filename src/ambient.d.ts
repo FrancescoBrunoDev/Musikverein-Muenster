@@ -30,7 +30,7 @@ type filtersCount = {
 	[key: string]: number;
 };
 
-type Entities = 'series' | 'location' | 'corporation' | 'person' | 'work';
+type Entity = 'location' | 'corporation' | 'person' | 'work';
 
 type AutocompleteResult = [string, string, string];
 
@@ -56,7 +56,7 @@ type EventPerformance = {
 	work: number;
 	order: number;
 	composers?: Composer[];
-	persons: ({ person: number; mediums: { subject: number; }[]; } | { person: number; mediums?: undefined; })[];
+	persons: Person[];
 };
 
 type EventLocation = {
@@ -99,8 +99,6 @@ type Titles = {
 };
 
 type KindKey = 'performances' | 'persons' | 'locations' | 'corporations';
-
-type KindType = 'work' | 'person' | 'location' | 'corporation';
 
 type allTitles = {
 	work: Titles[];

@@ -35,7 +35,7 @@
 		if ($filters.or && $filters.or.length === 0 && $filters.and && $filters.and.length === 0) {
 			arrayEventsPerFilter.push({
 				text: `All Events: ${dataSingleYear.eventCount}`,
-				color: 'hsl(var(--primary)'
+				color: 'hsl(var(--text)'
 			});
 		} else {
 			if ($filters.or.length > 0) {
@@ -47,13 +47,13 @@
 				});
 				arrayEventsPerFilter.push({
 					text: `Or Filter: ${dataSingleYear.filters['or'].count}`,
-					color: 'hsl(var(--primary)'
+					color: 'hsl(var(--text)'
 				});
 			}
 			if ($filters.and.length > 0) {
 				arrayEventsPerFilter.push({
 					text: `And Filter: ${dataSingleYear.filters['and'].count}`,
-					color: 'hsl(var(--primary)'
+					color: 'hsl(var(--text)'
 				});
 			}
 		}
@@ -86,7 +86,7 @@
 					if ($filters.and.length > 0) {
 						const andFilter = {
 							name: 'and',
-							color: 'hsl(var(--primary)',
+							color: 'hsl(var(--text)',
 							id: 0,
 							entity: 'and'
 						};
@@ -99,7 +99,7 @@
 					if ($filters.or.length > 0) {
 						const orFilter = {
 							name: 'or',
-							color: 'hsl(var(--primary)',
+							color: 'hsl(var(--text)',
 							id: 0,
 							entity: 'or'
 						};
@@ -108,7 +108,7 @@
 					if ($filters.and.length > 0) {
 						const andFilter = {
 							name: 'and',
-							color: 'hsl(var(--primary)',
+							color: 'hsl(var(--text)',
 							id: 0,
 							entity: 'and'
 						};
@@ -119,7 +119,7 @@
 				}
 			} else {
 				y = (dataSingleYear: DataRecordCoordinates) => dataSingleYear.eventCount;
-				colorLine = 'hsl(var(--primary)';
+				colorLine = 'hsl(var(--text)';
 			}
 
 			data = $filteredEventsForGraph;

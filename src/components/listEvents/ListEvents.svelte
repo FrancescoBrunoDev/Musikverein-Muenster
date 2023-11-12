@@ -53,7 +53,7 @@
 		{#each Object.keys($filteredEvents) as year}
 			<div class="flex flex-col overflow-x-hidden">
 				<div class="flex flex-row gap-2 align-middle">
-					<div class="text-2xl">{year}</div>
+					<div class="text-7xl">{year}</div>
 					<div>{$filteredEvents[year].length}</div>
 				</div>
 				<div class="flex items-start gap-2 flex-wrap pb-4 leading-tight">
@@ -70,7 +70,7 @@
 	<div class="fixed bottom-0 flex h-fit w-screen justify-center">
 		<div
 			transition:fly={{ y: y, duration: 500, easing: cubicOut }}
-			class="fixed bottom-0 flex h-fit w-fit flex-col justify-center rounded-tl-xl rounded-tr-xl bg-secondary/90 p-5 pt-1 backdrop-blur-sm dark:bg-background/90"
+			class="fixed bottom-0 flex h-fit w-fit flex-col justify-center rounded-tl-xl rounded-tr-xl bg-primary/70 p-5 pt-1 backdrop-blur-sm dark:bg-background/90"
 		>
 			<button on:click={toggleSearchSection} class="flex h-fit w-full items-center justify-center">
 				<ChevronUp

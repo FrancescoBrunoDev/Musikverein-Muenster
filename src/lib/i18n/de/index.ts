@@ -2,14 +2,37 @@ import type { Translation } from '../i18n-types';
 
 const de = {
 	// this is an example Translation, just rename or delete this folder if you want
-	HI: 'Hallo {name}! Bitte hinterlasse einen Stern, wenn dir das Projekt gefällt: https://github.com/ivanhofer/typesafe-i18n',
-	search: 'Suche',
-	toggle_label: 'Sprache ändern',
-	orMethod: 'oder',
-	andMethod: 'und',
-	notMethod: 'nicht',
-	menu: 'Menü',
-	home: 'Home',
+	filters: {
+		search: 'Suche',
+		methods: {
+			or: 'oder',
+			and: 'und',
+			not: 'nicht'
+		},
+		entities: {
+			person: 'Person',
+			work: 'Werk',
+			corporation: 'Körperschaft',
+			location: 'Ort',
+			performances: 'Aufführungen'
+		},
+		filter: {
+			checkboxPerformanceEvent: "zeige die 'oder' Ereignisse als Aufführungen im Graphen"
+		}
+	},
+	events: {
+		showAllPerformances: 'Zeige alle Aufführungen',
+		performedBy: 'Aufgeführt von'
+	},
+	navbar: {
+		menu: 'Menü',
+		home: 'Home',
+		timeline: 'Zeitleiste',
+		exibitions: 'Ausstellungen',
+		exibitionsNames: {
+			first: 'Erste Ausstellung'
+		}
+	}
 } satisfies Translation;
 
 export default de;

@@ -20,19 +20,19 @@
 >
 	<button
 		use:melt={$item('or')}
-		class="undeline text-secondary uppercase {$value === 'or'
+		class="undeline uppercase {$value === 'or'
 			? 'underline'
-			: 'no-underline'} decoration-4 ">{$LL.orMethod()}</button
+			: 'no-underline'} decoration-4 ">{$LL.filters.methods.or()}</button
 	>
 	<button
 		use:melt={$item('and')}
-		class="undeline text-secondary uppercase {$value === 'and' ? 'underline' : 'no-underline'} decoration-4"
-		>{$LL.andMethod()}</button
+		class="undeline uppercase {$value === 'and' ? 'underline' : 'no-underline'} decoration-4"
+		>{$LL.filters.methods.and()}</button
 	>
 	<button
 		use:melt={$item('not')}
-		class="undeline text-secondary uppercase {$value === 'not'
+		class="undeline uppercase {$value === 'not'
 			? 'underline'
-			: 'no-underline'} decoration-4">{$LL.notMethod()}</button
+			: 'no-underline'} decoration-4">{$LL.filters.methods.not()}</button
 	>
 </div>

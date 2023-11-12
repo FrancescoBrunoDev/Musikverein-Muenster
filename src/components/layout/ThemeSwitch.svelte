@@ -20,7 +20,7 @@
 <button
 	use:melt={$root}
 	aria-label="Toggle italic"
-	class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary transition-all hover:scale-105 hover:drop-shadow-xl dark:bg-primary dark:text-secondary"
+	class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary transition-all hover:scale-hover hover:drop-shadow-xl dark:bg-primary"
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

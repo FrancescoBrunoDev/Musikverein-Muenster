@@ -37,7 +37,7 @@
 	}
 </script>
 
-<div>
+<div class="subpixel-antialiased">
 	<div class="grid h-screen justify-items-center">
 		<NavBar {value} {handleLocaleChange} />
 		<slot />

@@ -1,15 +1,37 @@
-import type { BaseTranslation } from '../i18n-types'
+import type { BaseTranslation } from '../i18n-types';
 
 const en = {
-	// TODO: your translations go here
-	HI: 'Hi {name:string}! Please leave a star if you like this project: https://github.com/ivanhofer/typesafe-i18n',
-	search: "Search",
-	toggle_label: "Change language",
-	orMethod: 'or',
-	andMethod: 'and',
-	notMethod: 'not',
-	menu: 'Menu',
-	home: 'Home',
-} satisfies BaseTranslation
+	filters: {
+		search: 'Search',
+		methods: {
+			or: 'or',
+			and: 'and',
+			not: 'not'
+		},
+		entities: {
+			person: 'Person',
+			work: 'Work',
+			corporation: 'Corporation',
+			location: 'Location',
+			performances: 'Performances'
+		},
+		filter: {
+			checkboxPerformanceEvent: "show the 'or' events as performances in the graph"
+		}
+	},
+	events: {
+		showAllPerformances: 'Show all performances',
+		performedBy: 'Performed by'
+	},
+	navbar: {
+		menu: 'Menu',
+		home: 'Home',
+		timeline: 'Timeline',
+		exibitions: 'Exibitions',
+		exibitionsNames: {
+			first: 'First Exibition'
+		}
+	}
+} satisfies BaseTranslation;
 
-export default en
+export default en;

@@ -15,37 +15,20 @@ export default {
 		extend: {
 			colors: {
 				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
+				text: 'hsl(var(--text))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: 'hsl(var(--primary))'
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
+					DEFAULT: 'hsl(var(--secondary))'
 				},
 				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
+					DEFAULT: 'hsl(var(--destructive))'
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
-				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
-				},
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
+					DEFAULT: 'hsl(var(--accent))'
 				}
 			},
 			borderRadius: {
@@ -53,8 +36,11 @@ export default {
 				md: `calc(var(--radius) - 2px)`,
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			scale: {
+				hover: '1.01'
+			},
 			fontFamily: {
-				sans: ['Outfit', 'sans-serif'],
+				sans: ['Outfit', 'sans-serif']
 			},
 			keyframes: {
 				'accordion-down': {

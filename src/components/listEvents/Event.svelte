@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LL from '$lib/i18n/i18n-svelte';
 	import EventPerformances from './EventPerformances.svelte';
 	import { getTitle } from '$stores/storeEvents';
 	import { filters, filteredEvents } from '$stores/storeFilters';
@@ -61,7 +62,7 @@
 					case 'work':
 					case 'person':
 						event.performances.forEach((performance) => {
-							if (filter.entity === 'composer') {
+							if (filter.entity === 'composer' && performance.composers) {
 								incrementCounter(
 									filter.id,
 									performance.composers && filter.id == performance.composers[0].person
@@ -144,7 +145,7 @@
 		<div class="flex w-80 flex-col gap-4 p-2">
 			{#if event.corporations}
 				<div>
-					<div class="text-base font-bold dark:font-semibold">Corporations</div>
+					<div class="text-base font-bold dark:font-semibold">{$LL.filters.entities.corporation()}</div>
 					{#each event.corporations as corporation}
 						{#if corporation.subject == 2}
 							{#await getTitle(corporation.corporation, 'corporation') then title}
@@ -169,9 +170,9 @@
 				</div>
 			{/if}
 			<div>
-				<div class="w-full text-base font-bold dark:font-semibold">Performances</div>
+				<div class="w-full text-base font-bold dark:font-semibold">{$LL.filters.entities.performances()}</div>
 				{#if event.performances}
-					<div class="flex flex-col gap-1 divide-y-2 divide-primary dark:divide-secondary">
+					<div class="flex flex-col gap-1 divide-y-2 divide-primary dark:divide-secondary dark:font-light">
 						<EventPerformances {event} />
 					</div>
 				{/if}
