@@ -14,7 +14,7 @@
 	} = createToggle({
 		onPressedChange: toggleMenu
 	});
-	$: console.log($themeKind);
+	
 </script>
 
 <button
@@ -36,14 +36,14 @@
 	>
 		{#if $themeKind === 'dark'}
 			<path
-				in:draw={{ duration: 1500, easing: expoInOut, delay: 750 }}
-				out:draw={{ duration: 1500, easing: expoInOut }}
+				in:draw={{ duration: 1000, easing: expoInOut, delay: 500 }}
+				out:draw={{ duration: 1000, easing: expoInOut }}
 				d="M 2 12 a 10 10 0 1 0 20 0 a 10 10 0 1 0 -20 0"
 				transform="translate(12, 12) rotate(90) translate(-12, -12)"
 			/>
 		{:else}<path
-				in:draw={{ duration: 1500, easing: expoInOut, delay: 750 }}
-				out:draw={{ duration: 1500, easing: expoInOut }}
+				in:draw={{ duration: 1000, easing: expoInOut, delay: 500 }}
+				out:draw={{ duration: 1000, easing: expoInOut }}
 				d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"
 			/>
 		{/if}</svg

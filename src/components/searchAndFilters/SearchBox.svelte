@@ -23,7 +23,7 @@
 
 <div class="flex w-full items-center gap-2">
 	<div
-		class="flex w-full items-center rounded-full bg-secondary drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary"
+		class="flex w-full items-center rounded-full bg-secondary dark:bg-primary drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary"
 	>
 		<MethodSearch />
 		<input
@@ -52,8 +52,8 @@
 			}}
 			class={'hover:scale-hover rounded-full px-4 pb-[0.15rem] text-sm transition-shadow hover:drop-shadow-lg ' +
 				($entitiesForSearchBox.includes(entity)
-					? 'bg-primary text-background'
-					: 'text-text bg-secondary')}
+					? 'bg-secondary text-text'
+					: 'bg-transparent text-text')}
 		>
 			{$LL.filters.entities[entity]()}
 		</button>
