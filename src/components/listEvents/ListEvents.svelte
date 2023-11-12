@@ -14,7 +14,7 @@
 
 	let container: HTMLElement;
 	let marginButtonListEvents: string = '50px';
-	export let y = $isSearchSectionInEventsList ? 0 : -0;
+	const y = $isSearchSectionInEventsList ? 0 : -0;
 
 	function toggleSearchSection() {
 		$isSearchSectionInEventsListOpen = !$isSearchSectionInEventsListOpen;
