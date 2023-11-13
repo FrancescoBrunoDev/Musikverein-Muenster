@@ -101,11 +101,7 @@ type Titles = {
 type KindKey = 'performances' | 'persons' | 'locations' | 'corporations';
 
 type allTitles = {
-	work: Titles[];
-	person: Titles[];
-	location: Titles[];
-	corporation: Titles[];
-	timestamp?: string;
+    [K in Entity]: { [key: number]: { title: string } }
 };
 
 type Locales = Locales;

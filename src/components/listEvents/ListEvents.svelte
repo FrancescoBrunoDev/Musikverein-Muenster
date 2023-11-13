@@ -41,7 +41,7 @@
 
 		observer.observe(container);
 	});
-	$: console.log($isSearchSectionInEventsList);
+
 </script>
 
 <div

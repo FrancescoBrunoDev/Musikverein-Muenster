@@ -1,6 +1,7 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { fetchedEvents } from '$stores/storeEvents';
+import { getTitle } from '$stores/storeEvents';
 
 const filtersUrlified = writable<string>('');
 const filters = writable<Filters>({
@@ -31,7 +32,60 @@ const UpdateSelectedMethodFilter = (method: Method) => {
 	SelectedMethodFilter.set(method);
 };
 
+const ulifyerFilters = () => {
+	filters.subscribe((res) => {
+		const filtersOr = res.or.map((filter) => filter.id).join(',');
+		const filtersAnd = res.and.map((filter) => filter.id).join(',');
+		const filtersNot = res.not.map((filter) => filter.id).join(',');
+		const filtersString = `fo=${filtersOr}&fa=${filtersAnd}&fn=${filtersNot}`;
+		filtersUrlified.set(filtersString);
+	});
+};
 
+const deUrlifyerFilters = (filtersUrlified: string) => {
+	if (filtersUrlified === 'new') return;
+	if (
+		typeof filtersUrlified !== 'string' ||
+		!filtersUrlified.includes('&') ||
+		!filtersUrlified.includes('=')
+	) {
+		throw new Error('Invalid filtersUrlified format');
+	}
+
+	const filtersOr = filtersUrlified.split('&')[0]?.split('=')[1] ?? '';
+	const filtersAnd = filtersUrlified.split('&')[1]?.split('=')[1] ?? '';
+	const filtersNot = filtersUrlified.split('&')[2]?.split('=')[1] ?? '';
+	const filtersDe = {
+		or: filtersOr
+			.split(',')
+			.filter((id) => id)
+			.map((id) => ({
+				id: Number(id),
+				entity: 'person',
+				name: getTitle(Number(id), 'person'),
+				color: pickColor()
+			})),
+		and: filtersAnd
+			.split(',')
+			.filter((id) => id)
+			.map((id) => ({
+				id: Number(id),
+				entity: 'person',
+				name: getTitle(Number(id), 'person'),
+				color: pickColor()
+			})),
+		not: filtersNot
+			.split(',')
+			.filter((id) => id)
+			.map((id) => ({
+				id: Number(id),
+				entity: 'person',
+				name: getTitle(Number(id), 'person'),
+				color: pickColor()
+			}))
+	};
+	filters.set(filtersDe);
+};
 
 const pickColor = () => {
 	let _colorFilters: string[] = [];
@@ -187,5 +241,7 @@ export {
 	addFilterElement,
 	removeFilterElement,
 	updateEntitiesForSearchBox,
-	changeFilterPersonOrComposer
+	changeFilterPersonOrComposer,
+	ulifyerFilters,
+	deUrlifyerFilters
 };

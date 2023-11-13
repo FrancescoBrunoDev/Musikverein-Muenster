@@ -31,7 +31,9 @@
 </script>
 
 {#each event.performances as performance}
-	{#await getTitle(performance.work, 'work') then title}
+	{#await getTitle(performance.work, 'work')}
+		<p>Loading...</p>
+	{:then title}
 		{#if $filters.or.length === 0 && $filters.and.length === 0 && $filters.not.length === 0}
 			<span>{title} <EventPerformancesPersons {performance} /></span>
 		{:else if hasMatchingFilter(performance)}
@@ -53,7 +55,7 @@
 						{/if}
 					{/each}
 				</div>
-				<span>{title} <EventPerformancesPersons {performance} /></span>
+				<span>{title}<EventPerformancesPersons {performance} /></span>
 			</div>
 		{:else if isPerformanceOpen}
 			<span>{title} <EventPerformancesPersons {performance} /></span>

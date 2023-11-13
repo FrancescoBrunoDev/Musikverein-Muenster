@@ -21,11 +21,11 @@ const getTitles = async (events: Events) => {
 
 		await Promise.all(
 			uidTypes.map(async (kind) => {
-				const allUids = await getUids(kind, events);
+				const allUids = await getUidsPerEntity(kind, events);
 				const batches = Array.from({ length: Math.ceil(allUids.length / batchSize) }, (_, i) =>
 					allUids.slice(i * batchSize, i * batchSize + batchSize)
 				);
-		
+
 				await Promise.all(
 					batches.map(async (batch) => {
 						const uids = batch.join('|');
@@ -34,11 +34,12 @@ const getTitles = async (events: Events) => {
 						);
 						const json = await res.json();
 						const titles = json[kind];
-						allTitles = { ...allTitles, [kind]: titles };
+						allTitles = { ...allTitles, [kind]: { ...allTitles[kind], ...titles } };
 					})
 				);
 			})
 		);
+
 		return allTitles;
 	} catch (error) {
 		console.error(
@@ -48,7 +49,7 @@ const getTitles = async (events: Events) => {
 	}
 };
 
-const getUids = async (kind: Entity, FetchedEvents: Events) => {
+const getUidsPerEntity = async (kind: Entity, FetchedEvents: Events) => {
 	const uids = new Set();
 
 	for (const key in FetchedEvents) {

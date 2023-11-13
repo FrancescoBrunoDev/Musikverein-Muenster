@@ -1,7 +1,7 @@
 <script lang="ts">
 	import LL from '$lib/i18n/i18n-svelte';
 	import EventPerformances from './EventPerformances.svelte';
-	import { getTitle } from '$stores/storeEvents';
+	import { allTitles, getTitle } from '$stores/storeEvents';
 	import { filters, filteredEvents } from '$stores/storeFilters';
 	import { Circle } from 'lucide-svelte';
 	export let eventUid: number;
@@ -15,23 +15,6 @@
 			color: string;
 		};
 	} = {};
-
-	function allWorksAsString(performances: EventPerformance[]) {
-		let allWorkAsString = '';
-		if (!performances) return;
-		performances.forEach((performance) => {
-			if (performance.work) {
-				const workTitle = getTitle(performance.work, 'work');
-				// just take the first word after the first "(" and remove the "," that follows
-				const workTitleShort = workTitle ? workTitle.split('(')[1] : '';
-				allWorkAsString += `${workTitleShort}`;
-			}
-		});
-		if (allWorkAsString.length <= 30) {
-			allWorkAsString = allWorkAsString.repeat(2);
-		}
-		return allWorkAsString;
-	}
 
 	$: {
 		if ($filteredEvents) {
@@ -114,17 +97,9 @@
 			: 'hover:scale-hover flex flex-col justify-center gap-2 transition-all duration-100'
 	}`}
 >
-	{#if !isEventOpen}
-		<div
-			class="pointer-events-none absolute -bottom-20 -left-20 -right-20 -top-20 flex justify-center align-middle text-sm leading-none"
-		>
-			<div class="h-32 w-56 break-words">{allWorksAsString(event.performances)}</div>
-		</div>
-	{/if}
-
 	<button
 		on:click={() => handleClickEvent()}
-		class={`flex-shrink-0 flex-grow-0  font-bold ${
+		class={`z-10 flex-shrink-0 flex-grow-0 font-bold ${
 			isEventOpen
 				? 'relative left-0 right-0 top-0 h-fit w-80 border-b-2 border-background py-2'
 				: 'h-32 w-24'
