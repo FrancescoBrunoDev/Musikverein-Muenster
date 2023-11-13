@@ -16,6 +16,23 @@
 		};
 	} = {};
 
+	function allWorksAsString(performances: EventPerformance[]) {
+		let allWorkAsString = '';
+		if (!performances) return;
+		performances.forEach((performance) => {
+			if (performance.work) {
+				const workTitle = getTitle(performance.work, 'work');
+				// just take the first word after the first "(" and remove the "," that follows
+				const workTitleShort = workTitle ? workTitle.split('(')[1] : '';
+				allWorkAsString += `${workTitleShort}`;
+			}
+		});
+		if (allWorkAsString.length <= 30) {
+			allWorkAsString = allWorkAsString.repeat(2);
+		}
+		return allWorkAsString;
+	}
+
 	$: {
 		if ($filteredEvents) {
 			Object.keys($filteredEvents).forEach((year) => {
@@ -30,7 +47,6 @@
 				date = date.replaceAll('00.00', '?');
 			}
 		}
-		// clean the filtersArrayWithCounter
 		filtersArrayWithCounter = {};
 		countFilters();
 	}
@@ -92,18 +108,29 @@
 </script>
 
 <div
-	class={`w-fit rounded-xl bg-secondary  ${
-		isEventOpen ? 'flex h-fit flex-shrink-0 flex-col' : 'flex flex-col justify-center gap-2 transition-all duration-100 hover:scale-hover'
+	class={`relative w-fit overflow-hidden rounded-xl border-2 border-secondary bg-secondary ${
+		isEventOpen
+			? 'flex h-fit flex-shrink-0 flex-col'
+			: 'hover:scale-hover flex flex-col justify-center gap-2 transition-all duration-100'
 	}`}
 >
+	{#if !isEventOpen}
+		<div
+			class="pointer-events-none absolute -bottom-20 -left-20 -right-20 -top-20 flex justify-center align-middle text-sm leading-none"
+		>
+			<div class="h-32 w-56 break-words">{allWorksAsString(event.performances)}</div>
+		</div>
+	{/if}
+
 	<button
 		on:click={() => handleClickEvent()}
 		class={`flex-shrink-0 flex-grow-0  font-bold ${
 			isEventOpen
-				? 'border-text relative left-0 right-0 top-0 h-fit w-80 border-b-2 py-2'
+				? 'relative left-0 right-0 top-0 h-fit w-80 border-b-2 border-background py-2'
 				: 'h-32 w-24'
 		}`}
 		>{date}
+
 		{#if !isEventOpen}
 			<div class="flex flex-wrap justify-center gap-2">
 				{#each Object.keys(filtersArrayWithCounter) as key}
@@ -174,9 +201,7 @@
 					{$LL.filters.entities.performances()}
 				</div>
 				{#if event.performances}
-					<div
-						class="flex flex-col gap-1 divide-y-2 divide-text dark:font-light"
-					>
+					<div class="flex flex-col gap-1 divide-y-2 divide-background dark:font-light">
 						<EventPerformances {event} />
 					</div>
 				{/if}

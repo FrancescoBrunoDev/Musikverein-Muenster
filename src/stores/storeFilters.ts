@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { fetchedEvents } from '$stores/storeEvents';
 
+const filtersUrlified = writable<string>('');
 const filters = writable<Filters>({
 	and: [],
 	or: [],
@@ -29,6 +30,8 @@ const entitiesForSearchBox = writable<Entity[]>(['person', 'corporation', 'work'
 const UpdateSelectedMethodFilter = (method: Method) => {
 	SelectedMethodFilter.set(method);
 };
+
+
 
 const pickColor = () => {
 	let _colorFilters: string[] = [];
@@ -179,6 +182,7 @@ export {
 	filters,
 	filteredEvents,
 	entitiesForSearchBox,
+	filtersUrlified,
 	UpdateSelectedMethodFilter,
 	addFilterElement,
 	removeFilterElement,

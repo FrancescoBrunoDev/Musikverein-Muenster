@@ -2,9 +2,7 @@
 	import LL from '$lib/i18n/i18n-svelte';
 	import { fly } from 'svelte/transition';
 	import { quintInOut } from 'svelte/easing';
-	import { toggleDarkMode } from '$stores/storeTheme';
 	import { ArrowRight } from 'lucide-svelte';
-	import { Lightbulb } from 'lucide-svelte';
 	import LanguageSwitch from '$components/layout/LanguageSwitch.svelte';
 	import ThemeSwitch from '$components/layout/ThemeSwitch.svelte';
 
@@ -49,7 +47,7 @@
 							<a
 								class="transition-transform duration-75 hover:-translate-y-1"
 								on:click={() => toggleMenu()}
-								href="/timeline">{$LL.navbar.timeline()}</a
+								href="/timeline/new">{$LL.navbar.timeline()}</a
 							>
 
 							<a

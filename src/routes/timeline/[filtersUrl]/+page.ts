@@ -1,4 +1,5 @@
 import type { PageLoad } from './$types';
+import { joinEventByYear } from '$lib/dataMusiconn';
 
 const kindMapping: { [key in Entity]: { key: string; uid: string } } = {
 	work: { key: 'performances', uid: 'work' },
@@ -16,15 +17,26 @@ const getTitles = async (events: Events) => {
 			location: [],
 			corporation: []
 		};
+		const batchSize = 300;
+
 		await Promise.all(
 			uidTypes.map(async (kind) => {
-				const uids = await getUids(kind, events).then((res) => res.join('|'));
-				const res = await fetch(
-					`https://performance.musiconn.de/api?action=get&${kind}=${uids}&props=title&format=json`
+				const allUids = await getUids(kind, events);
+				const batches = Array.from({ length: Math.ceil(allUids.length / batchSize) }, (_, i) =>
+					allUids.slice(i * batchSize, i * batchSize + batchSize)
 				);
-				const json = await res.json();
-				const titles = json[kind];
-				allTitles = { ...allTitles, [kind]: titles };
+		
+				await Promise.all(
+					batches.map(async (batch) => {
+						const uids = batch.join('|');
+						const res = await fetch(
+							`https://performance.musiconn.de/api?action=get&${kind}=${uids}&props=title&format=json`
+						);
+						const json = await res.json();
+						const titles = json[kind];
+						allTitles = { ...allTitles, [kind]: titles };
+					})
+				);
 			})
 		);
 		return allTitles;
@@ -56,12 +68,12 @@ const getUids = async (kind: Entity, FetchedEvents: Events) => {
 	return Array.from(uids);
 };
 
-export const load: PageLoad = async ({ fetch }) => {
+export const load: PageLoad = async ({ fetch, params }) => {
+	const { filtersUrl } = params;
 	let events: Events = {};
 	let allTitles;
 	try {
-		const res = await fetch(`/api/musiconn/joinEventByYear`);
-		events = await res.json();
+		events = await joinEventByYear();
 		allTitles = await getTitles(events);
 	} catch (error) {
 		console.error('An error occurred while fetching events:', error);
@@ -70,7 +82,8 @@ export const load: PageLoad = async ({ fetch }) => {
 	return {
 		props: {
 			events: events,
-			allTitles: allTitles
+			allTitles: allTitles,
+			filtersUrl: filtersUrl
 		}
 	};
 };

@@ -8,6 +8,7 @@
 	import { showLinesAsPerformances } from '$stores/storeGraph';
 	import { fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+	import FiltersShareButton from '$components/filtersShareButton.svelte';
 
 	function handleCheckboxChange() {
 		$showLinesAsPerformances = !$showLinesAsPerformances;
@@ -78,4 +79,7 @@
 			<LineGraph />
 		</div>
 	{/if}
+	<div class="fixed bottom-3 right-3">
+		<FiltersShareButton />
+	</div>
 </div>

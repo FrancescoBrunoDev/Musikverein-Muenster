@@ -23,7 +23,7 @@
 
 <div
 	use:melt={$trigger}
-	class="flex items-center gap-1 rounded-full border border-primary py-1 px-3 text-xs hover:z-20 hover:drop-shadow-lg"
+	class="flex items-center gap-1 rounded-full border border-secondary py-1 px-3 text-xs hover:z-20 hover:drop-shadow-lg"
 >
 	{#if method === 'or' || method === 'and'}
 		<Circle class="-ml-1" fill={filter.color} size={10} stroke-opacity={0} />
