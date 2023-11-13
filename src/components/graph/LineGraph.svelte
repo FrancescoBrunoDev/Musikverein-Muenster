@@ -141,7 +141,7 @@
 				{data}
 				height={300}
 				scaleByDomain={true}
-				xDomain={[1840, 1910]}
+				xDomain={[1850, 1910]}
 				yDomain={[0, 30]}
 			>
 				<VisLine {x} {y} color={colorLine} fallbackValue={0} />
