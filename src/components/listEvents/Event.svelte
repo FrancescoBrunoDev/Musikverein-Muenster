@@ -1,7 +1,7 @@
 <script lang="ts">
 	import LL from '$lib/i18n/i18n-svelte';
 	import EventPerformances from './EventPerformances.svelte';
-	import { allTitles, getTitle } from '$stores/storeEvents';
+	import { getTitles, getTitleString, allTitles } from '$stores/storeEvents';
 	import { filters, filteredEvents } from '$stores/storeFilters';
 	import { Circle } from 'lucide-svelte';
 	export let eventUid: number;
@@ -36,6 +36,9 @@
 
 	function handleClickEvent() {
 		isEventOpen = !isEventOpen;
+		if (isEventOpen) {
+			getTitles(event);
+		}
 	}
 
 	function countFilters() {
@@ -131,7 +134,9 @@
 			<span class="text-sm dark:font-semibold">
 				{#if event.locations}
 					{#each event.locations as location}
-						{#await getTitle(location.location, 'location') then title}
+						{#await getTitleString(location.location, 'location')}
+							<div>loading</div>
+						{:then title}
 							{title}
 						{:catch error}
 							<div>Error: {error.message}</div>
@@ -150,7 +155,9 @@
 					</div>
 					{#each event.corporations as corporation}
 						{#if corporation.subject == 2}
-							{#await getTitle(corporation.corporation, 'corporation') then title}
+							{#await getTitleString(corporation.corporation, 'corporation')}
+								<div>loading</div>
+							{:then title}
 								<div class="flex items-center gap-1">
 									{#each Object.values($filters).flat() as filter}
 										{#if filter.entity === 'corporation' && filter.id == corporation.corporation}

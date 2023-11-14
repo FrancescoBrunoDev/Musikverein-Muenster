@@ -1,7 +1,6 @@
 import { get, writable } from 'svelte/store';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
-import { fetchedEvents } from '$stores/storeEvents';
-import { getTitle } from '$stores/storeEvents';
+import { getTitleString, getTitle, fetchedEvents } from '$stores/storeEvents';
 
 const filtersUrlified = writable<string>('');
 const filters = writable<Filters>({
@@ -34,15 +33,15 @@ const UpdateSelectedMethodFilter = (method: Method) => {
 
 const ulifyerFilters = () => {
 	filters.subscribe((res) => {
-		const filtersOr = res.or.map((filter) => filter.id).join(',');
-		const filtersAnd = res.and.map((filter) => filter.id).join(',');
-		const filtersNot = res.not.map((filter) => filter.id).join(',');
+		const filtersOr = res.or.map((filter) => `${filter.entity}:${filter.id}`).join(',');
+		const filtersAnd = res.and.map((filter) => `${filter.entity}:${filter.id}`).join(',');
+		const filtersNot = res.not.map((filter) => `${filter.entity}:${filter.id}`).join(',');
 		const filtersString = `fo=${filtersOr}&fa=${filtersAnd}&fn=${filtersNot}`;
 		filtersUrlified.set(filtersString);
 	});
 };
 
-const deUrlifyerFilters = (filtersUrlified: string) => {
+const deUrlifyerFilters = async (filtersUrlified: string) => {
 	if (filtersUrlified === 'new') return;
 	if (
 		typeof filtersUrlified !== 'string' ||
@@ -52,39 +51,65 @@ const deUrlifyerFilters = (filtersUrlified: string) => {
 		throw new Error('Invalid filtersUrlified format');
 	}
 
-	const filtersOr = filtersUrlified.split('&')[0]?.split('=')[1] ?? '';
-	const filtersAnd = filtersUrlified.split('&')[1]?.split('=')[1] ?? '';
-	const filtersNot = filtersUrlified.split('&')[2]?.split('=')[1] ?? '';
-	const filtersDe = {
-		or: filtersOr
-			.split(',')
-			.filter((id) => id)
-			.map((id) => ({
-				id: Number(id),
-				entity: 'person',
-				name: getTitle(Number(id), 'person'),
-				color: pickColor()
-			})),
-		and: filtersAnd
-			.split(',')
-			.filter((id) => id)
-			.map((id) => ({
-				id: Number(id),
-				entity: 'person',
-				name: getTitle(Number(id), 'person'),
-				color: pickColor()
-			})),
-		not: filtersNot
-			.split(',')
-			.filter((id) => id)
-			.map((id) => ({
-				id: Number(id),
-				entity: 'person',
-				name: getTitle(Number(id), 'person'),
-				color: pickColor()
-			}))
+	const filtersOr =
+		filtersUrlified
+			.split('&')[0]
+			?.split('=')[1]
+			?.split(',')
+			.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] })) ?? [];
+	const filtersAnd =
+		filtersUrlified
+			.split('&')[1]
+			?.split('=')[1]
+			?.split(',')
+			.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] })) ?? [];
+	const filtersNot =
+		filtersUrlified
+			.split('&')[2]
+			?.split('=')[1]
+			?.split(',')
+			.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] })) ?? [];
+
+	const filtersUrl = {
+		or: await Promise.all(
+			filtersOr
+				.filter((filter) => filter.id)
+				.map(async (filter) => ({
+					id: Number(filter.id),
+					entity: filter.entity,
+					name: `${await getTitle([filter.id], filter.entity).then(() =>
+						getTitleString(Number(filter.id), filter.entity)
+					)}`,
+					color: pickColor()
+				}))
+		),
+		and: await Promise.all(
+			filtersAnd
+				.filter((filter) => filter.id)
+				.map(async (filter) => ({
+					id: Number(filter.id),
+					entity: filter.entity,
+					name: `${await getTitle([filter.id], filter.entity).then(() =>
+						getTitleString(Number(filter.id), filter.entity)
+					)}`,
+					color: pickColor()
+				}))
+		),
+		not: await Promise.all(
+			filtersNot
+				.filter((filter) => filter.id)
+				.map(async (filter) => ({
+					id: Number(filter.id),
+					entity: filter.entity,
+					name: `${await getTitle([filter.id], filter.entity).then(() =>
+						getTitleString(Number(filter.id), filter.entity)
+					)}`,
+					color: pickColor()
+				}))
+		)
 	};
-	filters.set(filtersDe);
+	console.log(filtersUrl);
+	filters.set(filtersUrl);
 };
 
 const pickColor = () => {

@@ -12,12 +12,13 @@
 
 	fetchedEvents.set(data.props.events);
 
-	if (data.props.allTitles) {
-		allTitles.set(data.props.allTitles);
-	}
-
-	deUrlifyerFilters(data.props.filtersUrl);
-	updateFilteredEventsAndUdateDataForGraph();
+	deUrlifyerFilters(data.props.filtersUrl)
+		.then(() => {
+			updateFilteredEventsAndUdateDataForGraph();
+		})
+		.catch((error) => {
+			console.error('Error in deUrlifyerFilters:', error);
+		});
 </script>
 
 <Maintimeline />

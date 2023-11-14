@@ -8,7 +8,7 @@
 		heightSearchSection,
 		isSearchSectionInEventsListOpen
 	} from '$stores/storeSearchSection';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { ChevronUp } from 'lucide-svelte';
 

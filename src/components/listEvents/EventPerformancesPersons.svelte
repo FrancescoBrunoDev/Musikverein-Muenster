@@ -1,30 +1,26 @@
 <script lang="ts">
 	import LL from '$lib/i18n/i18n-svelte';
-	import { getTitle } from '$stores/storeEvents';
+	import { getTitleString } from '$stores/storeEvents';
 
 	export let performance: EventPerformance;
 
 	let isPersonOpen = false;
 
 	// make a function that join all the persons in a string with |
-	function joinPersons(persons: Person[]) {
-		let personsString = '';
-		persons.forEach((person, index) => {
-			const personTitle = getTitle(person.person, 'person');
-			if (index === 0) {
-				personsString += personTitle;
-			} else {
-				personsString += ` | ${personTitle}`;
-			}
-		});
-		return personsString;
+	async function joinPersons(persons: Person[]) {
+		const titles = await Promise.all(persons.map((person) => getTitleString(person.person, 'person')));
+		return titles.join(' | ');
 	}
 </script>
 
 <button
 	on:click={() => (isPersonOpen = !isPersonOpen)}
-	class="font-bold hover:scale-hover dark:font-semibold">{$LL.events.performedBy()}</button
+	class="hover:scale-hover font-bold dark:font-semibold">{$LL.events.performedBy()}</button
 >
 {#if isPersonOpen}
-	<span class="text-sm">{joinPersons(performance.persons)}</span>
+	{#await joinPersons(performance.persons)}
+		<div>load</div>
+	{:then title}
+		<span class="text-sm">{title}</span>
+	{/await}
 {/if}

@@ -2,7 +2,7 @@
 	import LL from '$lib/i18n/i18n-svelte';
 	import { Circle, ChevronUp } from 'lucide-svelte';
 	import { filters } from '$stores/storeFilters';
-	import { getTitle } from '$stores/storeEvents';
+	import { getTitleString } from '$stores/storeEvents';
 	import EventPerformancesPersons from '$components/listEvents/EventPerformancesPersons.svelte';
 	export let event: EventItem;
 
@@ -31,8 +31,8 @@
 </script>
 
 {#each event.performances as performance}
-	{#await getTitle(performance.work, 'work')}
-		<p>Loading...</p>
+	{#await getTitleString(performance.work, 'work')}
+		<div />
 	{:then title}
 		{#if $filters.or.length === 0 && $filters.and.length === 0 && $filters.not.length === 0}
 			<span>{title} <EventPerformancesPersons {performance} /></span>
