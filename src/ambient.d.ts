@@ -30,7 +30,7 @@ type filtersCount = {
 	[key: string]: number;
 };
 
-type Entity = 'location' | 'corporation' | 'person' | 'work';
+type Entity = 'location' | 'corporation' | 'person' | 'work' | 'composer';
 
 type AutocompleteResult = [string, string, string];
 
@@ -89,9 +89,9 @@ type Method = 'or' | 'not' | 'and';
 
 type Filter = {
 	name: string;
-	entity: string;
+	entity: Entity;
 	id: number;
-	color: string;
+	color?: string;
 };
 
 type Titles = {
@@ -101,7 +101,11 @@ type Titles = {
 type KindKey = 'performances' | 'persons' | 'locations' | 'corporations';
 
 type allTitles = {
-    [K in Entity]: { [key: number]: { title: string } }
+	[K in Entity]: { [key: number]: { title: string } };
+};
+
+type FiltersForUrl = {
+	[key: string]: string;
 };
 
 type Locales = Locales;

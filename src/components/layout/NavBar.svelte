@@ -47,7 +47,7 @@
 							<a
 								class="transition-transform duration-75 hover:-translate-y-1"
 								on:click={() => toggleMenu()}
-								href="/timeline/new">{$LL.navbar.timeline()}</a
+								href="/timeline">{$LL.navbar.timeline()}</a
 							>
 
 							<a

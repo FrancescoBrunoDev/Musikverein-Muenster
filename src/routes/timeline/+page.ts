@@ -1,8 +1,7 @@
 import type { PageLoad } from './$types';
 import { joinEventByYear } from '$lib/dataMusiconn';
 
-export const load: PageLoad = async ({ fetch, params }) => {
-	const { filtersUrl } = params;
+export const load: PageLoad = async () => {
 	let events: Events = {};
 	try {
 		events = await joinEventByYear();
@@ -12,8 +11,7 @@ export const load: PageLoad = async ({ fetch, params }) => {
 
 	return {
 		props: {
-			events: events,
-			filtersUrl: filtersUrl
+			events: events
 		}
 	};
 };

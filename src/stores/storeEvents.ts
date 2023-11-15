@@ -5,18 +5,20 @@ const allTitles = writable<allTitles>({
 	work: {},
 	person: {},
 	location: {},
-	corporation: {}
+	corporation: {},
+	composer: {},
 });
 
 const kindMapping: { [key in Entity]: { key: string; uid: string } } = {
 	work: { key: 'performances', uid: 'work' },
 	person: { key: 'persons', uid: 'person' },
 	location: { key: 'locations', uid: 'location' },
-	corporation: { key: 'corporations', uid: 'corporation' }
+	corporation: { key: 'corporations', uid: 'corporation' },
+	composer: { key: 'composers', uid: 'person' }
 };
 
 const getTitles = async (event: EventItem) => {
-	const uidTypes: Entity[] = ['work', 'person', 'location', 'corporation'];
+	const uidTypes: Entity[] = ['work', 'person', 'location', 'corporation', 'composer'];
 	try {
 		await Promise.all(
 			uidTypes.map(async (kind) => {
@@ -44,13 +46,17 @@ const getTitles = async (event: EventItem) => {
 };
 
 const getTitle = async (allUids: string[], kind: Entity) => {
-	console.log(allUids)
+	let kindForApi: Entity = kind;
+	if (kind === 'composer') {
+		kindForApi = 'person';
+	}
 	const uids = allUids.length > 1 ? allUids.join('|') : allUids[0];
 	const res = await fetch(
-		`https://performance.musiconn.de/api?action=get&${kind}=${uids}&props=title&format=json`
+		`https://performance.musiconn.de/api?action=get&${kindForApi}=${uids}&props=title&format=json`
 	);
 	const json = await res.json();
-	const titles = json[kind];
+	const titles = json[kindForApi];
+	console.log(titles)
 	allTitles.update((allTitlesMom) => {
 		allTitlesMom[kind] = { ...allTitlesMom[kind], ...titles };
 		return allTitlesMom;
@@ -77,7 +83,8 @@ const getTitleString = (uid: number, kind: Entity): Promise<string> => {
 			work: {},
 			person: {},
 			location: {},
-			corporation: {}
+			corporation: {},
+			composer: {}
 		};
 		const intervalId = setInterval(() => {
 			allTitles.subscribe((res) => {
