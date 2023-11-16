@@ -53,7 +53,7 @@
 				if (!filtersArrayWithCounter.hasOwnProperty(filter.id)) {
 					filtersArrayWithCounter[filter.id] = {
 						counter: 0,
-						color: filter.color
+						color: filter.color || '',
 					};
 				}
 

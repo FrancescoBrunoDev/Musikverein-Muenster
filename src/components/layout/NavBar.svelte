@@ -6,6 +6,13 @@
 	import LanguageSwitch from '$components/layout/LanguageSwitch.svelte';
 	import ThemeSwitch from '$components/layout/ThemeSwitch.svelte';
 
+	async function getExibitions() {
+		const response = await fetch('api/getExibitionMarkdown');
+		const exibitions: ExibitionMarkdown[] = await response.json();
+		console.log(exibitions);
+		return exibitions;
+	}
+
 	export let value: Locales;
 	export let handleLocaleChange: any;
 
@@ -36,7 +43,10 @@
 				}}
 				class="left-50 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-screen flex-col bg-background pb-10 pl-10"
 			>
-				<button on:click={() => toggleMenu()} class="mr-10 mt-20 self-end hover:scale-hover md:mr-20">
+				<button
+					on:click={() => toggleMenu()}
+					class="mr-10 mt-20 self-end hover:scale-hover md:mr-20"
+				>
 					<ArrowRight size={100} color="hsl(var(--text)" /></button
 				>
 				<div class="flex h-full items-end justify-between pr-10 md:pr-20">
@@ -53,12 +63,17 @@
 							<a
 								class="group transition-transform duration-75 hover:-translate-y-1"
 								on:click={() => toggleMenu()}
-								href="/austellung">{$LL.navbar.exibitions()}</a
+								href="/exibitions">{$LL.navbar.exibitions()}</a
 							>
 							<ul class="pl-5">
-								<li class="text-xl transition-transform duration-75 hover:-translate-y-1">
-									{$LL.navbar.exibitionsNames.first()}
-								</li>
+								{#await getExibitions()}
+									<div></div>{:then exibitions}
+									{#each exibitions as exibition}
+										<li class="text-xl transition-transform duration-75 hover:-translate-y-1">
+											<a href="/exibitions/{exibition.slug}">{exibition.title}</a>
+										</li>
+									{/each}
+								{/await}
 							</ul>
 						</div>
 					</div>

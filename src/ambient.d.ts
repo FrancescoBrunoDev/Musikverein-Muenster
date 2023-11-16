@@ -111,3 +111,12 @@ type FiltersForUrl = {
 type Locales = Locales;
 
 type ThemeKind = 'base' | 'dark';
+
+type ExibitionMarkdown = {
+	title: string
+	slug: string
+	description: string
+	date: string
+	categories: Categories[]
+	published: boolean
+}
