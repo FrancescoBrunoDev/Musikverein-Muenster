@@ -13,7 +13,8 @@ const en = {
 			work: 'Work',
 			corporation: 'Corporation',
 			location: 'Location',
-			performances: 'Performances'
+			performances: 'Performances',
+			composer: 'Composer',
 		},
 		filter: {
 			checkboxPerformanceEvent: "show the 'or' events as performances in the graph"

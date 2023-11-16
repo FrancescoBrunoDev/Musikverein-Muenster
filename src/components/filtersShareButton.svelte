@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { filtersUrlified, urlifyerFilters } from '$stores/storeFilters';
+	import { filtersUrlified, urlifyerFilters, filters } from '$stores/storeFilters';
 	import { Share } from 'lucide-svelte';
 
 	let isMouseOver: boolean = false;
@@ -25,13 +25,15 @@
 </script>
 
 <!-- svelte-ignore a11y-mouse-events-have-key-events -->
-<button
-	on:mouseover={handleMouseOver}
-	on:mouseout={handleMouseOut}
-	aria-label="Toggle italic"
-	class="z-30 flex h-10 w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-secondary px-2 drop-shadow transition-all hover:scale-hover hover:drop-shadow-xl dark:bg-primary"
-	on:click={() => handleClick()}
->
-	{#if isMouseOver}<span class="pl-1">{text}</span>
-	{/if}<Share />
-</button>
+{#if $filters.or.length > 0 || $filters.and.length > 0 || $filters.not.length > 0}
+	<button
+		on:mouseover={handleMouseOver}
+		on:mouseout={handleMouseOut}
+		aria-label="Toggle italic"
+		class="z-30 flex h-fit w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-secondary p-2 drop-shadow transition-all hover:scale-hover hover:drop-shadow-xl dark:bg-primary"
+		on:click={() => handleClick()}
+	>
+		{#if isMouseOver}<span class="pl-1 text-sm">{text}</span>
+		{/if}<Share size={20} />
+	</button>
+{/if}

@@ -14,7 +14,8 @@ const de = {
 			work: 'Werk',
 			corporation: 'Körperschaft',
 			location: 'Ort',
-			performances: 'Aufführungen'
+			performances: 'Aufführungen',
+			composer: 'Komponist',
 		},
 		filter: {
 			checkboxPerformanceEvent: "zeige die 'oder' Ereignisse als Aufführungen im Graphen"

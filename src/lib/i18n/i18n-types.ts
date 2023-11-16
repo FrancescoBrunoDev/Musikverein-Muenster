@@ -54,6 +54,10 @@ type RootTranslation = {
 			 * P​e​r​f​o​r​m​a​n​c​e​s
 			 */
 			performances: string
+			/**
+			 * C​o​m​p​o​s​e​r
+			 */
+			composer: string
 		}
 		filter: {
 			/**
@@ -139,6 +143,10 @@ export type TranslationFunctions = {
 			 * Performances
 			 */
 			performances: () => LocalizedString
+			/**
+			 * Composer
+			 */
+			composer: () => LocalizedString
 		}
 		filter: {
 			/**
