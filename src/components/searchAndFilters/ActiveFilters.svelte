@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { filters } from '$stores/storeFilters';
 	import FilterGroup from '$components/searchAndFilters/FilterGroup.svelte';
-	import FiltersShareButton from '$components/filtersShareButton.svelte';
+	import FiltersShareButton from '$components/FiltersShareButton.svelte';
 	type GroupedFilters = { [key: string]: Filter[] };
 
 	let groupedFiltersOR: GroupedFilters;

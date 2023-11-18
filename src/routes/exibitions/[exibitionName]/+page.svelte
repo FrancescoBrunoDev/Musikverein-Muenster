@@ -9,12 +9,13 @@
 	<meta property="og:title" content={data.meta.title} />
 </svelte:head>
 
-<section class="flex h-screen items-center">
-	<div class="flex flex-col">
-		<!-- Title -->
-		<hgroup class="text-4xl">
-			<h1>{data.meta.title}</h1>
-		</hgroup>
+<section>
+	<!-- Title -->
+	<div
+		class="flex h-screen w-screen items-center bg-cover bg-center"
+		style="background-image: url('{data.meta.img}')"
+	>
+		<h1 class="text-8xl">{data.meta.title}</h1>
 
 		<!-- Tags -->
 		<div class="flex gap-2">
@@ -24,8 +25,8 @@
 		</div>
 
 		<!-- exibition -->
-		<div class="prose">
-			<svelte:component this={data.content} />
-		</div>
+	</div>
+	<div class="container mx-auto max-w-6xl">
+		<svelte:component this={data.content} />
 	</div>
 </section>

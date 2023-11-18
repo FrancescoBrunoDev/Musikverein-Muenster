@@ -7,9 +7,8 @@
 	<title>{config.title}</title>
 </svelte:head>
 
-<!-- Posts -->
 <section class="flex h-screen items-center">
-	<ul class="posts">
+	<ul>
 		{#each data.exibitions as exibition}
 			<li class="post">
 				<a href="/exibitions/{exibition.slug}" class="text-5xl">{exibition.title}</a>

@@ -5,7 +5,6 @@ async function getexibitions() {
 	let exibitions: ExibitionMarkdown[] = []
 
 	const paths = import.meta.glob('/src/routes/exibitions/markdown/*.md', { eager: true })
-    console.log(paths)
 	for (const path in paths) {
 		const file = paths[path]
 		const slug = path.split('/').at(-1)?.replace('.md', '')
