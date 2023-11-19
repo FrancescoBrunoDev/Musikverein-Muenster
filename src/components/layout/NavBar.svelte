@@ -7,7 +7,7 @@
 	import ThemeSwitch from '$components/layout/ThemeSwitch.svelte';
 
 	async function getExibitions() {
-		const response = await fetch('api/exibitions/getMarkdown');
+		const response = await fetch('/api/exibitions/getMarkdown');
 		const exibitions: ExibitionMarkdown[] = await response.json();
 		console.log(exibitions);
 		return exibitions;
