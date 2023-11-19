@@ -21,7 +21,6 @@
 		isMouseOver = false;
 	}
 
-	$: console.log('isMouseOver:', isMouseOver);
 </script>
 
 <!-- svelte-ignore a11y-mouse-events-have-key-events -->
