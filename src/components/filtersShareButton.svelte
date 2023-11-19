@@ -23,11 +23,13 @@
 
 </script>
 
-<!-- svelte-ignore a11y-mouse-events-have-key-events -->
+
 {#if $filters.or.length > 0 || $filters.and.length > 0 || $filters.not.length > 0}
 	<button
 		on:mouseover={handleMouseOver}
 		on:mouseout={handleMouseOut}
+		on:focus={handleMouseOver}
+        on:blur={handleMouseOut}
 		aria-label="Toggle italic"
 		class="z-30 flex h-fit w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-secondary p-2 drop-shadow transition-all hover:scale-hover hover:drop-shadow-xl dark:bg-primary"
 		on:click={() => handleClick()}
