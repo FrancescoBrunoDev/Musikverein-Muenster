@@ -32,7 +32,7 @@ type filtersCount = {
 
 type Entity = 'location' | 'corporation' | 'person' | 'work' | 'composer';
 
-type AutocompleteResult = [string, string, string];
+type AutocompleteResult = [string, string, string] | [];
 
 type Store = {
 	selectedPerson: AutocompleteResult[];

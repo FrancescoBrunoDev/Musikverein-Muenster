@@ -1,4 +1,4 @@
-import { get, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { getTitleString, getTitle, fetchedEvents } from '$stores/storeEvents';
 
@@ -146,10 +146,13 @@ const addFilterElement = async (selected: any) => {
 	}
 
 	filters.update((currentFilters) => {
-		const filterExists = currentFilters[method as keyof Filters]?.some(
+		const filterExistsInMethod = currentFilters[method as keyof Filters]?.some(
 			(f) => f.id === filter.id && f.entity === filter.entity
 		);
-		if (filterExists) {
+		const filterExistsInNot = currentFilters['not'].some(
+			(f) => f.id === filter.id && f.entity === filter.entity
+		);
+		if (filterExistsInMethod || filterExistsInNot) {
 			return currentFilters;
 		} else {
 			const updatedFilters = { ...currentFilters };
@@ -161,13 +164,27 @@ const addFilterElement = async (selected: any) => {
 	updateFilteredEventsAndUdateDataForGraph();
 };
 
-const removeFilterElement = (selected: number, method: Method) => {
+const moveFilterElement = (selected: Filter, method: Method, moveTo: Method) => {
+	filters.update((currentFilters) => {
+		const index = currentFilters[method].findIndex((f) => f.id === selected.id && f.entity === selected.entity);
+		if (index === -1) {
+			return currentFilters;
+		}
+		const filterToMove = currentFilters[method][index];
+		currentFilters[method].splice(index, 1);
+		currentFilters[moveTo].push(filterToMove);
+		return currentFilters;
+	});
+	updateFilteredEventsAndUdateDataForGraph();
+}
+
+const removeFilterElement = (selected: Filter, method: Method) => {
 	let _colorFilters;
 	colorFilters.subscribe((res) => {
 		_colorFilters = res;
 	});
 	filters.update((currentFilters) => {
-		const index = currentFilters[method].findIndex((f) => f.id === selected);
+		const index = currentFilters[method].findIndex((f) => f.id === selected.id && f.entity === selected.entity);
 		if (index === -1) {
 			return currentFilters;
 		}
@@ -179,31 +196,24 @@ const removeFilterElement = (selected: number, method: Method) => {
 	updateFilteredEventsAndUdateDataForGraph();
 };
 
-const changeFilterPersonOrComposer = (selectedId: any, selectedEntity: any, method: Method) => {
+const changeFilterPersonOrComposer = (selected: Filter, method: Method) => {
 	filters.update((currentFilters) => {
 		const methodFilters = currentFilters[method];
 		if (!methodFilters) return currentFilters;
 
-		const filterToChange = methodFilters.find(
-			(f) => f.id === selectedId && f.entity === selectedEntity
-		);
-		if (!filterToChange) return currentFilters;
+		const newMethodFilters: Filter[] = methodFilters.map((f) => {
+			if (f.id === selected.id && f.entity === selected.entity) {
+				const newState = f.entity === 'person' ? 'composer' : 'person';
+				return { ...f, entity: newState };
+			}
+			return f;
+		});
 
-		const newState = filterToChange.entity === 'person' ? 'composer' : 'person';
-		filterToChange.entity = newState;
-
-		if (methodFilters.some((f) => f.id === selectedId && f.entity === newState)) {
-			const index = methodFilters.findIndex(
-				(f) => f.id === selectedId && f.entity === selectedEntity
-			);
-			if (index !== -1) methodFilters.splice(index, 1);
-		}
-
+		currentFilters[method] = newMethodFilters;
 		return currentFilters;
 	});
 	updateFilteredEventsAndUdateDataForGraph();
 };
-
 const isMoreAPersonOrAComposer = async (id: number) => {
 	const personId = id;
 	let _fetchedEvents: Events = await new Promise((resolve) => {
@@ -274,5 +284,6 @@ export {
 	updateEntitiesForSearchBox,
 	changeFilterPersonOrComposer,
 	urlifyerFilters,
-	deUrlifyerFilters
+	deUrlifyerFilters,
+	moveFilterElement
 };

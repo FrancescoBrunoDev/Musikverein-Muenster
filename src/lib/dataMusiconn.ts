@@ -1,4 +1,5 @@
-import { entitiesForSearchBox } from '$stores/storeFilters';
+import { entitiesForSearchBox, filters } from '$stores/storeFilters';
+import { suggestions } from '$stores/storeSearchSection';
 
 const MuensterID = 332; //307 (new 332) is the ID of Muenster in the musiconn database
 const API_URL = 'https://performance.musiconn.de/api';
@@ -39,7 +40,9 @@ const getAllEvents = async () => {
 
 		const fetchPromises = batches.map(async (batch: { event: string }[]) => {
 			const joinedEventIds = batch.map((eventObj) => eventObj.event).join('|');
-			const res = await fetch(`${API_URL}?action=get&event=${joinedEventIds}&props=uid|dates|locations|persons|performances|corporations&format=json`);
+			const res = await fetch(
+				`${API_URL}?action=get&event=${joinedEventIds}&props=uid|dates|locations|persons|performances|corporations&format=json`
+			);
 			return res.json();
 		});
 
@@ -80,23 +83,45 @@ const autocomplete = async (query: string) => {
 			resolve(res);
 		});
 	});
+	function setFilters(results: AutocompleteResult[]) {
+		filters.subscribe((filter: any) => {
+			const mapFilterItems = (items: Filter[]) =>
+				items.map((item) => ({
+					id: item.id,
+					entity: item.entity === 'composer' ? 'person' : item.entity
+				}));
+
+			const notFilterItems = mapFilterItems(filter.not);
+			const orFilterItems = mapFilterItems(filter.or);
+			const andFilterItems = mapFilterItems(filter.and);
+
+			const isFiltered = (result: any) => (item: any) =>
+				item.id == result[2] && item.entity == result[1];
+
+			const filteredResults = results.filter(
+				(result:AutocompleteResult) =>
+					![...notFilterItems, ...orFilterItems, ...andFilterItems].some(isFiltered(result))
+			);
+
+			suggestions.set(filteredResults);
+		});
+	}
 	const entities = _entitiesForSearchBox.join('|');
 	if (entities.length !== 0) {
 		try {
 			const res = await fetch(
-				`https://performance.musiconn.de/api?action=autocomplete&title=${query}&entities=${entities}&max=20&project=26&format=json`
+				`${API_URL}?action=autocomplete&title=${query}&entities=${entities}&max=20&project=26&format=json`
 			);
 			const results = await res.json();
-			return results;
+			setFilters(results);
 		} catch (error) {
 			console.error('Error fetching all events with the project id:', error);
 			try {
 				const res = await fetch(
-					`https://performance.musiconn.de/api?action=autocomplete&title=${query}&entities=${entities}&max=20&format=json`
+					`${API_URL}?action=autocomplete&title=${query}&entities=${entities}&max=20&format=json`
 				);
 				const results = await res.json();
-				console.log('results', results);
-				return results;
+				setFilters(results);
 			} catch (error) {
 				console.error('Error fetching all events with the project id:', error);
 				return [];

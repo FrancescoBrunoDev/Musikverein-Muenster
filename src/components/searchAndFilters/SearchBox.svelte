@@ -12,9 +12,7 @@
 	const handleInput = () => {
 		const value = $inputValue;
 		if (value.length > 0) {
-			autocomplete(value).then((response) => {
-				$suggestions = response;
-			});
+			autocomplete(value)
 		} else {
 			$suggestions = [];
 		}
@@ -43,9 +41,7 @@
 			on:click={() => {
 				updateEntitiesForSearchBox(entity);
 				if ($inputValue.length > 0) {
-					autocomplete($inputValue).then((response) => {
-						$suggestions = response;
-					});
+					autocomplete($inputValue);
 				} else {
 					$suggestions = [];
 				}
