@@ -11,7 +11,7 @@
 		or: [],
 		not: []
 	});
-	
+
 	fetchedEvents.set(data.props.events);
 
 	updateFilteredEventsAndUdateDataForGraph();

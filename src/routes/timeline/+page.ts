@@ -7,6 +7,7 @@ export const load: PageLoad = async () => {
 		events = await joinEventByYear();
 	} catch (error) {
 		console.error('An error occurred while fetching events:', error);
+		events = {};
 	}
 
 	return {

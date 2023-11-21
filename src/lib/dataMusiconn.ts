@@ -22,6 +22,7 @@ const getMuensterEventsAndChildLocation = async (locationId: number) => {
 
 		return events;
 	} catch (error) {
+		
 		console.error('Error fetching events and child locations:', error);
 		return [];
 	}

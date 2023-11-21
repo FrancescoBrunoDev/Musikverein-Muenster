@@ -31,6 +31,7 @@
 			bind:value={$inputValue}
 			on:input={handleInput}
 			placeholder={$LL.filters.search()}
+			autocomplete="off"
 		/>
 	</div>
 	<Info size={25} stroke-width={40} />

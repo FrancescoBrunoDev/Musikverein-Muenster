@@ -40,7 +40,6 @@ const getTitles = async (event: EventItem) => {
 	} catch (error) {
 		console.error(
 			'An error occurred while fetching titles, I will try to use the stored Titles:',
-			error
 		);
 	}
 };
@@ -56,7 +55,6 @@ const getTitle = async (allUids: string[], kind: Entity) => {
 	);
 	const json = await res.json();
 	const titles = json[kindForApi];
-	console.log(titles)
 	allTitles.update((allTitlesMom) => {
 		allTitlesMom[kind] = { ...allTitlesMom[kind], ...titles };
 		return allTitlesMom;
