@@ -8,6 +8,6 @@ export async function load({ params }) {
 			meta: exibition.metadata
 		};
 	} catch (e) {
-		throw error(404, `Could not find ${params.exibitionName}`); 
+		error(404, `Could not find ${params.exibitionName}`); 
 	}
 }
