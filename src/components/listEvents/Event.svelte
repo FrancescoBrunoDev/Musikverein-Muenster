@@ -1,9 +1,10 @@
 <script lang="ts">
 	import LL from '$lib/i18n/i18n-svelte';
 	import EventPerformances from './EventPerformances.svelte';
-	import { getTitles, getTitleString, allTitles } from '$stores/storeEvents';
+	import { getTitles, getTitleString } from '$stores/storeEvents';
 	import { filters, filteredEvents } from '$stores/storeFilters';
-	import { Circle } from 'lucide-svelte';
+	import { Circle, FileInput } from 'lucide-svelte';
+	import { fly } from 'svelte/transition';
 	export let eventUid: number;
 
 	let event: EventItem;
@@ -25,9 +26,19 @@
 					}
 				});
 			});
-			date = event?.dates[0].date.slice(5).replaceAll('-', '.') || '';
-			if (date.slice(0, 5) === '00.00') {
-				date = date.replaceAll('00.00', '?');
+			let dateStr = event?.dates[0].date;
+			if (dateStr && dateStr !== '00.00') {
+				// handle date format 00.00 or day undefined
+				if (dateStr.endsWith('-00')) {
+					let dateObj = new Date(dateStr.slice(0, -2) + '01');
+					date = dateObj.toLocaleDateString('it-IT', { month: '2-digit' }) + '.?';
+				} else {
+					let dateObj = new Date(dateStr);
+					date = dateObj.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' });
+					date = date.split('/').join('.');
+				}
+			} else {
+				date = '?';
 			}
 		}
 		filtersArrayWithCounter = {};
@@ -53,7 +64,7 @@
 				if (!filtersArrayWithCounter.hasOwnProperty(filter.id)) {
 					filtersArrayWithCounter[filter.id] = {
 						counter: 0,
-						color: filter.color || '',
+						color: filter.color || ''
 					};
 				}
 
@@ -94,17 +105,17 @@
 </script>
 
 <div
-	class={`relative w-fit overflow-hidden rounded-xl border-2 border-secondary bg-secondary ${
+	class={`relative w-fit overflow-hidden rounded-xl border-2 border-secondary bg-secondary transition-all duration-100 ${
 		isEventOpen
 			? 'flex h-fit flex-shrink-0 flex-col'
-			: 'hover:scale-hover flex flex-col justify-center gap-2 transition-all duration-100'
+			: 'flex flex-col justify-center gap-2 hover:scale-hover'
 	}`}
 >
 	<button
 		on:click={() => handleClickEvent()}
-		class={`z-10 flex-shrink-0 flex-grow-0 font-bold ${
+		class={`z-10 flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out ${
 			isEventOpen
-				? 'relative left-0 right-0 top-0 h-fit w-80 border-b-2 border-background py-2'
+				? 'relative left-0 right-0 top-0 h-fit w-80 py-2'
 				: 'h-32 w-24'
 		}`}
 		>{date}
@@ -135,9 +146,9 @@
 				{#if event.locations}
 					{#each event.locations as location}
 						{#await getTitleString(location.location, 'location')}
-							<div>loading</div>
+							<div />
 						{:then title}
-							{title}
+							<div transition:fly={{ y: 10, duration: 100, delay: 200 }}>{title}</div>
 						{:catch error}
 							<div>Error: {error.message}</div>
 						{/await}
@@ -149,41 +160,60 @@
 	{#if isEventOpen}
 		<div class="flex w-80 flex-col gap-4 p-2">
 			{#if event.corporations}
-				<div>
-					<div class="text-base font-bold dark:font-semibold">
-						{$LL.filters.entities.corporation()}
+				<div class="flex flex-col gap-1">
+					<div>
+						<div class="text-base font-bold dark:font-semibold">
+							{$LL.filters.entities.corporation()}
+						</div>
+						{#each event.corporations as corporation}
+							{#if corporation.subject == 2}
+								{#await getTitleString(corporation.corporation, 'corporation')}
+									<div>loading</div>
+								{:then title}
+									<div class="flex items-center gap-1">
+										{#each Object.values($filters).flat() as filter}
+											{#if filter.entity === 'corporation' && filter.id == corporation.corporation}
+												<Circle
+													class="flex-shrink-0"
+													fill={filter.color}
+													size={10}
+													stroke-opacity={0}
+												/>
+											{/if}
+										{/each}
+										<span class="text-sm">{title}</span>
+									</div>
+								{:catch error}
+									<div>Error: {error.message}</div>
+								{/await}
+							{/if}
+						{/each}
 					</div>
-					{#each event.corporations as corporation}
-						{#if corporation.subject == 2}
-							{#await getTitleString(corporation.corporation, 'corporation')}
-								<div>loading</div>
-							{:then title}
-								<div class="flex items-center gap-1">
-									{#each Object.values($filters).flat() as filter}
-										{#if filter.entity === 'corporation' && filter.id == corporation.corporation}
-											<Circle
-												class="flex-shrink-0"
-												fill={filter.color}
-												size={10}
-												stroke-opacity={0}
-											/>
-										{/if}
-									{/each}
-									<span class="text-sm">{title}</span>
-								</div>
-							{:catch error}
-								<div>Error: {error.message}</div>
-							{/await}
-						{/if}
-					{/each}
+					<div class="flex w-fit items-center gap-2">
+						<div class="text-base font-bold dark:font-semibold">
+							{$LL.filters.entities.source()}
+						</div>
+						{#each event.sources as source}
+							{#if source.url}
+								<a
+									class="hover:scale-hover"
+									href={source.url}
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									<FileInput strokeWidth={2.25} />
+								</a>
+							{/if}
+						{/each}
+					</div>
 				</div>
 			{/if}
-			<div>
+			<div class="bg-background p-2 rounded-xl">
 				<div class="w-full text-base font-bold dark:font-semibold">
 					{$LL.filters.entities.performances()}
 				</div>
 				{#if event.performances}
-					<div class="flex flex-col gap-1 divide-y-2 divide-background dark:font-light">
+					<div class="flex flex-col gap-1 divide-y-2 divide-secondary dark:font-light">
 						<EventPerformances {event} />
 					</div>
 				{/if}

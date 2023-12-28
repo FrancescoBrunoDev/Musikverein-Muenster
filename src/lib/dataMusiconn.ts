@@ -42,7 +42,7 @@ const getAllEvents = async () => {
 		const fetchPromises = batches.map(async (batch: { event: string }[]) => {
 			const joinedEventIds = batch.map((eventObj) => eventObj.event).join('|');
 			const res = await fetch(
-				`${API_URL}?action=get&event=${joinedEventIds}&props=uid|dates|locations|persons|performances|corporations&format=json`
+				`${API_URL}?action=get&event=${joinedEventIds}&props=uid|dates|locations|persons|performances|corporations|sources&format=json`
 			);
 			return res.json();
 		});

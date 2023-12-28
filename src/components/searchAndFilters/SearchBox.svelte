@@ -21,11 +21,11 @@
 
 <div class="flex w-full items-center gap-2">
 	<div
-		class="flex w-full items-center rounded-full bg-secondary dark:bg-primary drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary"
+		class="flex w-full items-center rounded-full bg-secondary drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary px-4"
 	>
 		<MethodSearch />
 		<input
-			class="focus-none h-10 w-full cursor-text bg-transparent px-3 placeholder-background outline-none"
+			class="focus-none h-10 w-full cursor-text bg-transparent px-3 placeholder-text/40 outline-none"
 			type="text"
 			id="myInput"
 			bind:value={$inputValue}

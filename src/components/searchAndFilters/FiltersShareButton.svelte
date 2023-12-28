@@ -32,7 +32,7 @@
         on:blur={handleMouseOut}
 		on:click={handleClick}
 		aria-label="Toggle italic"
-		class="z-30 flex h-fit w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-secondary p-2 drop-shadow transition-all hover:scale-hover hover:drop-shadow-xl dark:bg-primary"
+		class="z-30 flex h-fit w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-secondary p-2 drop-shadow transition-all hover:scale-hover hover:drop-shadow-xl"
 	>
 		{#if isMouseOver}<span class="pl-1 text-sm">{text}</span>
 		{/if}<Share size={20} />

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import LL from '$lib/i18n/i18n-svelte';
 	import { toggleDarkMode, themeKind } from '$stores/storeTheme';
 	import { createToggle, melt } from '@melt-ui/svelte';
 	import { draw } from 'svelte/transition';
@@ -20,7 +19,7 @@
 <button
 	use:melt={$root}
 	aria-label="Toggle italic"
-	class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary transition-all hover:scale-hover hover:drop-shadow-xl dark:bg-primary"
+	class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary transition-all hover:scale-hover hover:drop-shadow-xl"
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

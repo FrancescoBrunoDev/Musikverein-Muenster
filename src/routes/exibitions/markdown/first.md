@@ -11,7 +11,7 @@ img: https://picsum.photos/1500/1300
   import Gallery from "$components/markdown/Gallery.svelte"
 </script>
 
-## Markdown
+### Markdown
 
 Hey friends! 👋
 

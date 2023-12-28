@@ -7,7 +7,7 @@ export const GET: RequestHandler = async () => {
 	try {
 		response = await joinEventByYear();
 		return json(response);
-	} catch (error) {
+	} catch (error: any) {
 		console.error(error);
 		return json({ error: error.message });
 	}

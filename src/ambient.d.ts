@@ -59,6 +59,12 @@ type EventPerformance = {
 	persons: Person[];
 };
 
+type Source = {
+	page: string;
+	source: number;
+	url: string;
+};
+
 type EventLocation = {
 	location: number;
 };
@@ -71,6 +77,7 @@ type EventItem = {
 	performances: EventPerformance[];
 	corporations: Corporation[];
 	metchAnd?: boolean;
+	sources: Source[];
 };
 
 type Events = {

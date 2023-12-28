@@ -58,6 +58,10 @@ type RootTranslation = {
 			 * C​o​m​p​o​s​e​r
 			 */
 			composer: string
+			/**
+			 * S​o​u​r​c​e
+			 */
+			source: string
 		}
 		filter: {
 			/**
@@ -147,6 +151,10 @@ export type TranslationFunctions = {
 			 * Composer
 			 */
 			composer: () => LocalizedString
+			/**
+			 * Source
+			 */
+			source: () => LocalizedString
 		}
 		filter: {
 			/**

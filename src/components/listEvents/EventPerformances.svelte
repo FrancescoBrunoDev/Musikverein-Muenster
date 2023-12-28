@@ -4,6 +4,7 @@
 	import { filters } from '$stores/storeFilters';
 	import { getTitleString } from '$stores/storeEvents';
 	import EventPerformancesPersons from '$components/listEvents/EventPerformancesPersons.svelte';
+	import { fly } from 'svelte/transition';
 	export let event: EventItem;
 
 	let isPerformanceOpen = false;
@@ -33,9 +34,9 @@
 {#each event.performances as performance}
 	{#await getTitleString(performance.work, 'work') then title}
 		{#if $filters.or.length === 0 && $filters.and.length === 0 && $filters.not.length === 0}
-			<span>{title} <EventPerformancesPersons {performance} /></span>
+			<span in:fly={{ y: 20, duration: 100, delay:200 }}>{title} <EventPerformancesPersons {performance} /></span>
 		{:else if hasMatchingFilter(performance)}
-			<div class="flex items-center gap-1">
+			<div in:fly={{ y: 20, duration: 100, delay:200 }} class="flex items-center gap-1">
 				<div class="flex flex-col gap-1">
 					{#each Object.values($filters).flat() as filter}
 						{#if filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person}
@@ -56,7 +57,7 @@
 				<span>{title}<EventPerformancesPersons {performance} /></span>
 			</div>
 		{:else if isPerformanceOpen}
-			<span>{title} <EventPerformancesPersons {performance} /></span>
+			<span in:fly={{ y: 20, duration: 100, delay:200 }}>{title} <EventPerformancesPersons {performance} /></span>
 		{/if}
 	{:catch error}
 		<div>Error: {error.message}</div>

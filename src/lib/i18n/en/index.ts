@@ -15,6 +15,7 @@ const en = {
 			location: 'Location',
 			performances: 'Performances',
 			composer: 'Composer',
+			source: 'Source'
 		},
 		filter: {
 			checkboxPerformanceEvent: "show the 'or' events as performances in the graph"

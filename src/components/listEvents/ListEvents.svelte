@@ -57,7 +57,11 @@
 					<div>{$filteredEvents[year].length}</div>
 				</div>
 				<div class="flex items-start gap-2 flex-wrap pb-4 leading-tight">
-					{#each $filteredEvents[year] as event}
+					{#each $filteredEvents[year].slice().sort((a, b) => {
+						const dateA = new Date(a.dates[0].date);
+						const dateB = new Date(b.dates[0].date);
+						return dateA.getTime() - dateB.getTime();
+					}) as event}
 						<Event eventUid={event.uid} />
 					{/each}
 				</div>
