@@ -1,1 +1,1 @@
-<p class="text-base"><slot /></p>
+<p class="text-base text-justify"><slot /></p>

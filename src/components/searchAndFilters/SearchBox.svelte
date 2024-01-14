@@ -36,7 +36,7 @@
 	</div>
 	<Info size={25} stroke-width={40} />
 </div>
-<div class="my-2 flex gap-2 pl-2">
+<div class="my-2 flex gap-2 pl-2 flex-wrap">
 	{#each entities as entity}
 		<button
 			on:click={() => {

@@ -26,7 +26,7 @@
 
 		<!-- exibition -->
 	</div>
-	<div class="container mx-auto max-w-6xl">
+	<div class="container mx-auto max-w-6xl content">
 		<svelte:component this={data.content} />
 	</div>
 </section>

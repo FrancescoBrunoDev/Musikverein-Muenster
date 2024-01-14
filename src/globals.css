@@ -38,9 +38,21 @@
 		transition:
 			background-color 0.2s ease-in-out,
 			color 0.2s ease-in-out;
-		@apply text-text bg-background text-base;
+		@apply bg-background text-base text-text;
 		font-feature-settings:
 			'rlig' 1,
 			'calt' 1;
+	}
+}
+
+/* style in blog */
+
+.content {
+	a {
+		text-decoration: underline;
+		text-decoration-color: aquamarine;
+	}
+	strong {
+		font-weight: 700;
 	}
 }
