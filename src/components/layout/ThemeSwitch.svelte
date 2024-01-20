@@ -13,13 +13,12 @@
 	} = createToggle({
 		onPressedChange: toggleMenu
 	});
-	
 </script>
 
 <button
 	use:melt={$root}
 	aria-label="Toggle italic"
-	class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary transition-all hover:scale-hover hover:drop-shadow-xl"
+	class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary transition-all hover:scale-hover hover:drop-shadow-xl"
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

@@ -30,7 +30,7 @@
 		</label>
 		<button
 			use:melt={$root}
-			class="button-checkbox relative h-6 cursor-default rounded-full bg-destructive dark:bg-red-900 transition-all duration-100 hover:cursor-pointer hover:shadow-lg data-[state=checked]:bg-green-600 dark:data-[state=checked]:bg-green-700"
+			class="button-checkbox relative h-6 cursor-default rounded-full bg-destructive transition-all duration-100 hover:cursor-pointer hover:shadow-lg data-[state=checked]:bg-green-600 dark:bg-red-900 dark:data-[state=checked]:bg-green-700"
 			id={titleToId(title)}
 			aria-labelledby="{titleToId(title)}-label"
 		>

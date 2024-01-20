@@ -3,14 +3,11 @@
 	import SearchBox from '$components/searchAndFilters/SearchBox.svelte';
 	import {
 		isSearchSectionInEventsList,
-		heightSearchSection,
 		isSearchSectionInEventsListOpen
 	} from '$stores/storeSearchSection';
-	import { fly } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
 </script>
 
-<div class="w-full" bind:clientHeight={$heightSearchSection}>
+<div class="w-full">
 	{#if $isSearchSectionInEventsList}
 		<ActiveFilters />
 	{/if}

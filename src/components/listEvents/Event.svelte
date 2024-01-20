@@ -105,7 +105,7 @@
 </script>
 
 <div
-	class={`relative w-fit overflow-hidden rounded-xl border-2 border-secondary bg-secondary transition-all duration-100 ${
+	class={`relative w-fit overflow-hidden rounded-xl border-2 border-secondary bg-secondary text-primary transition-all duration-100 ${
 		isEventOpen
 			? 'flex h-fit flex-shrink-0 flex-col'
 			: 'flex flex-col justify-center gap-2 hover:scale-hover'
@@ -114,9 +114,7 @@
 	<button
 		on:click={() => handleClickEvent()}
 		class={`z-10 flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out ${
-			isEventOpen
-				? 'relative left-0 right-0 top-0 h-fit w-80 py-2'
-				: 'h-32 w-24'
+			isEventOpen ? 'relative left-0 right-0 top-0 h-fit w-80 py-2' : 'h-32 w-24'
 		}`}
 		>{date}
 
@@ -208,7 +206,7 @@
 					</div>
 				</div>
 			{/if}
-			<div class="bg-background p-2 rounded-xl">
+			<div class="rounded-xl bg-background p-2 text-secondary">
 				<div class="w-full text-base font-bold dark:font-semibold">
 					{$LL.filters.entities.performances()}
 				</div>

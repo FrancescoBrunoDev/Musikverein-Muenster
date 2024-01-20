@@ -12,7 +12,7 @@
 	const handleInput = () => {
 		const value = $inputValue;
 		if (value.length > 0) {
-			autocomplete(value)
+			autocomplete(value);
 		} else {
 			$suggestions = [];
 		}
@@ -21,7 +21,7 @@
 
 <div class="flex w-full items-center gap-2">
 	<div
-		class="flex w-full items-center rounded-full bg-secondary drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary px-4"
+		class="flex w-full items-center rounded-full bg-secondary px-4 text-background drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary"
 	>
 		<MethodSearch />
 		<input
@@ -36,7 +36,7 @@
 	</div>
 	<Info size={25} stroke-width={40} />
 </div>
-<div class="my-2 flex gap-2 pl-2 flex-wrap">
+<div class="my-2 flex flex-wrap gap-2 pl-2">
 	{#each entities as entity}
 		<button
 			on:click={() => {
@@ -47,10 +47,10 @@
 					$suggestions = [];
 				}
 			}}
-			class={'hover:scale-hover rounded-full px-4 pb-[0.15rem] text-sm transition-shadow hover:drop-shadow-lg ' +
+			class={'rounded-full border-2 px-4 pb-[0.15rem] text-sm transition-shadow hover:scale-hover hover:drop-shadow-lg ' +
 				($entitiesForSearchBox.includes(entity)
-					? 'bg-secondary text-text'
-					: 'bg-transparent text-text')}
+					? 'bg-secondary text-primary border-secondary'
+					: 'bg-transparent text-secondary')}
 		>
 			{$LL.filters.entities[entity]()}
 		</button>

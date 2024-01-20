@@ -7,9 +7,9 @@
 @layer base {
 	:root {
 		--text: 0, 36%, 5%;
-		--background: 300, 6%, 93%;
-		--primary: 30, 90%, 43%;
-		--secondary: 0, 4%, 85%;
+		--background: 0, 60%, 99%; /* white */
+		--primary: 0, 60%, 99%; /* white */
+		--secondary: 0, 60%, 1%; /* black */
 		--accent: 0, 51%, 46%;
 		--destructive: 0 84.2% 60.2%;
 		--border: 240 5.9% 90%;
@@ -19,9 +19,9 @@
 
 	.dark {
 		--text: 0, 36%, 95%;
-		--background: 300, 6%, 7%;
-		--primary: 30, 90%, 57%;
-		--secondary: 0, 4%, 15%;
+		--background: 0, 60%, 1%; /* black */
+		--primary: 0, 60%, 1%; /* black */
+		--secondary: 0, 60%, 99%; /* white */
 		--accent: 0, 51%, 54%;
 		--destructive: 0 62.8% 30.6%;
 		--border: 240 3.7% 15.9%;
