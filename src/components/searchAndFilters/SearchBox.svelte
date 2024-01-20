@@ -5,8 +5,8 @@
 	import MethodSearch from '$components/searchAndFilters/MethodSearch.svelte';
 	import SuggestionSearch from '$components/searchAndFilters/SuggestionSearch.svelte';
 	import { entitiesForSearchBox, updateEntitiesForSearchBox } from '$stores/storeFilters';
-	import { suggestions, inputValue } from '$stores/storeSearchSection';
-
+	import { suggestions, inputValue, showInfoSearch } from '$stores/storeSearchSection';
+	
 	const entities: Entity[] = ['person', 'work', 'corporation', 'location'];
 
 	const handleInput = () => {
@@ -34,7 +34,9 @@
 			autocomplete="off"
 		/>
 	</div>
-	<Info size={25} stroke-width={40} />
+	<button on:click={() => ($showInfoSearch = !$showInfoSearch)}>
+		<Info size={25} stroke-width={40} />
+	</button>
 </div>
 <div class="my-2 flex flex-wrap gap-2 pl-2">
 	{#each entities as entity}

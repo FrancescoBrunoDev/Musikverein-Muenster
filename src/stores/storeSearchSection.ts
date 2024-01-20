@@ -4,10 +4,12 @@ const suggestions = writable<AutocompleteResult[]>([]);
 const inputValue = writable<string>('');
 const isSearchSectionInEventsList = writable<boolean>(false);
 const isSearchSectionInEventsListOpen = writable<boolean>(false);
+const showInfoSearch = writable<boolean>(false);
 
 export {
 	suggestions,
 	inputValue,
 	isSearchSectionInEventsList,
-	isSearchSectionInEventsListOpen
+	isSearchSectionInEventsListOpen,
+	showInfoSearch,
 };

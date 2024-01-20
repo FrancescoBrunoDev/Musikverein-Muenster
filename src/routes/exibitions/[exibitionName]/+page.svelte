@@ -15,7 +15,7 @@
 		class="flex h-screen w-screen items-center bg-cover bg-center"
 		style="background-image: url('{data.meta.img}')"
 	>
-		<h1 class="text-8xl">{data.meta.title}</h1>
+		<h1 class="text-8xl font-serif text-background">{data.meta.title}</h1>
 
 		<!-- Tags -->
 		<div class="flex gap-2">

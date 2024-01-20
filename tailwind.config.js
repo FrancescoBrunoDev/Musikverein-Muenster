@@ -40,7 +40,8 @@ export default {
 				hover: '1.03'
 			},
 			fontFamily: {
-				sans: ['Outfit', 'sans-serif']
+				sans: ['Outfit', 'sans-serif'],
+				serif: ['Regatto']
 			},
 			keyframes: {
 				'accordion-down': {

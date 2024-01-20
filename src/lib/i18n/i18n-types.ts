@@ -69,6 +69,16 @@ type RootTranslation = {
 			 */
 			checkboxPerformanceEvent: string
 		}
+		infoSearch: {
+			/**
+			 * S​e​a​r​c​h​ ​G​u​i​d​e
+			 */
+			title: string
+			/**
+			 * S​e​a​r​c​h​ ​f​o​r​ ​e​n​t​i​t​i​e​s​ ​a​n​d​ ​e​v​e​n​t​s​ ​i​n​ ​t​h​e​ ​g​r​a​p​h
+			 */
+			description: string
+		}
 	}
 	events: {
 		/**
@@ -161,6 +171,16 @@ export type TranslationFunctions = {
 			 * show the 'or' events as performances in the graph
 			 */
 			checkboxPerformanceEvent: () => LocalizedString
+		}
+		infoSearch: {
+			/**
+			 * Search Guide
+			 */
+			title: () => LocalizedString
+			/**
+			 * Search for entities and events in the graph
+			 */
+			description: () => LocalizedString
 		}
 	}
 	events: {

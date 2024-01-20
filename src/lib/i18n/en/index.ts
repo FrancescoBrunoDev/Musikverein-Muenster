@@ -19,6 +19,10 @@ const en = {
 		},
 		filter: {
 			checkboxPerformanceEvent: "show the 'or' events as performances in the graph"
+		},
+		infoSearch: {
+			title: 'Search Guide',
+			description: 'Search for entities and events in the graph'
 		}
 	},
 	events: {

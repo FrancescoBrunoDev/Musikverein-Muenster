@@ -6,4 +6,6 @@
 	<title>{config.title}</title>
 </svelte:head>
 
-<div class="relative h-screen w-screen"></div>
+<div class="relative h-screen w-screen flex items-center justify-center">
+	<h1 class="font-serif text-8xl text-center">MusikVerein<br/>Münster</h1>
+</div>

@@ -20,6 +20,10 @@ const de = {
 		},
 		filter: {
 			checkboxPerformanceEvent: "zeige die 'oder' Ereignisse als Aufführungen im Graphen"
+		},
+		infoSearch: {
+			title: 'Suchanleitung',
+			description: 'Suche nach Entitäten und Ereignissen im Graphen'
 		}
 	},
 	events: {

@@ -23,7 +23,7 @@
 	}
 </script>
 
-<div class="fixed top-0 z-50 flex h-10 w-full items-center justify-center bg-background">
+<div class="fixed top-0 z-40 flex h-10 w-full items-center justify-center bg-background">
 	<div class="container flex justify-between text-lg">
 		<ul class="flex items-center">
 			<li>

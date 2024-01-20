@@ -82,7 +82,7 @@
 {#if isGalleryOpen}
 	<div
 		transition:fade={{ duration: 300 }}
-		class="fixed bottom-0 left-0 right-0 top-0 flex h-screen w-screen items-center justify-center backdrop-blur backdrop-brightness-75"
+		class="fixed bottom-0 left-0 right-0 top-0 z-50 flex h-screen w-screen items-center justify-center backdrop-blur backdrop-brightness-75"
 	>
 		<div
 			in:fly={{ y: 100, duration: 400, easing: cubicOut }}

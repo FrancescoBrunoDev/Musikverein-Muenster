@@ -28,6 +28,12 @@
 		--ring: 240 4.9% 83.9%;
 		--radius: 0.25rem;
 	}
+
+	@font-face {
+		font-family: 'Regatto';
+		src: url(/fonts/Regatto/RegattoBold-lgVM0.ttf);
+		font-weight: bold;
+	}
 }
 
 @layer base {
