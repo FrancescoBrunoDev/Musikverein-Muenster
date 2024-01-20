@@ -26,7 +26,11 @@
 					if (entry.isIntersecting) {
 						isSearchSectionInEventsList.set(false);
 					} else {
-						isSearchSectionInEventsList.set(true);
+						if (Object.keys($filteredEvents).length > 4) {
+							isSearchSectionInEventsList.set(true);
+						} else {
+							isSearchSectionInEventsList.set(false);
+						}
 					}
 				},
 				{
@@ -65,7 +69,7 @@
 	<div class="sticky bottom-0 z-40 flex h-fit w-screen justify-center">
 		<div
 			transition:slide={{ duration: 500, easing: cubicOut }}
-			class="flex h-fit w-fit flex-col justify-center rounded-tl-xl rounded-tr-xl p-5 pt-1 shadow-2xl bg-primary"
+			class="flex h-fit w-fit flex-col justify-center rounded-tl-xl rounded-tr-xl bg-background p-5 pt-1 shadow-2xl"
 		>
 			<button on:click={toggleSearchSection} class="flex h-fit w-full items-center justify-center">
 				<ChevronUp

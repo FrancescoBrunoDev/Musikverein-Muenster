@@ -5,9 +5,10 @@
 		isSearchSectionInEventsList,
 		isSearchSectionInEventsListOpen
 	} from '$stores/storeSearchSection';
+	import FiltersShareButton from '$components/searchAndFilters/FiltersShareButton.svelte';
 </script>
 
-<div class="w-full">
+<div class="flex w-full flex-col gap-y-2">
 	{#if $isSearchSectionInEventsList}
 		<ActiveFilters />
 	{/if}
@@ -16,5 +17,8 @@
 	{/if}
 	{#if !$isSearchSectionInEventsList}
 		<ActiveFilters />
+		<div class="place-self-end">
+			<FiltersShareButton />
+		</div>
 	{/if}
 </div>

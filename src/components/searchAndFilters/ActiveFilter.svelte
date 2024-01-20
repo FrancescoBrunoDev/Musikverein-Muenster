@@ -24,7 +24,7 @@
 
 <div
 	use:melt={$trigger}
-	class="flex items-center gap-1 bg-background rounded-full border border-secondary px-3 py-1 text-xs text-secondary hover:z-20 hover:drop-shadow-lg"
+	class="flex items-center gap-1 bg-primary rounded-full border border-secondary px-3 py-1 text-xs text-background hover:z-20 hover:drop-shadow-lg"
 >
 	{#if method === 'or' || method === 'and'}
 		<Circle class="-ml-1" fill={filter.color} size={10} stroke-opacity={0} />
@@ -38,7 +38,7 @@
 	</button>
 	{#if $open}
 		<div use:melt={$content} transition:fade={{ duration: 100 }} class="flex flex-col gap-y-1">
-			<ul class="flex flex-initial flex-col gap-y-1 rounded-xl bg-secondary p-1 text-xs">
+			<ul class="flex flex-initial flex-col gap-y-1 rounded-xl bg-primary p-1 text-xs">
 				{#if filter.entity === 'person' || filter.entity === 'composer'}
 					<li>
 						<button
@@ -49,7 +49,7 @@
 					</li>
 				{/if}
 			</ul>
-			<ul class="flex flex-initial flex-col gap-y-1 rounded-xl bg-secondary p-1 text-xs">
+			<ul class="flex flex-initial flex-col gap-y-1 rounded-xl bg-primary p-1 text-xs">
 				{#each possibleMethods as possibleMethod}
 					{#if possibleMethod !== method}
 						<ButtonMoveFilterTo {filter} {method} moveTo={possibleMethod} />

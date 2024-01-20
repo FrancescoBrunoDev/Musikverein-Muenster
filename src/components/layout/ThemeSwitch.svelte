@@ -1,24 +1,15 @@
 <script lang="ts">
 	import { toggleDarkMode, themeKind } from '$stores/storeTheme';
-	import { createToggle, melt } from '@melt-ui/svelte';
 	import { draw } from 'svelte/transition';
 	import { expoInOut } from 'svelte/easing';
-
-	function toggleMenu() {
-		toggleDarkMode();
-	}
-
-	const {
-		elements: { root }
-	} = createToggle({
-		onPressedChange: toggleMenu
-	});
 </script>
 
 <button
-	use:melt={$root}
+	on:click={() => {
+		toggleDarkMode();
+	}}
 	aria-label="Toggle italic"
-	class="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary transition-all hover:scale-hover hover:drop-shadow-xl"
+	class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-background transition-all hover:scale-hover hover:drop-shadow-xl"
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

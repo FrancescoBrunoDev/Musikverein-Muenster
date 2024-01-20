@@ -105,7 +105,7 @@
 </script>
 
 <div
-	class={`relative w-fit overflow-hidden rounded-xl border-2 border-secondary bg-secondary text-primary transition-all duration-100 ${
+	class={`relative w-fit overflow-hidden rounded-xl border-2 text-primary transition-all duration-100 ${
 		isEventOpen
 			? 'flex h-fit flex-shrink-0 flex-col'
 			: 'flex flex-col justify-center gap-2 hover:scale-hover'
@@ -206,12 +206,12 @@
 					</div>
 				</div>
 			{/if}
-			<div class="rounded-xl bg-background p-2 text-secondary">
+			<div class="rounded-xl border-2 p-2">
 				<div class="w-full text-base font-bold dark:font-semibold">
 					{$LL.filters.entities.performances()}
 				</div>
 				{#if event.performances}
-					<div class="flex flex-col gap-1 divide-y-2 divide-secondary dark:font-light">
+					<div class="divide flex flex-col gap-1 divide-y-2 dark:font-light">
 						<EventPerformances {event} />
 					</div>
 				{/if}

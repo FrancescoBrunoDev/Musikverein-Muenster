@@ -72,7 +72,7 @@
 	class="{size} group grid justify-items-stretch overflow-hidden rounded-xl"
 >
 	<div
-		class="absolute mx-auto flex items-center gap-1 place-self-center rounded-xl bg-secondary p-2 transition-all hover:drop-shadow-xl group-hover:scale-hover"
+		class="absolute mx-auto flex items-center gap-1 place-self-center rounded-xl bg-background p-2 transition-all hover:drop-shadow-xl group-hover:scale-hover"
 	>
 		<Maximize2 size={18} />
 		<p class="text-sm">Open the gallery</p>
@@ -91,7 +91,7 @@
 		>
 			<button
 				on:click={closeGallery}
-				class="flex h-8 w-8 items-center justify-center justify-self-end rounded-xl bg-secondary p-2 transition-all hover:scale-hover hover:drop-shadow-xl"
+				class="flex h-8 w-8 items-center justify-center justify-self-end rounded-xl bg-background p-2 transition-all hover:scale-hover hover:drop-shadow-xl"
 			>
 				<Minimize2 />
 			</button>

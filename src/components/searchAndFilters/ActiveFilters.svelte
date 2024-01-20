@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { filters } from '$stores/storeFilters';
 	import FilterGroup from '$components/searchAndFilters/FilterGroup.svelte';
-	import FiltersShareButton from '$components/searchAndFilters/FiltersShareButton.svelte';
 	type GroupedFilters = { [key: string]: Filter[] };
 
 	let groupedFiltersOR: GroupedFilters;
@@ -32,7 +31,4 @@
 	<FilterGroup groupedFilters={groupedFiltersOR} method="or" color="primary" />
 	<FilterGroup groupedFilters={groupedFiltersAND} method="and" color="primary" />
 	<FilterGroup groupedFilters={groupedFiltersNOT} method="not" color="destructive" />
-	<div class="place-self-end">
-		<FiltersShareButton />
-	</div>
 </div>

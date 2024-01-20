@@ -20,7 +20,7 @@
 </script>
 
 <form class="justify-self-end">
-	<div class="flex items-center rounded-xl bg-secondary p-2">
+	<div class="flex items-center rounded-xl p-2">
 		<label
 			class="w-40 pr-4 text-right text-sm font-normal leading-none"
 			for={titleToId(title)}
@@ -35,7 +35,7 @@
 			aria-labelledby="{titleToId(title)}-label"
 		>
 			<span
-				class="thumb block rounded-full bg-secondary transition data-[state=checked]:bg-primary"
+				class="thumb block rounded-full transition data-[state=checked]:bg-primary"
 			/>
 		</button>
 		<input use:melt={$input} />
