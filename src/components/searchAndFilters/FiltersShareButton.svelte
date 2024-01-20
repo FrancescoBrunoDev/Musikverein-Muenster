@@ -23,16 +23,19 @@
 </script>
 
 {#if $filters.or.length > 0 || $filters.and.length > 0 || $filters.not.length > 0}
-	<button
-		on:mouseover={handleMouseOver}
-		on:mouseout={handleMouseOut}
-		on:focus={handleMouseOver}
-		on:blur={handleMouseOut}
-		on:click={handleClick}
-		aria-label="Toggle italic"
-		class="z-30 flex h-fit w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-primary p-2 text-background drop-shadow transition-all hover:scale-hover hover:drop-shadow-xl"
-	>
+	<div class="flex items-center gap-2">
 		{#if isMouseOver}<span class="pl-1 text-sm">{text}</span>
-		{/if}<Share size={20} />
-	</button>
+		{/if}
+		<button
+			on:mouseover={handleMouseOver}
+			on:mouseout={handleMouseOut}
+			on:focus={handleMouseOver}
+			on:blur={handleMouseOut}
+			on:click={handleClick}
+			aria-label="Toggle italic"
+			class="z-30 flex h-fit w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-primary p-2 text-background drop-shadow transition-all hover:scale-hover hover:drop-shadow-xl"
+		>
+			<Share size={20} />
+		</button>
+	</div>
 {/if}
