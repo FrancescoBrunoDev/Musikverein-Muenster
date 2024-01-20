@@ -35,7 +35,7 @@
 			aria-labelledby="{titleToId(title)}-label"
 		>
 			<span
-				class="thumb block rounded-full transition data-[state=checked]:bg-primary"
+				class="thumb block rounded-full bg-background transition data-[state=checked]:bg-primary"
 			/>
 		</button>
 		<input use:melt={$input} />

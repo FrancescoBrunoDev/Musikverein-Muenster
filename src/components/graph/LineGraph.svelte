@@ -21,7 +21,7 @@
 	function getArrayOfActiveFilterColors(filters: Filter[]): string[] {
 		let array: string[] = [];
 		filters.forEach((filter) => {
-			array.push(filter.color);
+			array.push(filter.color ?? '');
 		});
 		return array;
 	}
@@ -88,7 +88,7 @@
 							name: 'and',
 							color: 'hsl(var(--text)',
 							id: 0,
-							entity: 'and'
+							entity: 'and' as Entity
 						};
 						_filters.push(andFilter);
 					}
@@ -115,7 +115,7 @@
 						_filters.push(andFilter);
 					}
 					y = _filters.map(getY);
-					colorLine = getArrayOfActiveFilterColors(_filters);
+					colorLine = getArrayOfActiveFilterColors(_filters as Filter[]);
 				}
 			} else {
 				y = (dataSingleYear: DataRecordCoordinates) => dataSingleYear.eventCount;
@@ -128,34 +128,36 @@
 	}
 </script>
 
-<div class="relative">
+<div class="flex justify-center h-full">
 	{#if data && data.length > 0}
-		<div
-			class="absolute z-10 ml-8 h-full w-32 bg-gradient-to-r from-background from-10% to-transparent"
-		/>
-		<div
-			class="absolute right-0 z-10 mr-8 h-full w-32 bg-gradient-to-l from-background from-10% to-transparent"
-		/>
-		<div class="z-10 w-screen max-w-5xl px-8">
-			<VisXYContainer
-				{data}
-				height={300}
-				scaleByDomain={true}
-				xDomain={[1850, 1910]}
-				yDomain={[0, 30]}
-			>
-				<VisLine {x} {y} color={colorLine} fallbackValue={0} />
-				<VisCrosshair color={colorLine} template={tooltipTemplate} />
-				<VisTooltip verticalShift={300} horizontalPlacement={Position.Right} />
-				<VisAxis gridLine={false} domainLine={false} tickLine={undefined} type="x" />
-			</VisXYContainer>
+		<div class="relative">
+			<div
+				class="absolute z-10 ml-8 h-full w-32 bg-gradient-to-r from-background from-10% to-transparent"
+			/>
+			<div
+				class="absolute right-0 z-10 mr-8 h-full w-32 bg-gradient-to-l from-background from-10% to-transparent"
+			/>
+			<div class="z-10 w-screen max-w-5xl px-8">
+				<VisXYContainer
+					{data}
+					height={300}
+					scaleByDomain={true}
+					xDomain={[1850, 1910]}
+					yDomain={[0, 30]}
+				>
+					<VisLine {x} {y} color={colorLine} fallbackValue={0} />
+					<VisCrosshair color={colorLine} template={tooltipTemplate} />
+					<VisTooltip verticalShift={300} horizontalPlacement={Position.Right} />
+					<VisAxis gridLine={false} domainLine={false} tickLine={undefined} type="x" />
+				</VisXYContainer>
+			</div>
 		</div>
 	{:else}
 		<div
 			transition:fade={{ delay: 250, duration: 300 }}
 			class="flex h-full w-screen items-center justify-center"
 		>
-			<div class="text-xl text-gray-400">Loading the data</div>
+			<div class="text-xl">Loading the data</div>
 		</div>
 	{/if}
 </div>
