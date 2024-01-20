@@ -70,7 +70,9 @@
 									<div></div>{:then exibitions}
 									{#each exibitions as exibition}
 										<li class="text-xl transition-transform duration-75 hover:-translate-y-1">
-											<a href="/exibitions/{exibition.slug}">{exibition.title}</a>
+											<a on:click={() => toggleMenu()} href="/exibitions/{exibition.slug}"
+												>{exibition.title}</a
+											>
 										</li>
 									{/each}
 								{/await}
