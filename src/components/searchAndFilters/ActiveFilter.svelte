@@ -24,7 +24,7 @@
 
 <div
 	use:melt={$trigger}
-	class="flex items-center gap-1 bg-primary rounded-full border border-secondary px-3 py-1 text-xs text-background hover:z-20 hover:drop-shadow-lg"
+	class="flex items-center gap-1 rounded-full border border-secondary bg-primary px-3 py-1 text-xs text-background hover:z-20 hover:drop-shadow-lg"
 >
 	{#if method === 'or' || method === 'and'}
 		<Circle class="-ml-1" fill={filter.color} size={10} stroke-opacity={0} />
@@ -38,18 +38,22 @@
 	</button>
 	{#if $open}
 		<div use:melt={$content} transition:fade={{ duration: 100 }} class="flex flex-col gap-y-1">
-			<ul class="flex flex-initial flex-col gap-y-1 rounded-xl bg-primary p-1 text-xs">
-				{#if filter.entity === 'person' || filter.entity === 'composer'}
+			{#if filter.entity === 'person' || filter.entity === 'composer'}
+				<ul
+					class="flex flex-initial flex-col gap-y-1 rounded-xl bg-primary p-1 text-xs hover:scale-hover"
+				>
 					<li>
 						<button
 							on:click={() => changeFilterPersonOrComposer(filter, method)}
-							class="rounded-full w-full bg-background px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-hover hover:shadow-lg"
-							>as a {#if filter.entity === 'person'}performer{:else if filter.entity === 'composer'}composer{/if}</button
+							class="w-full rounded-full bg-background px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-hover hover:shadow-lg"
+							>as a {#if filter.entity === 'person'}composer{:else if filter.entity === 'composer'}performer{/if}</button
 						>
 					</li>
-				{/if}
-			</ul>
-			<ul class="flex flex-initial flex-col gap-y-1 rounded-xl bg-primary p-1 text-xs">
+				</ul>
+			{/if}
+			<ul
+				class="flex flex-initial flex-col gap-y-1 rounded-xl bg-primary p-1 text-xs hover:scale-hover"
+			>
 				{#each possibleMethods as possibleMethod}
 					{#if possibleMethod !== method}
 						<ButtonMoveFilterTo {filter} {method} moveTo={possibleMethod} />
