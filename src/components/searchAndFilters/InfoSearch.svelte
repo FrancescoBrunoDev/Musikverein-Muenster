@@ -1,5 +1,5 @@
 <script lang="ts">
-    import LL from '$lib/i18n/i18n-svelte';
+	import LL from '$lib/i18n/i18n-svelte';
 	import { fade, fly } from 'svelte/transition';
 	import { cubicOut, cubicIn } from 'svelte/easing';
 	import { Minimize2 } from 'lucide-svelte';
@@ -12,7 +12,7 @@
 
 <div
 	transition:fade={{ duration: 300 }}
-	class="z-50 fixed bottom-0 left-0 right-0 top-0 flex h-screen w-screen items-center justify-center backdrop-blur backdrop-brightness-75"
+	class="fixed bottom-0 left-0 right-0 top-0 z-50 flex h-screen w-screen items-center justify-center backdrop-blur backdrop-brightness-75"
 >
 	<div
 		in:fly={{ y: 100, duration: 400, easing: cubicOut }}
@@ -21,11 +21,11 @@
 	>
 		<button
 			on:click={closeModal}
-			class="flex h-8 w-8 items-center justify-center justify-self-end rounded-xl bg-background p-2 transition-all hover:scale-hover hover:drop-shadow-xl"
+			class="flex h-8 w-8 items-center justify-center justify-self-end rounded-xl bg-background p-2 transition-all hover:scale-hover hover:drop-shadow-xl dark:bg-primary dark:text-background"
 		>
 			<Minimize2 />
 		</button>
-		<div class="rounded-xl bg-background p-2">
+		<div class="rounded-xl bg-background p-2 dark:bg-primary dark:text-background">
 			<h3 class="text-lg font-bold">{$LL.filters.infoSearch.title()}</h3>
 			<p>{$LL.filters.infoSearch.description()}</p>
 		</div>

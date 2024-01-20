@@ -1,1 +1,1 @@
-<p class="text-base text-justify"><slot /></p>
+<p class="text-justify text-base dark:font-light"><slot /></p>

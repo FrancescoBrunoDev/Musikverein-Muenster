@@ -66,7 +66,7 @@
 </div>
 
 {#if Object.keys($filteredEvents).length > 0 && $isSearchSectionInEventsList}
-	<div class="sticky bottom-0 z-40 flex h-fit w-screen justify-center">
+	<div class="sticky bottom-0 z-30 flex h-fit w-screen justify-center">
 		<div
 			transition:slide={{ duration: 500, easing: cubicOut }}
 			class="shadow-search flex h-fit w-fit flex-col justify-center rounded-tl-xl rounded-tr-xl bg-background px-8 pt-1 pb-4"

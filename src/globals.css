@@ -6,7 +6,7 @@
 
 @layer base {
 	:root {
-		--text: 0, 36%, 5%;
+		--text: 0, 60%, 1%;
 		--background: 0, 60%, 99%; /* white */
 		--primary: 0, 60%, 1%; /* black */
 		--secondary: 0, 60%, 99%; /* white */
@@ -18,7 +18,7 @@
 	}
 
 	.dark {
-		--text: 0, 36%, 95%;
+		--text: 0, 60%, 99%;
 		--background: 0, 60%, 1%; /* black */
 		--primary: 0, 60%, 99%; /* white */
 		--secondary: 0, 60%, 1%; /* black */
