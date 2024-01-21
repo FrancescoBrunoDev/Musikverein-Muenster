@@ -69,7 +69,7 @@
 	<div class="sticky bottom-0 z-30 flex h-fit w-screen justify-center">
 		<div
 			transition:slide={{ duration: 500, easing: cubicOut }}
-			class="shadow-search flex h-fit w-fit flex-col justify-center rounded-tl-xl rounded-tr-xl bg-background px-8 pt-1 pb-4"
+			class="shadow-search flex h-fit w-screen flex-col justify-center rounded-tl-xl rounded-tr-xl bg-background px-8 pb-4 pt-1 md:w-fit"
 		>
 			<button on:click={toggleSearchSection} class="flex h-fit w-full items-center justify-center">
 				<ChevronUp
@@ -79,7 +79,7 @@
 				/>
 			</button>
 
-			<div class="flex md:w-[40rem] justify-center">
+			<div class="flex justify-center md:w-[40rem]">
 				<SearchSection />
 			</div>
 		</div>
@@ -87,7 +87,7 @@
 {/if}
 
 <style>
-    .shadow-search {
-        box-shadow: 0px -4px 30px hsla(var(--primary), 0.2);
-    }
+	.shadow-search {
+		box-shadow: 0px -4px 30px hsla(var(--primary), 0.2);
+	}
 </style>

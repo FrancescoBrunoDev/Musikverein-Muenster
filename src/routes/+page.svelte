@@ -8,7 +8,7 @@
 
 <div class="relative flex h-screen w-screen flex-col items-center justify-center">
 	<div class="noise h-96 w-96 rounded-full" />
-	<h1 class="z-10 text-center font-serif text-8xl">MusikVerein<br />Münster</h1>
+	<h1 class="z-10 text-center font-serif text-6xl md:text-8xl">MusikVerein<br />Münster</h1>
 </div>
 
 <style>
