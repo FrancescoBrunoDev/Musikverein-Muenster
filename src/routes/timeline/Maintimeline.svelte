@@ -37,7 +37,7 @@
 </script>
 
 <div
-	class="flex h-[60vh] w-screen items-end justify-center {$suggestions.length > 0
+	class="flex h-[60dvh] w-screen items-end justify-center {$suggestions.length > 0
 		? 'pb-0'
 		: 'pb-20'} content-end transition-all duration-500"
 	style={`opacity: ${opacitySearchSection};
@@ -69,7 +69,7 @@
 	on:focus={handleMouseOver}
 	style={`transform: scale(${scaleGraphSection}); bottom: ${bottomDistance}rem;`}
 	role="presentation"
-	class="flex h-[40vh] items-center justify-center transition-all duration-500"
+	class="flex h-[40dvh] items-center justify-center transition-all duration-500"
 >
 	<LineGraph />
 </div>
