@@ -13,7 +13,7 @@
 
 <style>
 	.noise {
-		background: linear-gradient(to top right, hsl(var(--primary)), transparent), url(svgNoise.svg);
+		background: linear-gradient(to top right, hsl(var(--primary)), transparent), url(/svgNoise.svg);
 		filter: contrast(130%) brightness(400%);
 	}
 </style>
