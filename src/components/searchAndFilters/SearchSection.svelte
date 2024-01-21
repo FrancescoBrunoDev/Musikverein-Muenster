@@ -6,14 +6,22 @@
 		isSearchSectionInEventsListOpen
 	} from '$stores/storeSearchSection';
 	import FiltersShareButton from '$components/searchAndFilters/FiltersShareButton.svelte';
+	import { slide } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 </script>
 
-<div class="flex w-full flex-col gap-y-2">
+<div
+	class="flex w-full flex-col {$isSearchSectionInEventsListOpen || !$isSearchSectionInEventsList
+		? 'gap-y-2'
+		: ''} "
+>
 	{#if $isSearchSectionInEventsList}
 		<ActiveFilters />
 	{/if}
 	{#if $isSearchSectionInEventsListOpen || !$isSearchSectionInEventsList}
-		<SearchBox />
+		<div transition:slide={{ duration: 500, easing: cubicOut }}>
+			<SearchBox />
+		</div>
 	{/if}
 	{#if !$isSearchSectionInEventsList}
 		<ActiveFilters />

@@ -79,7 +79,7 @@
 				/>
 			</button>
 
-			<div class="flex justify-center md:w-[40rem]">
+			<div class="md:w-[40rem]">
 				<SearchSection />
 			</div>
 		</div>
