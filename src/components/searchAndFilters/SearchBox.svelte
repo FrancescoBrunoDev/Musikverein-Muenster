@@ -1,12 +1,12 @@
 <script lang="ts">
 	import LL from '$lib/i18n/i18n-svelte';
 	import { autocomplete } from '$lib/dataMusiconn';
-	import { Info } from 'lucide-svelte';
 	import MethodSearch from '$components/searchAndFilters/MethodSearch.svelte';
 	import SuggestionSearch from '$components/searchAndFilters/SuggestionSearch.svelte';
 	import { entitiesForSearchBox, updateEntitiesForSearchBox } from '$stores/storeFilters';
-	import { suggestions, inputValue, showInfoSearch } from '$stores/storeSearchSection';
-	
+	import { suggestions, inputValue } from '$stores/storeSearchSection';
+	import InfoSearch from './InfoSearch.svelte';
+
 	const entities: Entity[] = ['person', 'work', 'corporation', 'location'];
 
 	const handleInput = () => {
@@ -34,9 +34,7 @@
 			autocomplete="off"
 		/>
 	</div>
-	<button on:click={() => ($showInfoSearch = !$showInfoSearch)}>
-		<Info size={25} stroke-width={40} />
-	</button>
+	<InfoSearch />
 </div>
 <div class="my-2 flex flex-wrap gap-2 pl-2">
 	{#each entities as entity}
