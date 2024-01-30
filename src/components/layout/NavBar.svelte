@@ -2,7 +2,7 @@
 	import LL from '$lib/i18n/i18n-svelte';
 	import { fly } from 'svelte/transition';
 	import { quintInOut } from 'svelte/easing';
-	import { ArrowRight } from 'lucide-svelte';
+	import { X } from 'lucide-svelte';
 	import LanguageSwitch from '$components/layout/LanguageSwitch.svelte';
 	import ThemeSwitch from '$components/layout/ThemeSwitch.svelte';
 
@@ -45,9 +45,9 @@
 			>
 				<button
 					on:click={() => toggleMenu()}
-					class="mr-10 mt-20 self-end hover:scale-hover md:mr-20"
+					class="mr-10 mt-20 self-end hover:scale-hover md:mr-20 hover:drop-shadow-2xl"
 				>
-					<ArrowRight size={100} color="hsl(var(--text)" /></button
+					<X size={100} color="hsl(var(--text)" /></button
 				>
 				<div class="flex h-full items-end justify-between pr-10 md:pr-20">
 					<div
