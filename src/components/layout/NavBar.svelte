@@ -47,7 +47,7 @@
 					on:click={() => toggleMenu()}
 					class="mr-10 mt-20 self-end hover:scale-hover md:mr-20 hover:drop-shadow-2xl"
 				>
-					<X size={100} color="hsl(var(--text)" /></button
+					<X strokeWidth={2.5} size={100} color="hsl(var(--text)" /></button
 				>
 				<div class="flex h-full items-end justify-between pr-10 md:pr-20">
 					<div
