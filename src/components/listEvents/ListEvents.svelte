@@ -69,7 +69,7 @@
 	<div class="sticky bottom-0 z-30 flex h-fit w-screen justify-center">
 		<div
 			transition:slide={{ duration: 500, easing: cubicOut }}
-			class="shadow-search flex h-fit w-screen flex-col justify-center rounded-tl-xl rounded-tr-xl bg-background px-8 pb-4 pt-1 md:w-fit"
+			class="border-t-2 border-r-2 border-l-2 shadow-2xl flex h-fit w-screen flex-col justify-center rounded-tl-xl rounded-tr-xl bg-background px-8 pb-4 pt-1 md:w-fit"
 		>
 			<button on:click={toggleSearchSection} class="flex h-fit w-full items-center justify-center">
 				<ChevronUp

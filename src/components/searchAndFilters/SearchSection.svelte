@@ -6,7 +6,7 @@
 		isSearchSectionInEventsListOpen
 	} from '$stores/storeSearchSection';
 	import FiltersShareButton from '$components/searchAndFilters/FiltersShareButton.svelte';
-	import { slide } from 'svelte/transition';
+	import { slide, fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 </script>
 
@@ -18,8 +18,12 @@
 	{#if $isSearchSectionInEventsList}
 		<ActiveFilters />
 	{/if}
-	{#if $isSearchSectionInEventsListOpen || !$isSearchSectionInEventsList}
+	{#if $isSearchSectionInEventsListOpen}
 		<div transition:slide={{ duration: 500, easing: cubicOut }}>
+			<SearchBox />
+		</div>
+	{:else if !$isSearchSectionInEventsList}
+		<div transition:fly={{ y: -10, opacity: 0, duration: 500, easing: cubicOut, delay: 250 }}>
 			<SearchBox />
 		</div>
 	{/if}
