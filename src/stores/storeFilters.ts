@@ -27,6 +27,7 @@ const colorFilters = writable([
 ]);
 const filteredEvents = writable<Events>({});
 const entitiesForSearchBox = writable<Entity[]>(['person', 'corporation', 'work', 'location']);
+const isAFilterDragged = writable<boolean>(false);
 
 const UpdateSelectedMethodFilter = (method: Method) => {
 	SelectedMethodFilter.set(method);
@@ -34,9 +35,15 @@ const UpdateSelectedMethodFilter = (method: Method) => {
 
 const urlifyerFilters = () => {
 	filters.subscribe((res) => {
-		const filtersOr = res.or.map((filter) => `${filter.entity.substring(0, 3)}:${filter.id}`).join(',');
-		const filtersAnd = res.and.map((filter) => `${filter.entity.substring(0, 3)}:${filter.id}`).join(',');
-		const filtersNot = res.not.map((filter) => `${filter.entity.substring(0, 3)}:${filter.id}`).join(',');
+		const filtersOr = res.or
+			.map((filter) => `${filter.entity.substring(0, 3)}:${filter.id}`)
+			.join(',');
+		const filtersAnd = res.and
+			.map((filter) => `${filter.entity.substring(0, 3)}:${filter.id}`)
+			.join(',');
+		const filtersNot = res.not
+			.map((filter) => `${filter.entity.substring(0, 3)}:${filter.id}`)
+			.join(',');
 		const filtersString = `${filtersOr || '_'}/${filtersAnd || '_'}/${filtersNot || '_'}`;
 		filtersUrlified.set(filtersString);
 	});
@@ -167,7 +174,9 @@ const addFilterElement = async (selected: any) => {
 
 const moveFilterElement = (selected: Filter, method: Method, moveTo: Method) => {
 	filters.update((currentFilters) => {
-		const index = currentFilters[method].findIndex((f) => f.id === selected.id && f.entity === selected.entity);
+		const index = currentFilters[method].findIndex(
+			(f) => f.id === selected.id && f.entity === selected.entity
+		);
 		if (index === -1) {
 			return currentFilters;
 		}
@@ -177,7 +186,7 @@ const moveFilterElement = (selected: Filter, method: Method, moveTo: Method) => 
 		return currentFilters;
 	});
 	updateFilteredEventsAndUdateDataForGraph();
-}
+};
 
 const removeFilterElement = (selected: Filter, method: Method) => {
 	let _colorFilters;
@@ -185,7 +194,9 @@ const removeFilterElement = (selected: Filter, method: Method) => {
 		_colorFilters = res;
 	});
 	filters.update((currentFilters) => {
-		const index = currentFilters[method].findIndex((f) => f.id === selected.id && f.entity === selected.entity);
+		const index = currentFilters[method].findIndex(
+			(f) => f.id === selected.id && f.entity === selected.entity
+		);
 		if (index === -1) {
 			return currentFilters;
 		}
@@ -279,6 +290,7 @@ export {
 	filteredEvents,
 	entitiesForSearchBox,
 	filtersUrlified,
+	isAFilterDragged,
 	UpdateSelectedMethodFilter,
 	addFilterElement,
 	removeFilterElement,

@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { removeFilterElement, changeFilterPersonOrComposer } from '$stores/storeFilters';
+	import {
+		removeFilterElement,
+		changeFilterPersonOrComposer,
+		isAFilterDragged
+	} from '$stores/storeFilters';
 	import { createTooltip, melt } from '@melt-ui/svelte';
 	import { fade } from 'svelte/transition';
 	import { Circle } from 'lucide-svelte';
@@ -20,11 +24,51 @@
 		closeOnPointerDown: true,
 		forceVisible: true
 	});
+
+	let isDragging = false;
+	let clone: HTMLElement | null = null;
+	function handleDragStart(event: DragEvent) {
+		isAFilterDragged.set(true);
+		const thisMethod = method;
+		event.dataTransfer?.setData('text/plain', JSON.stringify({ filter, thisMethod }));
+
+		// Create a clone of the element and append it to the body
+		clone = event.target.cloneNode(true);
+		clone.style.position = 'absolute';
+		clone.style.pointerEvents = 'none';
+		document.body.appendChild(clone);
+
+		// Update the position of the clone to follow the mouse
+		document.addEventListener('mousemove', handleMouseMove);
+	}
+
+	function handleMouseMove(event: MouseEvent) {
+		if (clone) {
+			clone.style.left = event.pageX + 'px';
+			clone.style.top = event.pageY + 'px';
+		}
+	}
+
+	function handleDragEnd(event: DragEvent) {
+		// Remove the clone and the mousemove event listener when the drag operation ends
+		if (clone) {
+			clone.remove();
+			clone = null;
+		}
+		document.removeEventListener('mousemove', handleMouseMove);
+	}
 </script>
 
 <div
 	use:melt={$trigger}
-	class="flex items-center gap-1 rounded-full border border-secondary bg-primary px-3 py-1 text-xs text-background hover:z-20 hover:drop-shadow-lg"
+	draggable={true}
+	on:dragstart={handleDragStart}
+	on:dragend={handleDragEnd}
+	role="button"
+	tabindex="0"
+	class="flex items-center gap-1 rounded-full border border-secondary bg-primary px-3 py-1 text-xs text-background hover:z-20 hover:drop-shadow-lg {isDragging
+		? 'cursor-grabbing'
+		: 'cursor-grab'}"
 >
 	{#if method === 'or' || method === 'and'}
 		<Circle class="-ml-1" fill={filter.color} size={10} stroke-opacity={0} />
@@ -36,7 +80,7 @@
 	>
 		{filter.name}
 	</button>
-	{#if $open}
+	{#if $open && !isDragging}
 		<div use:melt={$content} transition:fade={{ duration: 100 }} class="flex flex-col gap-y-1">
 			{#if filter.entity === 'person' || filter.entity === 'composer'}
 				<ul

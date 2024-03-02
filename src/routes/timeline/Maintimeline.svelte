@@ -37,9 +37,7 @@
 </script>
 
 <div
-	class="flex h-[60dvh] w-screen items-end justify-center {$suggestions.length > 0
-		? 'pb-0'
-		: 'pb-20'} content-end transition-all duration-500"
+	class="flex h-[60dvh] w-screen items-center justify-center pt-20 content-end transition-all duration-500"
 	style={`opacity: ${opacitySearchSection};
                 filter: blur(${blurSearchSection}px);
                 transform: scale(${scaleSearchSection});`}

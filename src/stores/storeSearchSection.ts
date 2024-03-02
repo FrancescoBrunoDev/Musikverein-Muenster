@@ -5,4 +5,9 @@ const inputValue = writable<string>('');
 const isSearchSectionInEventsList = writable<boolean>(false);
 const isSearchSectionInEventsListOpen = writable<boolean>(false);
 
-export { suggestions, inputValue, isSearchSectionInEventsList, isSearchSectionInEventsListOpen };
+export {
+	suggestions,
+	inputValue,
+	isSearchSectionInEventsList,
+	isSearchSectionInEventsListOpen,
+};
