@@ -11,7 +11,7 @@
 		elements: { root, item },
 		states: { value }
 	} = createRadioGroup({
-		defaultValue: 'or'
+		defaultValue: 'and'
 	});
 	$: {
 		UpdateSelectedMethodFilter($value as Method);
