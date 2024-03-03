@@ -16,7 +16,6 @@
 		indexGallery = 0;
 		const formattedTitle = title.replace(/\s/g, '_').toLowerCase();
 		const formattedGallery = gallery.replace(/\s/g, '_').toLowerCase();
-		console.log(title);
 		const imgUrls = await fetch(
 			`/api/exibitions/getGalleryImgUrls/${formattedTitle}/${formattedGallery}`
 		);

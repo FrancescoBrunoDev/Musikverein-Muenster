@@ -5,10 +5,6 @@
 
 	const filterMethods: Method[] = ['or', 'and', 'not'];
 	const filterColors = { or: 'primary', and: 'primary', not: 'destructive' };
-
-	$: {
-		console.log($filters);
-	}
 </script>
 
 {#if $filters.or.length > 0 || $filters.and.length > 0 || $filters.not.length > 0}

@@ -9,7 +9,6 @@
 	async function getExibitions() {
 		const response = await fetch('/api/exibitions/getMarkdown');
 		const exibitions: ExibitionMarkdown[] = await response.json();
-		console.log(exibitions);
 		return exibitions;
 	}
 

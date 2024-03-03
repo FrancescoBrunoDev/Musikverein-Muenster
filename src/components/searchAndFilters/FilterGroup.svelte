@@ -16,7 +16,6 @@
 			}
 
 			grouped[filter.entity].push(filter);
-			console.log($isAFilterDragged);
 			return grouped;
 		}, {});
 	}
@@ -25,7 +24,6 @@
 		isAFilterDragged.set(false);
 		event.preventDefault();
 		const { filter, thisMethod } = JSON.parse(event.dataTransfer?.getData('text/plain') || '{}');
-		console.log(filter, thisMethod);
 		moveFilterElement(filter, thisMethod, method);
 	}
 </script>

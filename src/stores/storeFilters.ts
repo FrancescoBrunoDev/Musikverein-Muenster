@@ -122,7 +122,6 @@ const deUrlifyerFilters = async (filtersUrl: FiltersForUrl) => {
 				}))
 		)
 	};
-	console.log(newFilters, 'prova');
 	filters.set(newFilters);
 };
 
