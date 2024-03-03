@@ -25,16 +25,17 @@
 			window.removeEventListener('click', handleClickOutside);
 		};
 	});
+	$: console.log($suggestions);
 </script>
 
 {#if $suggestions && $suggestions.length > 0}
 	<div
 		bind:this={div}
-		transition:slide={{ delay: 300 }}
+		transition:slide
 		class="z-10 mt-2 grid h-fit max-h-52 w-full grid-cols-1 gap-y-2 overflow-auto overscroll-auto rounded-xl border bg-background p-2"
 	>
 		{#each $suggestions as suggestion}
-			<div class="flex items-center gap-1">
+			<div class="flex h-fit items-center gap-1">
 				{#if $entitiesForSearchBox.length > 1}
 					<div class="h-fit rounded-full border-2 border-text px-2 text-xs">
 						{suggestion[1]}

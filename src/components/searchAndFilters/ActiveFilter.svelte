@@ -26,36 +26,16 @@
 	});
 
 	let isDragging = false;
-	let clone: HTMLElement | null = null;
 	function handleDragStart(event: DragEvent) {
 		isAFilterDragged.set(true);
+		// change the style of the pointer to grab
 		const thisMethod = method;
+		isDragging = true;
 		event.dataTransfer?.setData('text/plain', JSON.stringify({ filter, thisMethod }));
-
-		// Create a clone of the element and append it to the body
-		clone = event.target.cloneNode(true);
-		clone.style.position = 'absolute';
-		clone.style.pointerEvents = 'none';
-		document.body.appendChild(clone);
-
-		// Update the position of the clone to follow the mouse
-		document.addEventListener('mousemove', handleMouseMove);
-	}
-
-	function handleMouseMove(event: MouseEvent) {
-		if (clone) {
-			clone.style.left = event.pageX + 'px';
-			clone.style.top = event.pageY + 'px';
-		}
 	}
 
 	function handleDragEnd(event: DragEvent) {
-		// Remove the clone and the mousemove event listener when the drag operation ends
-		if (clone) {
-			clone.remove();
-			clone = null;
-		}
-		document.removeEventListener('mousemove', handleMouseMove);
+		isDragging = false;
 	}
 </script>
 

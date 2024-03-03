@@ -49,8 +49,8 @@
 	</div>
 	<div class="absolute h-full w-1 rounded-full bg-{color}"></div>
 	<div
-		class="ml-2 min-h-8 border-spacing-4 border-2 pb-2 {$isAFilterDragged
-			? 'rounded border-dotted'
+		class="ml-2 min-h-8 pb-2 {$isAFilterDragged
+			? 'rounded outline-dashed outline-border'
 			: 'border-background'}"
 	>
 		{#each Object.keys(groupedFilters) as entity}

@@ -9,14 +9,19 @@
 
 	const entities: Entity[] = ['person', 'work', 'corporation', 'location'];
 
-	const handleInput = () => {
-		const value = $inputValue;
-		if (value.length > 0) {
-			autocomplete(value);
-		} else {
-			$suggestions = [];
-		}
-	};
+    let timeoutId: number | undefined;
+
+    const handleInput = () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            const value = $inputValue;
+            if (value.length > 0) {
+                autocomplete(value);
+            } else {
+                $suggestions = [];
+            }
+        }, 300);
+    };
 </script>
 
 <div class="flex w-full items-center gap-2">
