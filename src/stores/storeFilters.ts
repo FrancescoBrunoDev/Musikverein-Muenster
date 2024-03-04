@@ -28,6 +28,7 @@ const colorFilters = writable([
 const filteredEvents = writable<Events>({});
 const entitiesForSearchBox = writable<Entity[]>(['person', 'corporation', 'work', 'location']);
 const isAFilterDragged = writable<boolean>(false);
+const isMoveToActive = writable<boolean>(false);
 
 const UpdateSelectedMethodFilter = (method: Method) => {
 	SelectedMethodFilter.set(method);
@@ -290,6 +291,7 @@ export {
 	entitiesForSearchBox,
 	filtersUrlified,
 	isAFilterDragged,
+	isMoveToActive,
 	UpdateSelectedMethodFilter,
 	addFilterElement,
 	removeFilterElement,

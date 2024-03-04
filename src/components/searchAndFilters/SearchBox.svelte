@@ -6,22 +6,23 @@
 	import { entitiesForSearchBox, updateEntitiesForSearchBox } from '$stores/storeFilters';
 	import { suggestions, inputValue } from '$stores/storeSearchSection';
 	import InfoSearch from './InfoSearch.svelte';
+	import MenuDropdown from '$components/menuDropdown/MenuDropdown.svelte';
 
 	const entities: Entity[] = ['person', 'work', 'corporation', 'location'];
 
-    let timeoutId: number | undefined;
+	let timeoutId: number | undefined;
 
-    const handleInput = () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-            const value = $inputValue;
-            if (value.length > 0) {
-                autocomplete(value);
-            } else {
-                $suggestions = [];
-            }
-        }, 300);
-    };
+	const handleInput = () => {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => {
+			const value = $inputValue;
+			if (value.length > 0) {
+				autocomplete(value);
+			} else {
+				$suggestions = [];
+			}
+		}, 300);
+	};
 </script>
 
 <div class="flex w-full items-center gap-2">
@@ -40,6 +41,7 @@
 		/>
 	</div>
 	<InfoSearch />
+	<MenuDropdown marignTop=5 />
 </div>
 <div class="my-2 flex flex-wrap gap-2 pl-2">
 	{#each entities as entity}

@@ -2,7 +2,8 @@
 	import {
 		removeFilterElement,
 		changeFilterPersonOrComposer,
-		isAFilterDragged
+		isAFilterDragged,
+		isMoveToActive
 	} from '$stores/storeFilters';
 	import { createTooltip, melt } from '@melt-ui/svelte';
 	import { fade } from 'svelte/transition';
@@ -75,15 +76,17 @@
 					</li>
 				</ul>
 			{/if}
-			<ul
-				class="flex flex-initial flex-col gap-y-1 rounded-xl bg-primary p-1 text-xs hover:scale-hover"
-			>
-				{#each possibleMethods as possibleMethod}
-					{#if possibleMethod !== method}
-						<ButtonMoveFilterTo {filter} {method} moveTo={possibleMethod} />
-					{/if}
-				{/each}
-			</ul>
+			{#if $isMoveToActive}
+				<ul
+					class="flex flex-initial flex-col gap-y-1 rounded-xl bg-primary p-1 text-xs hover:scale-hover"
+				>
+					{#each possibleMethods as possibleMethod}
+						{#if possibleMethod !== method}
+							<ButtonMoveFilterTo {filter} {method} moveTo={possibleMethod} />
+						{/if}
+					{/each}
+				</ul>
+			{/if}
 		</div>
 	{/if}
 </div>
