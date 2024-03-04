@@ -40,11 +40,11 @@
 					x: 1500,
 					easing: quintInOut
 				}}
-				class="left-50 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-full flex-col bg-background pb-10 pl-10"
+				class="left-50 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-screen flex-col bg-background pb-10 pl-10"
 			>
 				<button
 					on:click={() => toggleMenu()}
-					class="mr-10 mt-20 self-end hover:scale-hover md:mr-20 hover:drop-shadow-2xl"
+					class="mr-10 mt-20 self-end hover:scale-hover hover:drop-shadow-2xl md:mr-20"
 				>
 					<X strokeWidth={2.5} size={100} color="hsl(var(--text)" /></button
 				>
