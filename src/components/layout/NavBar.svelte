@@ -40,7 +40,7 @@
 					x: 1500,
 					easing: quintInOut
 				}}
-				class="left-50 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-screen flex-col bg-background pb-10 pl-10"
+				class="left-50 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-[100vmin] flex-col bg-background pb-10 pl-10"
 			>
 				<button
 					on:click={() => toggleMenu()}
