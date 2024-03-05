@@ -32,7 +32,7 @@
 	<div
 		bind:this={div}
 		transition:slide
-		class="z-10 mt-2 grid h-fit max-h-52 w-full grid-cols-1 gap-y-2 overflow-auto overscroll-auto rounded-xl border bg-background p-2"
+		class="z-10 mt-2 grid h-fit max-h-52 w-full grid-cols-1 gap-y-2 overflow-auto overscroll-auto rounded-xl border-2 bg-background p-2"
 	>
 		{#each $suggestions as suggestion}
 			<div class="flex h-fit items-center gap-1">

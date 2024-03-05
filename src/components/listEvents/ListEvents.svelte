@@ -66,10 +66,10 @@
 </div>
 
 {#if Object.keys($filteredEvents).length > 0 && $isSearchSectionInEventsList}
-	<div class="sticky bottom-0 z-30 flex h-fit w-screen justify-center">
+	<div class="sticky bottom-0 z-30 flex h-fit w-screen justify-center md:bottom-3">
 		<div
 			transition:slide={{ duration: 500, easing: cubicOut }}
-			class="border-t-2 border-r-2 border-l-2 shadow-2xl flex h-fit w-screen flex-col justify-center rounded-tl-xl rounded-tr-xl bg-background px-8 pb-4 pt-1 md:w-fit"
+			class="flex h-fit w-screen flex-col justify-center rounded-b-none rounded-t-xl border-x-2 border-t-2 bg-background px-8 pb-4 pt-1 shadow-2xl md:w-fit md:rounded-xl md:border-2 md:pb-2"
 		>
 			<button on:click={toggleSearchSection} class="flex h-fit w-full items-center justify-center">
 				<ChevronUp
