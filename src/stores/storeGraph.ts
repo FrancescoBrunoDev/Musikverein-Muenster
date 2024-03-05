@@ -4,7 +4,7 @@ import { filters, filteredEvents } from '$stores/storeFilters';
 import { fetchedEvents } from '$stores/storeEvents';
 
 const filteredEventsForGraph = writable<DataRecordCoordinates[]>([]);
-const showLinesAsPerformances = writable<boolean>(false);
+const showLinesAsPerformances = writable<boolean>(true);
 
 const updateFilteredEventsAndUdateDataForGraph = async () => {
 	let _filters: Filters = {
