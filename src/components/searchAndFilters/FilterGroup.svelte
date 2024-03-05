@@ -40,21 +40,24 @@
 	aria-dropeffect="move"
 	tabindex="0"
 >
-	<div
-		class="absolute bottom-0 left-0 top-0 flex h-full -translate-x-5 items-center text-xs font-bold uppercase"
-	>
-		<span style="writing-mode: vertical-rl;" class="rotate-180"
-			>{$LL.filters.methods[method]()}</span
+	{#if Object.keys(groupedFilters).length !== 0 || $isAFilterDragged}
+		<div
+			class="absolute bottom-0 left-0 top-0 flex h-full -translate-x-5 items-center text-xs font-bold uppercase"
+			transition:fade={{ duration: 200 }}
 		>
-	</div>
+			<span style="writing-mode: vertical-rl;" class="rotate-180"
+				>{$LL.filters.methods[method]()}</span
+			>
+		</div>
+	{/if}
 	<div class="absolute h-full w-1 rounded-full bg-{color}"></div>
 	<div
-		class="ml-2 min-h-8 pb-2 {$isAFilterDragged
-			? 'rounded outline-dashed outline-border'
-			: 'border-background'}"
+		class="ml-3 pb-2 transition-all duration-200 {$isAFilterDragged
+			? 'min-h-10 rounded outline-dotted outline-border'
+			: 'min-h-4 border-background'}"
 	>
 		{#each Object.keys(groupedFilters) as entity}
-			<div class="grid pl-3" transition:slide={{ axis: 'y', delay: 150 }}>
+			<div class="grid pl-2" transition:slide={{ axis: 'y', delay: 150 }}>
 				<h2 class="mb-2 text-sm font-bold">
 					{entity === 'person' ? 'perfomer' : entity}
 				</h2>

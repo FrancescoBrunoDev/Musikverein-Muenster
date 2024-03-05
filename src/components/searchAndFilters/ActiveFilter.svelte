@@ -47,7 +47,7 @@
 	on:dragend={handleDragEnd}
 	role="button"
 	tabindex="0"
-	class="flex items-center gap-1 rounded-full border border-secondary bg-primary px-3 py-1 text-xs text-background hover:z-20 hover:drop-shadow-lg {isDragging
+	class="flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs text-background hover:z-20 hover:drop-shadow-lg {isDragging
 		? 'cursor-grabbing'
 		: 'cursor-grab'}"
 >

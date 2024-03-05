@@ -8,7 +8,7 @@
 </script>
 
 {#if $filters.or.length > 0 || $filters.and.length > 0 || $filters.not.length > 0}
-	<div class="flex flex-col gap-y-2" transition:slide={{ duration: 600}}>
+	<div class="flex flex-col gap-y-4" transition:slide={{ duration: 600}}>
 		{#each filterMethods as method}
 			<FilterGroup {method} color={filterColors[method]} />
 		{/each}
