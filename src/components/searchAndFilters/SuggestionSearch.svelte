@@ -25,7 +25,6 @@
 			window.removeEventListener('click', handleClickOutside);
 		};
 	});
-	$: console.log($suggestions);
 </script>
 
 {#if $suggestions && $suggestions.length > 0}

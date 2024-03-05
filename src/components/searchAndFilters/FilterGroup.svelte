@@ -54,7 +54,7 @@
 	<div
 		class="ml-3 pb-2 transition-all duration-200 {$isAFilterDragged
 			? 'min-h-10 rounded outline-dotted outline-border'
-			: 'min-h-4 border-background'}"
+			: 'min-h-1 border-background'}"
 	>
 		{#each Object.keys(groupedFilters) as entity}
 			<div class="grid pl-2" transition:slide={{ axis: 'y', delay: 150 }}>

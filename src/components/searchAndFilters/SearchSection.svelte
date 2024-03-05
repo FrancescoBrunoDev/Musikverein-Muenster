@@ -12,11 +12,13 @@
 
 <div
 	class="flex w-full flex-col {$isSearchSectionInEventsListOpen || !$isSearchSectionInEventsList
-		? 'gap-y-2'
+		? 'gap-y-4'
 		: ''} "
 >
 	{#if $isSearchSectionInEventsList}
-		<ActiveFilters />
+		<div class={!$isSearchSectionInEventsListOpen ? 'pb-2' : ''}>
+			<ActiveFilters />
+		</div>
 	{/if}
 	{#if $isSearchSectionInEventsListOpen}
 		<div transition:slide={{ duration: 500, easing: cubicOut }}>
