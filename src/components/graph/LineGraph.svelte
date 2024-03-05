@@ -140,7 +140,7 @@
 			<div class="z-10 w-screen max-w-5xl px-8">
 				<VisXYContainer
 					{data}
-					height={300}
+					height={250}
 					scaleByDomain={true}
 					xDomain={[1850, 1910]}
 					yDomain={[0, 30]}
