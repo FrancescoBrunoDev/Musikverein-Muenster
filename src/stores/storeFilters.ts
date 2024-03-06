@@ -1,7 +1,7 @@
-import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { getTitleString, getTitle, fetchedEvents } from '$stores/storeEvents';
+import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
 
 const filtersUrlified = writable<string>('');
 const filters = writable<Filters>({
@@ -171,6 +171,8 @@ const addFilterElement = async (selected: any) => {
 
 	updateFilteredEventsAndUdateDataForGraph();
 };
+
+const formatFilter = (filter: Filter) => {};
 
 const moveFilterElement = (selected: Filter, method: Method, moveTo: Method) => {
 	filters.update((currentFilters) => {

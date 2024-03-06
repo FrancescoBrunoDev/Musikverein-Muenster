@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
 
 const fetchedEvents = writable<Events>(undefined);
 const allTitles = writable<allTitles>({
@@ -6,7 +7,7 @@ const allTitles = writable<allTitles>({
 	person: {},
 	location: {},
 	corporation: {},
-	composer: {},
+	composer: {}
 });
 
 const kindMapping: { [key in Entity]: { key: string; uid: string } } = {
@@ -43,9 +44,7 @@ const getTitles = async (event: EventItem) => {
 			})
 		);
 	} catch (error) {
-		console.error(
-			'An error occurred while fetching titles, I will try to use the stored Titles:',
-		);
+		console.error('An error occurred while fetching titles, I will try to use the stored Titles:');
 	}
 };
 
@@ -56,7 +55,7 @@ const getTitle = async (allUids: string[], kind: Entity) => {
 	}
 	const uids = allUids.length > 1 ? allUids.join('|') : allUids[0];
 	const res = await fetch(
-		`https://performance.musiconn.de/api?action=get&${kindForApi}=${uids}&props=title&format=json`
+		`${urlBaseAPIMusiconn}?action=get&${kindForApi}=${uids}&props=title&format=json`
 	);
 	const json = await res.json();
 	const titles = json[kindForApi];
@@ -103,4 +102,14 @@ const getTitleString = (uid: number, kind: Entity): Promise<string> => {
 	});
 };
 
-export { fetchedEvents, allTitles, projectID, startYear, endYear, mainLocationID, getTitleString, getTitles, getTitle };
+export {
+	fetchedEvents,
+	allTitles,
+	projectID,
+	startYear,
+	endYear,
+	mainLocationID,
+	getTitleString,
+	getTitles,
+	getTitle
+};

@@ -1,13 +1,12 @@
 import { entitiesForSearchBox, filters } from '$stores/storeFilters';
 import { suggestions } from '$stores/storeSearchSection';
 import { projectID, startYear, endYear, mainLocationID } from '$stores/storeEvents';
-
-const API_URL = 'https://performance.musiconn.de/api';
+import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
 
 const getLocationEventsAndChildLocation = async (locationId: number) => {
 	try {
 		const res = await fetch(
-			`${API_URL}?action=get&location=${locationId}&props=childs|events&format=json`
+			`${urlBaseAPIMusiconn}?action=get&location=${locationId}&props=childs|events&format=json`
 		);
 		const data = await res.json();
 		let events = data.location[locationId].events || [];
@@ -19,7 +18,7 @@ const getLocationEventsAndChildLocation = async (locationId: number) => {
 			const childEvents = await Promise.all(childEventsPromises);
 			events = events.concat(...childEvents);
 		}
-		console.log('events', events);
+
 		return events;
 	} catch (error) {
 		console.error('Error fetching events and child locations:', error);
@@ -45,7 +44,7 @@ const getAllEvents = async () => {
 		const fetchPromises = batches.map(async (batch: { event: string }[]) => {
 			const joinedEventIds = batch.map((eventObj) => eventObj.event).join('|');
 			const res = await fetch(
-				`${API_URL}?action=get&event=${joinedEventIds}&props=uid|dates|locations|persons|performances|corporations|sources&format=json`
+				`${urlBaseAPIMusiconn}?action=get&event=${joinedEventIds}&props=uid|dates|locations|persons|performances|corporations|sources&format=json`
 			);
 			return res.json();
 		});
@@ -67,10 +66,17 @@ const joinEventByYear = async () => {
 			const event = allEvents[key];
 			let startYearValue: number = 0;
 			let endYearValue: number = 3000;
-			startYear.subscribe((res: number) => { startYearValue = res });
-			endYear.subscribe((res: number) => { endYearValue = res });
+			startYear.subscribe((res: number) => {
+				startYearValue = res;
+			});
+			endYear.subscribe((res: number) => {
+				endYearValue = res;
+			});
 			// se la data è antecedente al 1850 o successiva la 1900 non la considero
-			if (event.dates[0].date.split('-')[0] < startYearValue || event.dates[0].date.split('-')[0] > endYearValue) {
+			if (
+				event.dates[0].date.split('-')[0] < startYearValue ||
+				event.dates[0].date.split('-')[0] > endYearValue
+			) {
 				continue;
 			}
 			const year = event.dates[0].date.split('-')[0];
@@ -90,7 +96,7 @@ const autocomplete = async (query: string) => {
 	entitiesForSearchBox.subscribe((res: string[]) => {
 		_entitiesForSearchBox = res;
 	});
-	console.log('entitiesForSearchBox', _entitiesForSearchBox);
+
 	function setFilters(results: AutocompleteResult[]) {
 		filters.subscribe((filter: any) => {
 			const mapFilterItems = (items: Filter[]) =>
@@ -117,21 +123,25 @@ const autocomplete = async (query: string) => {
 	const entities = _entitiesForSearchBox.join('|');
 	if (entities.length !== 0) {
 		try {
-			let _projectID: number = 1
+			let _projectID: number = 1;
 			projectID.subscribe((res: number) => {
 				_projectID = res;
 			});
 
 			const res = await fetch(
-				`${API_URL}?action=autocomplete&title=${query}&entities=${entities}&max=20&project=${_projectID}&format=json`
+				`${urlBaseAPIMusiconn}?action=autocomplete&title=${query}&entities=${entities}&max=20&project=${_projectID}&format=json`
 			);
 			const results = await res.json();
 			setFilters(results);
 		} catch (error) {
-			console.error('Error fetching all events with the project id:', error, 'try without project id');
+			console.error(
+				'Error fetching all events with the project id:',
+				error,
+				'try without project id'
+			);
 			try {
 				const res = await fetch(
-					`${API_URL}?action=autocomplete&title=${query}&entities=${entities}&max=20&format=json`
+					`${urlBaseAPIMusiconn}?action=autocomplete&title=${query}&entities=${entities}&max=20&format=json`
 				);
 				const results = await res.json();
 				setFilters(results);
