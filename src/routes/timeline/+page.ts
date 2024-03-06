@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
 import { joinEventByYear } from '$lib/dataMusiconn';
 
-let cachedEvents: Events = null;
+let cachedEvents: Events;
 
 export const load: PageLoad = async () => {
 	if (!cachedEvents) {

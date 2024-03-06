@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 
 import { filters, filteredEvents } from '$stores/storeFilters';
-import { fetchedEvents } from '$stores/storeEvents';
+import { fetchedEvents, startYear, endYear } from '$stores/storeEvents';
 
 const filteredEventsForGraph = writable<DataRecordCoordinates[]>([]);
 const showLinesAsPerformances = writable<boolean>(true);
@@ -21,12 +21,21 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 		_fetchedEvents = res;
 	});
 
+		let _startYear: number = 0;
+	let _endYear: number = 3000;
+	startYear.subscribe((res: number) => {
+		_startYear = res;
+	});
+	endYear.subscribe((res: number) => {
+		_endYear = res;
+	});
+
 	filteredEventsForGraph.set([]);
 
 	filteredEvents.set({});
 
-	// there should be an yearObj for each year from 1850 to 1900
-	for (let year = 1840; year <= 1910; year++) {
+	// there should be an yearObj for each year from startYear to endYear
+	for (let year = _startYear; year <= _endYear+10; year++) {
 		const events = _fetchedEvents[year as keyof Events] || [];
 		let eventCount = 0;
 		const yearObj: DataRecordCoordinates = {

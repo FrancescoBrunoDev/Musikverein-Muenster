@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Position } from '@unovis/ts';
-	import { fade } from 'svelte/transition';
 	import { VisXYContainer, VisLine, VisAxis, VisTooltip, VisCrosshair } from '@unovis/svelte';
 	import { filteredEventsForGraph } from '$stores/storeGraph';
 	import { filters } from '$stores/storeFilters';
 	import { showLinesAsPerformances } from '$stores/storeGraph';
+	import { startYear, endYear } from '$stores/storeEvents';
 
 	let data: DataRecordCoordinates[] = []; // Declare data as a variable outside of onMount
 
@@ -128,36 +128,27 @@
 	}
 </script>
 
-<div class="flex justify-center h-full">
-	{#if data && data.length > 0}
-		<div class="relative">
-			<div
-				class="absolute z-10 ml-8 h-full w-32 bg-gradient-to-r from-background from-10% to-transparent"
-			/>
-			<div
-				class="absolute right-0 z-10 mr-8 h-full w-32 bg-gradient-to-l from-background from-10% to-transparent"
-			/>
-			<div class="z-10 w-screen max-w-5xl px-8">
-				<VisXYContainer
-					{data}
-					height={250}
-					scaleByDomain={true}
-					xDomain={[1850, 1910]}
-					yDomain={[0, 30]}
-				>
-					<VisLine {x} {y} color={colorLine} fallbackValue={0} />
-					<VisCrosshair color={colorLine} template={tooltipTemplate} />
-					<VisTooltip verticalShift={300} horizontalPlacement={Position.Right} />
-					<VisAxis gridLine={false} domainLine={false} tickLine={undefined} type="x" />
-				</VisXYContainer>
-			</div>
-		</div>
-	{:else}
+<div class="flex h-full justify-center">
+	<div class="relative">
 		<div
-			transition:fade={{ delay: 250, duration: 300 }}
-			class="flex h-full w-screen items-center justify-center"
-		>
-			<div class="text-xl">Loading the data</div>
+			class="absolute z-10 ml-8 h-full w-32 bg-gradient-to-r from-background from-10% to-transparent"
+		/>
+		<div
+			class="absolute right-0 z-10 mr-8 h-full w-32 bg-gradient-to-l from-background from-10% to-transparent"
+		/>
+		<div class="z-10 w-screen max-w-5xl px-8">
+			<VisXYContainer
+				{data}
+				height={250}
+				scaleByDomain={true}
+				xDomain={[$startYear, $endYear+10]}
+				yDomain={[0, 30]}
+			>
+				<VisLine {x} {y} color={colorLine} fallbackValue={0} />
+				<VisCrosshair color={colorLine} template={tooltipTemplate} />
+				<VisTooltip verticalShift={300} horizontalPlacement={Position.Right} />
+				<VisAxis gridLine={false} domainLine={false} tickLine={undefined} type="x" />
+			</VisXYContainer>
 		</div>
-	{/if}
+	</div>
 </div>

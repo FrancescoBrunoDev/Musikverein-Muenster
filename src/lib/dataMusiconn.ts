@@ -1,11 +1,10 @@
 import { entitiesForSearchBox, filters } from '$stores/storeFilters';
 import { suggestions } from '$stores/storeSearchSection';
-import { projectID } from '$stores/storeEvents';
+import { projectID, startYear, endYear, mainLocationID } from '$stores/storeEvents';
 
-const MuensterID = 332; //307 (new 332) is the ID of Muenster in the musiconn database
 const API_URL = 'https://performance.musiconn.de/api';
 
-const getMuensterEventsAndChildLocation = async (locationId: number) => {
+const getLocationEventsAndChildLocation = async (locationId: number) => {
 	try {
 		const res = await fetch(
 			`${API_URL}?action=get&location=${locationId}&props=childs|events&format=json`
@@ -15,15 +14,14 @@ const getMuensterEventsAndChildLocation = async (locationId: number) => {
 
 		if (data.location[locationId].childs && data.location[locationId].childs.length > 0) {
 			const childEventsPromises = data.location[locationId].childs.map((child: any) =>
-				getMuensterEventsAndChildLocation(child.location)
+				getLocationEventsAndChildLocation(child.location)
 			);
 			const childEvents = await Promise.all(childEventsPromises);
 			events = events.concat(...childEvents);
 		}
-
+		console.log('events', events);
 		return events;
 	} catch (error) {
-
 		console.error('Error fetching events and child locations:', error);
 		return [];
 	}
@@ -31,7 +29,11 @@ const getMuensterEventsAndChildLocation = async (locationId: number) => {
 
 const getAllEvents = async () => {
 	try {
-		const allEventIds = await getMuensterEventsAndChildLocation(MuensterID);
+		let _mainLocationID: number = 1;
+		mainLocationID.subscribe((res: number) => {
+			_mainLocationID = res;
+		});
+		const allEventIds = await getLocationEventsAndChildLocation(_mainLocationID);
 
 		const batchSize = 300;
 
@@ -63,8 +65,12 @@ const joinEventByYear = async () => {
 		const allEvents = batch.event;
 		for (const key in allEvents) {
 			const event = allEvents[key];
+			let startYearValue: number = 0;
+			let endYearValue: number = 3000;
+			startYear.subscribe((res: number) => { startYearValue = res });
+			endYear.subscribe((res: number) => { endYearValue = res });
 			// se la data è antecedente al 1850 o successiva la 1900 non la considero
-			if (event.dates[0].date.split('-')[0] < 1850 || event.dates[0].date.split('-')[0] > 1900) {
+			if (event.dates[0].date.split('-')[0] < startYearValue || event.dates[0].date.split('-')[0] > endYearValue) {
 				continue;
 			}
 			const year = event.dates[0].date.split('-')[0];
@@ -80,11 +86,11 @@ const joinEventByYear = async () => {
 };
 
 const autocomplete = async (query: string) => {
-	let _entitiesForSearchBox: string[] = await new Promise<string[]>((resolve) => {
-		entitiesForSearchBox.subscribe((res: string[]) => {
-			resolve(res);
-		});
+	let _entitiesForSearchBox: string[] = [];
+	entitiesForSearchBox.subscribe((res: string[]) => {
+		_entitiesForSearchBox = res;
 	});
+	console.log('entitiesForSearchBox', _entitiesForSearchBox);
 	function setFilters(results: AutocompleteResult[]) {
 		filters.subscribe((filter: any) => {
 			const mapFilterItems = (items: Filter[]) =>
@@ -111,16 +117,14 @@ const autocomplete = async (query: string) => {
 	const entities = _entitiesForSearchBox.join('|');
 	if (entities.length !== 0) {
 		try {
-			let _projectID = await new Promise<number>((resolve) => {
-				projectID.subscribe((res: number) => {
-					resolve(res);
-				});
-			}
-			);
+			let _projectID: number = 1
+			projectID.subscribe((res: number) => {
+				_projectID = res;
+			});
+
 			const res = await fetch(
 				`${API_URL}?action=autocomplete&title=${query}&entities=${entities}&max=20&project=${_projectID}&format=json`
 			);
-			console.log(projectID)
 			const results = await res.json();
 			setFilters(results);
 		} catch (error) {

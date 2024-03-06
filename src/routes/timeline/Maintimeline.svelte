@@ -2,6 +2,7 @@
 	import LineGraph from '$components/graph/LineGraph.svelte';
 	import SearchSection from '$components/searchAndFilters/SearchSection.svelte';
 	import { isSearchSectionInEventsList } from '$stores/storeSearchSection';
+	import { slide } from 'svelte/transition';
 
 	let opacitySearchSection = 1;
 	let blurSearchSection = 0;
@@ -27,7 +28,7 @@
 </script>
 
 <div class="flex h-dvh flex-col py-12">
-	<div
+	<div transition:slide
 		class="flex flex-grow content-end items-center justify-center transition-all duration-500"
 		style={`opacity: ${opacitySearchSection};
                 filter: blur(${blurSearchSection}px);

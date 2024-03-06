@@ -18,6 +18,9 @@ const kindMapping: { [key in Entity]: { key: string; uid: string } } = {
 };
 
 const projectID = writable<number>(26);
+const startYear = writable<number>(1850);
+const endYear = writable<number>(1900);
+const mainLocationID = writable<number>(332); //307 (new 332) is the ID of Muenster in the musiconn database
 
 const getTitles = async (event: EventItem) => {
 	const uidTypes: Entity[] = ['work', 'person', 'location', 'corporation', 'composer'];
@@ -100,4 +103,4 @@ const getTitleString = (uid: number, kind: Entity): Promise<string> => {
 	});
 };
 
-export { fetchedEvents, allTitles, projectID, getTitleString, getTitles, getTitle };
+export { fetchedEvents, allTitles, projectID, startYear, endYear, mainLocationID, getTitleString, getTitles, getTitle };
