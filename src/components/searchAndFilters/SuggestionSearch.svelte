@@ -3,7 +3,9 @@
 	import { addFilterElement, entitiesForSearchBox } from '$stores/storeFilters';
 	import { suggestions, inputValue } from '$stores/storeSearchSection';
 	import { onMount } from 'svelte';
-
+	import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
+	import { projectID } from '$stores/storeEvents';
+	import { Loader2 } from 'lucide-svelte';
 	let div: HTMLDivElement;
 
 	const handleFilterFromSuggestion = (suggestion: any) => {
@@ -25,6 +27,18 @@
 			window.removeEventListener('click', handleClickOutside);
 		};
 	});
+
+	async function getNumbers(suggestionID: number, entity: Entity) {
+		const res = await fetch(
+			`${urlBaseAPIMusiconn}?action=query&${entity}=${suggestionID}&entity=none&format=json&project=${$projectID}`
+		);
+		if (res.ok) {
+			const { count } = await res.json();
+			return count.event;
+		} else {
+			console.error('Fetch failed', res.status, res.statusText);
+		}
+	}
 </script>
 
 {#if $suggestions && $suggestions.length > 0}
@@ -36,7 +50,7 @@
 		{#each $suggestions as suggestion}
 			<div class="flex h-fit items-center gap-1">
 				{#if $entitiesForSearchBox.length > 1}
-					<div class="h-fit rounded-full border-2 border-text px-2 text-xs">
+					<div class="flex h-5 items-center rounded-full border-2 border-text px-2 text-xs">
 						{suggestion[1]}
 					</div>
 				{/if}
@@ -46,6 +60,19 @@
 					on:click={() => handleFilterFromSuggestion({ suggestion })}
 					id={suggestion[2]}>{suggestion[0]}</button
 				>
+				{#await getNumbers(Number(suggestion[2]), suggestion[1])}
+					<span class="flex h-5 items-center rounded-full bg-primary px-2 text-xs text-secondary">
+						<Loader2 class="h-full animate-spin" />
+					</span>
+				{:then numberEvents}
+					{#if Number(numberEvents) > 0}
+						<span class="flex h-5 items-center rounded-full bg-primary px-2 text-xs text-secondary">
+							{numberEvents}
+						</span>
+					{/if}
+				{:catch error}
+					<div>not availe now</div>
+				{/await}
 			</div>
 		{/each}
 	</div>

@@ -133,7 +133,6 @@ const autocomplete = async (query: string) => {
 				`${urlBaseAPIMusiconn}?action=autocomplete&title=${query}&entities=${entities}&max=20&project=${_projectID}&format=json`
 			);
 			const results = await res.json();
-			console.log(results);
 			const filteredSuggestions = removeFormSuggestionIfInFilters(results);
 			suggestions.set(filteredSuggestions);
 		} catch (error) {
