@@ -39,9 +39,21 @@
 			});
 		} else {
 			if ($filters.or.length > 0) {
-				$filters.or.forEach((filter) => {
+				$filters.or.forEach((filter: Filter) => {
+					let filterName = filter.name;
+					// if filter name is an object
+					if (typeof filterName === 'object') {
+						if (filter.entity === 'person' || filter.entity === 'composer') {
+							filterName = filter.name.lastName + ', ' + filter.name.abbreviatedFirstName;
+						} else if (filter.entity === 'work') {
+							filterName = filter.name.title + ', ' + filter.name.composer.lastName;
+						}
+					} else {
+						filterName = filterName;
+					}
+
 					arrayEventsPerFilter.push({
-						text: `${filter.name}: ${dataSingleYear.filters[filter.name].count}`,
+						text: `${filterName}: ${dataSingleYear.filters[filter.name].count}`,
 						color: filter.color
 					});
 				});
@@ -141,7 +153,7 @@
 				{data}
 				height={250}
 				scaleByDomain={true}
-				xDomain={[$startYear, $endYear+10]}
+				xDomain={[$startYear, $endYear + 10]}
 				yDomain={[0, 30]}
 			>
 				<VisLine {x} {y} color={colorLine} fallbackValue={0} />

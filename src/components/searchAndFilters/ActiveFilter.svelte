@@ -38,6 +38,8 @@
 	function handleDragEnd(event: DragEvent) {
 		isDragging = false;
 	}
+
+	let isMouseOver = false;
 </script>
 
 <div
@@ -56,10 +58,32 @@
 	{/if}
 	<button
 		type="button"
-		class="max-w-xs truncate hover:line-through"
+		class="max-w-xs truncate hover:line-through transition-all"
 		on:click={() => removeFilterElement(filter, method)}
+		on:mouseover={() => (isMouseOver = true)}
+		on:mouseleave={() => (isMouseOver = false)}
+		on:blur={() => (isMouseOver = false)}
+		on:focus={() => (isMouseOver = true)}
+		on:dragover={() => (isMouseOver = true)}
 	>
-		{filter.name}
+		<span>
+			{#if typeof filter.name === 'object'}
+				{#if 'lastName' in filter.name}
+					{#if filter.entity === 'person' || filter.entity === 'composer'}
+						{filter.name.lastName}, {#if isMouseOver}{filter.name.firstName}{:else}{filter.name
+								.abbreviatedFirstName}{/if}
+						{#if filter.birth && filter.death}
+							({filter.birth.split('-')[0]} - {filter.death.split('-')[0]})
+						{/if}
+					{/if}
+				{:else if 'title' in filter.name && filter.entity === 'work'}
+					{filter.name.title}, {filter.name.composer.lastName}
+					{#if isMouseOver}, {filter.name.composer.abbreviatedFirstName}{/if}
+				{/if}
+			{:else}
+				{filter.name}
+			{/if}
+		</span>
 	</button>
 	{#if $open && !isDragging}
 		<div use:melt={$content} transition:fade={{ duration: 100 }} class="flex flex-col gap-y-1">

@@ -10,7 +10,7 @@ const filters = writable<Filters>({
 	not: []
 });
 
-const SelectedMethodFilter = writable<Method>('or');
+const SelectedMethodFilter = writable<Method>('and');
 const colorFilters = writable([
 	'#04c0c7',
 	'#e7871a',
@@ -86,44 +86,22 @@ const deUrlifyerFilters = async (filtersUrl: FiltersForUrl) => {
 				return 'person';
 		}
 	}
-	const newFilters: Filters = {
-		or: await Promise.all(
-			filtersOr
-				.filter((filter) => filter.id)
-				.map(async (filter) => ({
-					id: Number(filter.id),
-					entity: whichEntityIs(filter.entity),
-					name: `${await getTitle([filter.id], whichEntityIs(filter.entity)).then(() =>
-						getTitleString(Number(filter.id), whichEntityIs(filter.entity))
-					)}`,
-					color: pickColor()
-				}))
-		),
-		and: await Promise.all(
-			filtersAnd
-				.filter((filter) => filter.id)
-				.map(async (filter) => ({
-					id: Number(filter.id),
-					entity: whichEntityIs(filter.entity),
-					name: `${await getTitle([filter.id], whichEntityIs(filter.entity)).then(() =>
-						getTitleString(Number(filter.id), whichEntityIs(filter.entity))
-					)}`,
-					color: pickColor()
-				}))
-		),
-		not: await Promise.all(
-			filtersNot
-				.filter((filter) => filter.id)
-				.map(async (filter) => ({
-					id: Number(filter.id),
-					entity: whichEntityIs(filter.entity),
-					name: `${await getTitle([filter.id], whichEntityIs(filter.entity)).then(() =>
-						getTitleString(Number(filter.id), whichEntityIs(filter.entity))
-					)}`
-				}))
-		)
-	};
-	filters.set(newFilters);
+	// use a cicle for for add a filter using the function addFilterElement
+	for (const filter of filtersOr) {
+		const name = '';
+		const entity = whichEntityIs(filter.entity);
+		addFilterElement({ suggestion: [name, entity, filter.id] }, 'or');
+	}
+	for (const filter of filtersAnd) {
+		const name = '';
+		const entity = whichEntityIs(filter.entity);
+		addFilterElement({ suggestion: [name, entity, filter.id] }, 'and');
+	}
+	for (const filter of filtersNot) {
+		const name = '';
+		const entity = whichEntityIs(filter.entity);
+		addFilterElement({ suggestion: [name, entity, filter.id] }, 'not');
+	}
 };
 
 const pickColor = () => {
@@ -137,11 +115,15 @@ const pickColor = () => {
 	return color;
 };
 
-const addFilterElement = async (selected: any) => {
-	let method: string;
-	SelectedMethodFilter.subscribe((res) => {
-		method = res;
-	});
+const addFilterElement = async (selected: any, method?: Method) => {
+	let _method: Method;
+	if (method) {
+		_method = method;
+	} else {
+		SelectedMethodFilter.subscribe((res) => {
+			_method = res;
+		});
+	}
 	const filter: Filter = {
 		name: selected.suggestion[0],
 		entity: selected.suggestion[1],
@@ -153,18 +135,27 @@ const addFilterElement = async (selected: any) => {
 		filter.entity = await isMoreAPersonOrAComposer(filter.id);
 	}
 
+	const formattedFilter: Filter = (await formatFilter(filter)) ?? {
+		id: filter.id,
+		entity: filter.entity,
+		name: filter.name,
+		birth: undefined,
+		death: undefined,
+		color: filter.color
+	};
+
 	filters.update((currentFilters) => {
-		const filterExistsInMethod = currentFilters[method as keyof Filters]?.some(
-			(f) => f.id === filter.id && f.entity === filter.entity
+		const filterExistsInMethod = currentFilters[_method as keyof Filters]?.some(
+			(f) => f.id === formattedFilter.id && f.entity === formattedFilter.entity
 		);
 		const filterExistsInNot = currentFilters['not'].some(
-			(f) => f.id === filter.id && f.entity === filter.entity
+			(f) => f.id === formattedFilter.id && f.entity === formattedFilter.entity
 		);
 		if (filterExistsInMethod || filterExistsInNot) {
 			return currentFilters;
 		} else {
 			const updatedFilters = { ...currentFilters };
-			updatedFilters[method as keyof Filters].push(filter);
+			updatedFilters[_method as keyof Filters].push(formattedFilter);
 			return updatedFilters;
 		}
 	});
@@ -172,7 +163,57 @@ const addFilterElement = async (selected: any) => {
 	updateFilteredEventsAndUdateDataForGraph();
 };
 
-const formatFilter = (filter: Filter) => {};
+const formatPersonName = (person: { name: { split: (arg0: string) => [any, any] } }) => {
+	const [lastName, firstName] = person.name.split(',');
+	const abbreviatedFirstName = firstName
+		.trim()
+		.split(' ')
+		.map((name: string) => `${name[0]}.`)
+		.join(' ');
+	return { lastName, firstName, abbreviatedFirstName };
+};
+
+const formatFilter = async (filter: Filter) => {
+	if (filter.entity === 'composer' || filter.entity === 'person') {
+		const res = await fetch(
+			`${urlBaseAPIMusiconn}?action=get&person=${filter.id}&props=biography|names&format=json`
+		);
+
+		const { person } = await res.json();
+		const { biography, names } = person[filter.id];
+		const { lastName, firstName, abbreviatedFirstName } = formatPersonName(names[0]);
+		const birth = biography?.birth?.dates?.[0]?.date;
+		const death = biography?.death?.dates?.[0]?.date;
+
+		return {
+			id: filter.id,
+			entity: filter.entity,
+			name: { lastName, firstName, abbreviatedFirstName },
+			birth,
+			death,
+			color: filter.color
+		};
+	} else if (filter.entity === 'work') {
+		const res = await fetch(
+			`${urlBaseAPIMusiconn}?action=get&work=${filter.id}&props=names|composers&format=json`
+		);
+		const { work } = await res.json();
+		const title = work[filter.id].names[0].name;
+		const composerId = work[filter.id].composers[0].person;
+		const { lastName, abbreviatedFirstName } = await fetch(
+			`${urlBaseAPIMusiconn}?action=get&person=${composerId}&props=names&format=json`
+		)
+			.then((res) => res.json())
+			.then((res) => res.person[composerId].names[0])
+			.then(formatPersonName);
+		return {
+			id: filter.id,
+			entity: filter.entity,
+			name: { title, composer: { lastName, abbreviatedFirstName } },
+			color: filter.color
+		};
+	}
+};
 
 const moveFilterElement = (selected: Filter, method: Method, moveTo: Method) => {
 	filters.update((currentFilters) => {

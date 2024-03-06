@@ -94,10 +94,23 @@ type Filters = {
 
 type Method = 'or' | 'not' | 'and';
 
+type PersonNameFilter = {
+	lastName: string;
+	firstName?: string;
+	abbreviatedFirstName?: string;
+};
+
+type WorkNameFilter = {
+	title: string;
+	composer: PersonNameFilter;
+};
+
 type Filter = {
-	name: string;
-	entity: Entity;
 	id: number;
+	entity: Entity;
+	name: PersonNameFilter | WorkNameFilter | string;
+	birth?: string;
+	death?: string;
 	color?: string;
 };
 
@@ -120,10 +133,10 @@ type Locales = Locales;
 type ThemeKind = 'base' | 'dark';
 
 type ExibitionMarkdown = {
-	title: string
-	slug: string
-	description: string
-	date: string
-	categories: Categories[]
-	published: boolean
-}
+	title: string;
+	slug: string;
+	description: string;
+	date: string;
+	categories: Categories[];
+	published: boolean;
+};
