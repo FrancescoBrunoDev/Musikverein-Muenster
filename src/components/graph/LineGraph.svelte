@@ -42,11 +42,11 @@
 				$filters.or.forEach((filter: Filter) => {
 					let filterName = filter.name;
 					// if filter name is an object
-					if (typeof filterName === 'object') {
+					if (typeof filter.name === 'object') {
 						if (filter.entity === 'person' || filter.entity === 'composer') {
-							filterName = filter.name.lastName + ', ' + filter.name.abbreviatedFirstName;
+							filterName = (filter.name as PersonNameFilter).lastName + ', ' + (filter.name as PersonNameFilter).abbreviatedFirstName;
 						} else if (filter.entity === 'work') {
-							filterName = filter.name.title + ', ' + filter.name.composer.lastName;
+							filterName = (filter.name as WorkNameFilter).title + ', ' + (filter.name as WorkNameFilter).composer.lastName;
 						} else {
 							filterName = filterName;
 						}

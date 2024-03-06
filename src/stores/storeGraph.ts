@@ -21,7 +21,7 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 		_fetchedEvents = res;
 	});
 
-		let _startYear: number = 0;
+	let _startYear: number = 0;
 	let _endYear: number = 3000;
 	startYear.subscribe((res: number) => {
 		_startYear = res;
@@ -35,7 +35,7 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 	filteredEvents.set({});
 
 	// there should be an yearObj for each year from startYear to endYear
-	for (let year = _startYear; year <= _endYear+10; year++) {
+	for (let year = _startYear; year <= _endYear + 10; year++) {
 		const events = _fetchedEvents[year as keyof Events] || [];
 		let eventCount = 0;
 		const yearObj: DataRecordCoordinates = {
@@ -73,24 +73,32 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 						yearObj.eventCount = currentEvents[year].length;
 
 						// Update yearObj.filters with all the or filters
-						_filters.or.forEach((filter) => {
+						_filters.or?.forEach((filter) => {
 							if (hasMatchingPerformances(event, filter)) {
-								yearObj.filters[filter.id] = yearObj.filters[filter.id] || {
-									count: 0,
-									color: filter.color
-								};
-								yearObj.filters[filter.id].count++;
+								if (yearObj.filters && yearObj.filters[filter.id]) {
+									yearObj.filters[filter.id].count = (yearObj.filters[filter.id].count || 0) + 1;
+								} else {
+									yearObj.filters[filter.id] = { count: 1, color: filter.color };
+								}
 							}
 						});
 
 						// Update yearObj.filters with an additional and filter
 						if (andConditions) {
-							yearObj.filters['and'] = yearObj.filters['and'] || { count: 0 };
-							yearObj.filters['and'].count++;
+							if (yearObj.filters && yearObj.filters['and']) {
+								yearObj.filters['and'].count = (yearObj.filters['and'].count || 0) + 1;
+							} else {
+								yearObj.filters['and'] = { count: 1 };
+							}
 						}
+
+						// Update yearObj.filters with an additional or filter
 						if (orConditions) {
-							yearObj.filters['or'] = yearObj.filters['or'] || { count: 0 };
-							yearObj.filters['or'].count++;
+							if (yearObj.filters && yearObj.filters['or']) {
+								yearObj.filters['or'].count = (yearObj.filters['or'].count || 0) + 1;
+							} else {
+								yearObj.filters['or'] = { count: 1 };
+							}
 						}
 
 						return { ...currentEvents }; // Return a copy of the modified object
