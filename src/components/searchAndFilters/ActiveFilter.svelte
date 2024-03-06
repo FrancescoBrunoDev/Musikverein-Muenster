@@ -75,7 +75,9 @@
 						{filter.name.lastName}, {#if isMouseOver}{filter.name.firstName}{:else}{filter.name
 								.abbreviatedFirstName}{/if}
 						{#if filter.birth && filter.death}
-							({filter.birth.split('-')[0]} - {filter.death.split('-')[0]})
+							<span class="hidden md:inline-block"
+								>({filter.birth.split('-')[0]} - {filter.death.split('-')[0]})</span
+							>
 						{/if}
 					{/if}
 				{:else if 'title' in filter.name && filter.entity === 'work'}
