@@ -28,7 +28,7 @@
 		};
 	});
 
-	async function getNumbers(suggestionID: number, entity: Entity) {
+	async function getNumbers(suggestionID: number, entity: string | undefined) {
 		const res = await fetch(
 			`${urlBaseAPIMusiconn}?action=query&${entity}=${suggestionID}&entity=none&format=json&project=${$projectID}`
 		);
