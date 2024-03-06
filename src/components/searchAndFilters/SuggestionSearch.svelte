@@ -62,7 +62,7 @@
 				>
 				{#await getNumbers(Number(suggestion[2]), suggestion[1])}
 					<span class="flex h-5 items-center rounded-full bg-primary px-2 text-xs text-secondary">
-						<Loader2 class="h-full animate-spin" />
+						<Loader2 class="h-full animate-spin py-1" />
 					</span>
 				{:then numberEvents}
 					{#if Number(numberEvents) > 0}
