@@ -17,6 +17,8 @@ const kindMapping: { [key in Entity]: { key: string; uid: string } } = {
 	composer: { key: 'composers', uid: 'person' }
 };
 
+const projectID = writable<number>(26);
+
 const getTitles = async (event: EventItem) => {
 	const uidTypes: Entity[] = ['work', 'person', 'location', 'corporation', 'composer'];
 	try {
@@ -98,4 +100,4 @@ const getTitleString = (uid: number, kind: Entity): Promise<string> => {
 	});
 };
 
-export { fetchedEvents, allTitles, getTitleString, getTitles, getTitle };
+export { fetchedEvents, allTitles, projectID, getTitleString, getTitles, getTitle };

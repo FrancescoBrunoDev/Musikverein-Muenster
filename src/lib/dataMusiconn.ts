@@ -1,5 +1,6 @@
 import { entitiesForSearchBox, filters } from '$stores/storeFilters';
 import { suggestions } from '$stores/storeSearchSection';
+import { projectID } from '$stores/storeEvents';
 
 const MuensterID = 332; //307 (new 332) is the ID of Muenster in the musiconn database
 const API_URL = 'https://performance.musiconn.de/api';
@@ -22,7 +23,7 @@ const getMuensterEventsAndChildLocation = async (locationId: number) => {
 
 		return events;
 	} catch (error) {
-		
+
 		console.error('Error fetching events and child locations:', error);
 		return [];
 	}
@@ -100,7 +101,7 @@ const autocomplete = async (query: string) => {
 				item.id == result[2] && item.entity == result[1];
 
 			const filteredResults = results.filter(
-				(result:AutocompleteResult) =>
+				(result: AutocompleteResult) =>
 					![...notFilterItems, ...orFilterItems, ...andFilterItems].some(isFiltered(result))
 			);
 
@@ -110,13 +111,20 @@ const autocomplete = async (query: string) => {
 	const entities = _entitiesForSearchBox.join('|');
 	if (entities.length !== 0) {
 		try {
-			const res = await fetch(
-				`${API_URL}?action=autocomplete&title=${query}&entities=${entities}&max=20&project=26&format=json`
+			let _projectID = await new Promise<number>((resolve) => {
+				projectID.subscribe((res: number) => {
+					resolve(res);
+				});
+			}
 			);
+			const res = await fetch(
+				`${API_URL}?action=autocomplete&title=${query}&entities=${entities}&max=20&project=${_projectID}&format=json`
+			);
+			console.log(projectID)
 			const results = await res.json();
 			setFilters(results);
 		} catch (error) {
-			console.error('Error fetching all events with the project id:', error);
+			console.error('Error fetching all events with the project id:', error, 'try without project id');
 			try {
 				const res = await fetch(
 					`${API_URL}?action=autocomplete&title=${query}&entities=${entities}&max=20&format=json`
