@@ -10,6 +10,7 @@ const en = {
 		},
 		entities: {
 			person: 'Person',
+			performer: 'Performer',
 			work: 'Work',
 			corporation: 'Corporation',
 			location: 'Location',
@@ -18,7 +19,9 @@ const en = {
 			source: 'Source'
 		},
 		filter: {
-			checkboxPerformanceEvent: "show the 'or' events as performances in the graph"
+			checkboxPerformanceEvent: "show the 'or' events as performances in the graph",
+			makeItBothComposerAndPerformer: 'both composer and performer',
+			asA: 'as a'
 		},
 		infoSearch: {
 			title: 'Search Guide',

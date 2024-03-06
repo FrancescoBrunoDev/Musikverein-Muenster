@@ -75,29 +75,30 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 						// Update yearObj.filters with all the or filters
 						_filters.or?.forEach((filter) => {
 							if (hasMatchingPerformances(event, filter)) {
-								if (yearObj.filters && yearObj.filters[filter.id]) {
-									yearObj.filters[filter.id].count = (yearObj.filters[filter.id].count || 0) + 1;
+								const key = filter.id + filter.entity;
+								if (yearObj.filters && yearObj.filters[key]) {
+									yearObj.filters[key].count = (yearObj.filters[key].count || 0) + 1;
 								} else {
-									yearObj.filters[filter.id] = { count: 1, color: filter.color };
+									yearObj.filters[key] = { count: 1, color: filter.color };
 								}
 							}
 						});
 
-						// Update yearObj.filters with an additional and filter
+						// Update yearObj.filters . The key is filter.id + filter.entity in lineGraph
 						if (andConditions) {
-							if (yearObj.filters && yearObj.filters['and']) {
-								yearObj.filters['and'].count = (yearObj.filters['and'].count || 0) + 1;
+							if (yearObj.filters && yearObj.filters['0and']) {
+								yearObj.filters['0and'].count = (yearObj.filters['0and'].count || 0) + 1;
 							} else {
-								yearObj.filters['and'] = { count: 1 };
+								yearObj.filters['0and'] = { count: 1 };
 							}
 						}
 
 						// Update yearObj.filters with an additional or filter
 						if (orConditions) {
-							if (yearObj.filters && yearObj.filters['or']) {
-								yearObj.filters['or'].count = (yearObj.filters['or'].count || 0) + 1;
+							if (yearObj.filters && yearObj.filters['0or']) {
+								yearObj.filters['0or'].count = (yearObj.filters['0or'].count || 0) + 1;
 							} else {
-								yearObj.filters['or'] = { count: 1 };
+								yearObj.filters['0or'] = { count: 1 };
 							}
 						}
 

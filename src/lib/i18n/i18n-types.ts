@@ -39,6 +39,10 @@ type RootTranslation = {
 			 */
 			person: string
 			/**
+			 * P​e​r​f​o​r​m​e​r
+			 */
+			performer: string
+			/**
 			 * W​o​r​k
 			 */
 			work: string
@@ -68,6 +72,14 @@ type RootTranslation = {
 			 * s​h​o​w​ ​t​h​e​ ​'​o​r​'​ ​e​v​e​n​t​s​ ​a​s​ ​p​e​r​f​o​r​m​a​n​c​e​s​ ​i​n​ ​t​h​e​ ​g​r​a​p​h
 			 */
 			checkboxPerformanceEvent: string
+			/**
+			 * b​o​t​h​ ​c​o​m​p​o​s​e​r​ ​a​n​d​ ​p​e​r​f​o​r​m​e​r
+			 */
+			makeItBothComposerAndPerformer: string
+			/**
+			 * a​s​ ​a
+			 */
+			asA: string
 		}
 		infoSearch: {
 			/**
@@ -142,6 +154,10 @@ export type TranslationFunctions = {
 			 */
 			person: () => LocalizedString
 			/**
+			 * Performer
+			 */
+			performer: () => LocalizedString
+			/**
 			 * Work
 			 */
 			work: () => LocalizedString
@@ -171,6 +187,14 @@ export type TranslationFunctions = {
 			 * show the 'or' events as performances in the graph
 			 */
 			checkboxPerformanceEvent: () => LocalizedString
+			/**
+			 * both composer and performer
+			 */
+			makeItBothComposerAndPerformer: () => LocalizedString
+			/**
+			 * as a
+			 */
+			asA: () => LocalizedString
 		}
 		infoSearch: {
 			/**

@@ -15,7 +15,8 @@
 	let colorLine: string[] | string = [] || '';
 
 	function getY(filter: Filter): (dataSingleYear: DataRecordCoordinates) => number | undefined {
-		return (dataSingleYear: DataRecordCoordinates) => dataSingleYear.filters[filter.id]?.count ?? 0;
+		const key = filter.id + filter.entity;
+		return (dataSingleYear: DataRecordCoordinates) => dataSingleYear.filters[key]?.count ?? 0;
 	}
 
 	function getArrayOfActiveFilterColors(filters: Filter[]): string[] {
@@ -44,18 +45,24 @@
 					// if filter name is an object
 					if (typeof filter.name === 'object') {
 						if (filter.entity === 'person' || filter.entity === 'composer') {
-							filterName = (filter.name as PersonNameFilter).lastName + ', ' + (filter.name as PersonNameFilter).abbreviatedFirstName;
+							filterName =
+								(filter.name as PersonNameFilter).lastName +
+								', ' +
+								(filter.name as PersonNameFilter).abbreviatedFirstName;
 						} else if (filter.entity === 'work') {
-							filterName = (filter.name as WorkNameFilter).title + ', ' + (filter.name as WorkNameFilter).composer.lastName;
+							filterName =
+								(filter.name as WorkNameFilter).title +
+								', ' +
+								(filter.name as WorkNameFilter).composer.lastName;
 						} else {
 							filterName = filterName;
 						}
 					} else {
 						filterName = filterName;
 					}
-
+					const key = filter.id + filter.entity;
 					arrayEventsPerFilter.push({
-						text: `${filterName}: ${dataSingleYear.filters[filter.id]?.count ?? 0}`,
+						text: `${filterName}: ${dataSingleYear.filters[key]?.count ?? 0}`,
 						color: filter.color
 					});
 				});
@@ -101,7 +108,7 @@
 						const andFilter = {
 							name: 'and',
 							color: 'hsl(var(--text)',
-							id: 'and',
+							id: 0,
 							entity: 'and' as Entity
 						};
 						_filters.push(andFilter);
@@ -123,8 +130,8 @@
 						const andFilter = {
 							name: 'and',
 							color: 'hsl(var(--text)',
-							id: 'and',
-							entity: 'and'
+							id: 0,
+							entity: 'and' as Entity
 						};
 						_filters.push(andFilter);
 					}

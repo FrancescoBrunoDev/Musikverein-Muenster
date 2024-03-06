@@ -159,7 +159,7 @@ const addFilterElement = async (selected: any, method?: Method) => {
 			return updatedFilters;
 		}
 	});
-
+	cleanDoubleFilters();
 	updateFilteredEventsAndUdateDataForGraph();
 };
 
@@ -228,6 +228,7 @@ const moveFilterElement = (selected: Filter, method: Method, moveTo: Method) => 
 		currentFilters[moveTo].push(filterToMove);
 		return currentFilters;
 	});
+	cleanDoubleFilters();
 	updateFilteredEventsAndUdateDataForGraph();
 };
 
@@ -248,6 +249,7 @@ const removeFilterElement = (selected: Filter, method: Method) => {
 		_colorFilters.push(filterToRemove.color);
 		return currentFilters;
 	});
+	cleanDoubleFilters();
 	updateFilteredEventsAndUdateDataForGraph();
 };
 
@@ -267,8 +269,58 @@ const changeFilterPersonOrComposer = (selected: Filter, method: Method) => {
 		currentFilters[method] = newMethodFilters;
 		return currentFilters;
 	});
+	cleanDoubleFilters();
 	updateFilteredEventsAndUdateDataForGraph();
 };
+
+const makeFilterPersonBothPersonAndComposer = (selected: Filter, method: Method) => {
+	filters.update((currentFilters) => {
+		const methodFilters = currentFilters[method];
+		if (!methodFilters) return currentFilters;
+
+		const newMethodFilters: Filter[] = methodFilters.flatMap((f) => {
+			if (f.id === selected.id && f.entity === selected.entity) {
+				return [
+					{ ...f, entity: 'person' },
+					{ ...f, entity: 'composer' }
+				];
+			}
+			return f;
+		});
+
+		currentFilters[method] = newMethodFilters;
+		return currentFilters;
+	});
+	cleanDoubleFilters();
+	updateFilteredEventsAndUdateDataForGraph();
+};
+
+const cleanDoubleFilters = () => {
+	filters.update((currentFilters) => {
+		const temp: { [key: string]: Filter } = {};
+		const methods: Method[] = ['not', 'or', 'and'];
+
+		methods.forEach((method) => {
+			const methodFilters = currentFilters[method];
+			if (!methodFilters) return;
+
+			const newMethodFilters: Filter[] = [];
+
+			methodFilters.forEach((f) => {
+				const key = `${f.id}-${f.entity}`;
+				if (!temp[key]) {
+					temp[key] = f;
+					newMethodFilters.push(f);
+				}
+			});
+
+			currentFilters[method] = newMethodFilters;
+		});
+
+		return currentFilters;
+	});
+};
+
 const isMoreAPersonOrAComposer = async (id: number) => {
 	const personId = id;
 	let _fetchedEvents: Events = await new Promise((resolve) => {
@@ -342,5 +394,6 @@ export {
 	changeFilterPersonOrComposer,
 	urlifyerFilters,
 	deUrlifyerFilters,
-	moveFilterElement
+	moveFilterElement,
+	makeFilterPersonBothPersonAndComposer
 };

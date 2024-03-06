@@ -11,6 +11,7 @@ const de = {
 		},
 		entities: {
 			person: 'Person',
+			performer: 'Interpret',
 			work: 'Werk',
 			corporation: 'Körperschaft',
 			location: 'Ort',
@@ -19,7 +20,9 @@ const de = {
 			source: 'Quelle'
 		},
 		filter: {
-			checkboxPerformanceEvent: "zeige die 'oder' Ereignisse als Aufführungen im Graphen"
+			checkboxPerformanceEvent: "zeige die 'oder' Ereignisse als Aufführungen im Graphen",
+			makeItBothComposerAndPerformer: 'sowohl Komponist als auch Interpret',
+			asA: 'als'
 		},
 		infoSearch: {
 			title: 'Suchanleitung',

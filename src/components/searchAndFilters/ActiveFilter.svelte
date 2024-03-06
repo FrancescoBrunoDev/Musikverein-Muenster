@@ -3,12 +3,14 @@
 		removeFilterElement,
 		changeFilterPersonOrComposer,
 		isAFilterDragged,
-		isMoveToActive
+		isMoveToActive,
+		makeFilterPersonBothPersonAndComposer
 	} from '$stores/storeFilters';
 	import { createTooltip, melt } from '@melt-ui/svelte';
 	import { fade } from 'svelte/transition';
 	import { Circle } from 'lucide-svelte';
 	import ButtonMoveFilterTo from './ButtonMoveFilterTo.svelte';
+	import LL from '$lib/i18n/i18n-svelte';
 
 	export let filter: Filter;
 	export let method: Method;
@@ -58,7 +60,7 @@
 	{/if}
 	<button
 		type="button"
-		class="max-w-xs truncate hover:line-through transition-all"
+		class="max-w-xs truncate transition-all hover:line-through"
 		on:click={() => removeFilterElement(filter, method)}
 		on:mouseover={() => (isMouseOver = true)}
 		on:mouseleave={() => (isMouseOver = false)}
@@ -95,7 +97,15 @@
 						<button
 							on:click={() => changeFilterPersonOrComposer(filter, method)}
 							class="w-full rounded-full bg-background px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-hover hover:shadow-lg"
-							>as a {#if filter.entity === 'person'}composer{:else if filter.entity === 'composer'}performer{/if}</button
+							>{$LL.filters.filter.asA()}
+							{#if filter.entity === 'person'}{$LL.filters.entities.composer()}{:else if filter.entity === 'composer'}{$LL.filters.entities.performer()}{/if}</button
+						>
+					</li>
+					<li>
+						<button
+							on:click={() => makeFilterPersonBothPersonAndComposer(filter, method)}
+							class="w-full rounded-full bg-background px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-hover hover:shadow-lg"
+							>{$LL.filters.filter.makeItBothComposerAndPerformer()}</button
 						>
 					</li>
 				</ul>
