@@ -59,7 +59,9 @@
 		{#each Object.keys(groupedFilters) as entity}
 			<div class="grid pl-2" transition:slide={{ axis: 'y', delay: 150 }}>
 				<h2 class="mb-2 text-sm font-bold">
-					{entity === 'person' ? 'perfomer' : entity}
+					{entity === 'person'
+						? $LL.filters.entities['performer']()
+						: $LL.filters.entities[entity]()}
 				</h2>
 
 				<div class="flex flex-wrap gap-2">

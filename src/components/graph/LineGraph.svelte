@@ -5,6 +5,7 @@
 	import { filters } from '$stores/storeFilters';
 	import { showLinesAsPerformances } from '$stores/storeGraph';
 	import { startYear, endYear } from '$stores/storeEvents';
+	import LL from '$lib/i18n/i18n-svelte';
 
 	let data: DataRecordCoordinates[] = []; // Declare data as a variable outside of onMount
 
@@ -46,6 +47,8 @@
 					if (typeof filter.name === 'object') {
 						if (filter.entity === 'person' || filter.entity === 'composer') {
 							filterName =
+								$LL.filters.entities[filter.entity]() +
+								' | ' +
 								(filter.name as PersonNameFilter).lastName +
 								', ' +
 								(filter.name as PersonNameFilter).abbreviatedFirstName;

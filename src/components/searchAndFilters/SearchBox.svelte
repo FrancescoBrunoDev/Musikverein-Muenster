@@ -41,7 +41,7 @@
 		/>
 	</div>
 	<InfoSearch />
-	<MenuDropdown marignTop=5 />
+	<MenuDropdown marignTop="5" />
 </div>
 <div class="my-2 flex flex-wrap gap-2 pl-2">
 	{#each entities as entity}

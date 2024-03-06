@@ -1,7 +1,8 @@
 import { writable } from 'svelte/store';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
-import { getTitleString, getTitle, fetchedEvents } from '$stores/storeEvents';
+import { fetchedEvents } from '$stores/storeEvents';
 import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
+import { lighten } from 'polished';
 
 const filtersUrlified = writable<string>('');
 const filters = writable<Filters>({
@@ -273,6 +274,25 @@ const changeFilterPersonOrComposer = (selected: Filter, method: Method) => {
 	updateFilteredEventsAndUdateDataForGraph();
 };
 
+function lightenColor(color: string, percent: number) {
+	const num = parseInt(color.replace('#', ''), 16),
+		amt = Math.round(2.55 * percent),
+		R = (num >> 16) + amt,
+		B = ((num >> 8) & 0x00ff) + amt,
+		G = (num & 0x0000ff) + amt;
+	return (
+		'#' +
+		(
+			0x1000000 +
+			(R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+			(B < 255 ? (B < 1 ? 0 : B) : 255) * 0x100 +
+			(G < 255 ? (G < 1 ? 0 : G) : 255)
+		)
+			.toString(16)
+			.slice(1)
+	);
+}
+
 const makeFilterPersonBothPersonAndComposer = (selected: Filter, method: Method) => {
 	filters.update((currentFilters) => {
 		const methodFilters = currentFilters[method];
@@ -281,7 +301,7 @@ const makeFilterPersonBothPersonAndComposer = (selected: Filter, method: Method)
 		const newMethodFilters: Filter[] = methodFilters.flatMap((f) => {
 			if (f.id === selected.id && f.entity === selected.entity) {
 				return [
-					{ ...f, entity: 'person' },
+					{ ...f, entity: 'person', color: lightenColor(f.color, 30) },
 					{ ...f, entity: 'composer' }
 				];
 			}
