@@ -21,11 +21,11 @@
 		</div>
 	{/if}
 	{#if $isSearchSectionInEventsListOpen}
-		<div transition:slide={{ duration: 500, easing: cubicOut }}>
+		<div transition:slide={{ duration: 200, easing: cubicOut }}>
 			<SearchBox />
 		</div>
 	{:else if !$isSearchSectionInEventsList}
-		<div transition:fly={{ y: -10, opacity: 0, duration: 500, easing: cubicOut, delay: 250 }}>
+		<div in:fly={{ y: -10, opacity: 0, duration: 400, easing: cubicOut, delay:400 }}>
 			<SearchBox />
 		</div>
 	{/if}
