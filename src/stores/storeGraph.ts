@@ -75,11 +75,11 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 						// Update yearObj.filters with all the or filters
 						_filters.or.forEach((filter) => {
 							if (hasMatchingPerformances(event, filter)) {
-								yearObj.filters[filter.name] = yearObj.filters[filter.name] || {
+								yearObj.filters[filter.id] = yearObj.filters[filter.id] || {
 									count: 0,
 									color: filter.color
 								};
-								yearObj.filters[filter.name].count++;
+								yearObj.filters[filter.id].count++;
 							}
 						});
 

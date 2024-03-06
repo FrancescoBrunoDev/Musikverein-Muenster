@@ -106,7 +106,7 @@ type WorkNameFilter = {
 };
 
 type Filter = {
-	id: number;
+	id: number | string;
 	entity: Entity;
 	name: PersonNameFilter | WorkNameFilter | string;
 	birth?: string;

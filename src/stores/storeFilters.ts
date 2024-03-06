@@ -132,7 +132,7 @@ const addFilterElement = async (selected: any, method?: Method) => {
 	};
 
 	if (filter.entity == 'person') {
-		filter.entity = await isMoreAPersonOrAComposer(filter.id);
+		filter.entity = await isMoreAPersonOrAComposer(Number(filter.id));
 	}
 
 	const formattedFilter: Filter = (await formatFilter(filter)) ?? {

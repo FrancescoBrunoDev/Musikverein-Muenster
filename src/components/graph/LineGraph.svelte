@@ -15,7 +15,7 @@
 	let colorLine: string[] | string = [] || '';
 
 	function getY(filter: Filter): (dataSingleYear: DataRecordCoordinates) => number | undefined {
-		return (dataSingleYear: DataRecordCoordinates) => dataSingleYear.filters[filter.name]?.count;
+		return (dataSingleYear: DataRecordCoordinates) => dataSingleYear.filters[filter.id]?.count ?? 0;
 	}
 
 	function getArrayOfActiveFilterColors(filters: Filter[]): string[] {
@@ -47,24 +47,26 @@
 							filterName = filter.name.lastName + ', ' + filter.name.abbreviatedFirstName;
 						} else if (filter.entity === 'work') {
 							filterName = filter.name.title + ', ' + filter.name.composer.lastName;
+						} else {
+							filterName = filterName;
 						}
 					} else {
 						filterName = filterName;
 					}
 
 					arrayEventsPerFilter.push({
-						text: `${filterName}: ${dataSingleYear.filters[filter.name].count}`,
+						text: `${filterName}: ${dataSingleYear.filters[filter.id]?.count ?? 0}`,
 						color: filter.color
 					});
 				});
 				arrayEventsPerFilter.push({
-					text: `Or Filter: ${dataSingleYear.filters['or'].count}`,
+					text: `Or Filter: ${dataSingleYear.filters['or']?.count ?? 0}`,
 					color: 'hsl(var(--text)'
 				});
 			}
 			if ($filters.and.length > 0) {
 				arrayEventsPerFilter.push({
-					text: `And Filter: ${dataSingleYear.filters['and'].count}`,
+					text: `And Filter: ${dataSingleYear.filters['and']?.count ?? 0}`,
 					color: 'hsl(var(--text)'
 				});
 			}
@@ -99,7 +101,7 @@
 						const andFilter = {
 							name: 'and',
 							color: 'hsl(var(--text)',
-							id: 0,
+							id: 'and',
 							entity: 'and' as Entity
 						};
 						_filters.push(andFilter);
@@ -121,7 +123,7 @@
 						const andFilter = {
 							name: 'and',
 							color: 'hsl(var(--text)',
-							id: 0,
+							id: 'and',
 							entity: 'and'
 						};
 						_filters.push(andFilter);
