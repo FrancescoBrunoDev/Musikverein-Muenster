@@ -97,7 +97,8 @@ const autocomplete = async (query: string) => {
 		_entitiesForSearchBox = res;
 	});
 
-	function setFilters(results: AutocompleteResult[]) {
+	function removeFormSuggestionIfInFilters(results: AutocompleteResult[]) {
+		let _results: AutocompleteResult[] = results;
 		filters.subscribe((filter: any) => {
 			const mapFilterItems = (items: Filter[]) =>
 				items.map((item) => ({
@@ -116,9 +117,9 @@ const autocomplete = async (query: string) => {
 				(result: AutocompleteResult) =>
 					![...notFilterItems, ...orFilterItems, ...andFilterItems].some(isFiltered(result))
 			);
-
-			suggestions.set(filteredResults);
+			_results = filteredResults;
 		});
+		return _results;
 	}
 	const entities = _entitiesForSearchBox.join('|');
 	if (entities.length !== 0) {
@@ -132,7 +133,9 @@ const autocomplete = async (query: string) => {
 				`${urlBaseAPIMusiconn}?action=autocomplete&title=${query}&entities=${entities}&max=20&project=${_projectID}&format=json`
 			);
 			const results = await res.json();
-			setFilters(results);
+			console.log(results);
+			const filteredSuggestions = removeFormSuggestionIfInFilters(results);
+			suggestions.set(filteredSuggestions);
 		} catch (error) {
 			console.error(
 				'Error fetching all events with the project id:',
@@ -144,7 +147,8 @@ const autocomplete = async (query: string) => {
 					`${urlBaseAPIMusiconn}?action=autocomplete&title=${query}&entities=${entities}&max=20&format=json`
 				);
 				const results = await res.json();
-				setFilters(results);
+				const filteredSuggestions = removeFormSuggestionIfInFilters(results);
+				suggestions.set(filteredSuggestions);
 			} catch (error) {
 				console.error('Error fetching all events with the project id:', error);
 				return [];
