@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { joinEventByYear } from '$lib/dataMusiconn';
+import { joinEventByYear } from '$lib/dataMusiconn.server';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {

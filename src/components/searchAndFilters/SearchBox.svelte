@@ -1,6 +1,6 @@
 <script lang="ts">
 	import LL from '$lib/i18n/i18n-svelte';
-	import { autocomplete } from '$lib/dataMusiconn';
+	import { autocomplete } from '$stores/storeSearchSection';
 	import MethodSearch from '$components/searchAndFilters/MethodSearch.svelte';
 	import SuggestionSearch from '$components/searchAndFilters/SuggestionSearch.svelte';
 	import { entitiesForSearchBox, updateEntitiesForSearchBox } from '$stores/storeFilters';
