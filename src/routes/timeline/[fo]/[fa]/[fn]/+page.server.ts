@@ -1,7 +1,7 @@
-import type { PageLoad } from './$types';
+import type { PageServerLoad } from './$types';
 import { joinEventByYear } from '$lib/dataMusiconn';
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params }) => {
 	const filterfo = params.fo;
 	const filterfa = params.fa;
 	const filterfn = params.fn;

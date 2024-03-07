@@ -1,9 +1,9 @@
-import type { PageLoad } from './$types';
+import type { PageServerLoad } from './$types';
 import { joinEventByYear } from '$lib/dataMusiconn';
 
 let cachedEvents: Events;
 
-export const load: PageLoad = async () => {
+export const load: PageServerLoad = async () => {
 	if (!cachedEvents) {
 		try {
 			cachedEvents = await joinEventByYear();
