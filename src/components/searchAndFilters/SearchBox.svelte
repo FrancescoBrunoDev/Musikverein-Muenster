@@ -25,7 +25,7 @@
 	};
 </script>
 
-<div class="flex w-full items-center gap-2">
+<div class="flex items-center gap-2">
 	<div
 		class="flex w-full items-center rounded-full bg-primary px-4 text-background drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary"
 	>

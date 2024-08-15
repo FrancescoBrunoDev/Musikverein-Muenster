@@ -25,7 +25,7 @@
 			<SearchBox />
 		</div>
 	{:else if !$isSearchSectionInEventsList}
-		<div in:fly={{ y: -10, opacity: 0, duration: 400, easing: cubicOut, delay:400 }}>
+		<div in:fly={{ y: -10, opacity: 0, duration: 400, easing: cubicOut, delay: 600 }}>
 			<SearchBox />
 		</div>
 	{/if}
