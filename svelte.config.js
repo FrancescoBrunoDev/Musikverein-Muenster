@@ -25,7 +25,8 @@ const config = {
 			$utils: 'src/utils',
 			$components: 'src/components',
 			$tailwind: 'src/globals.css',
-			$lib: 'src/lib'
+			$lib: 'src/lib',
+			$static: 'src/static'
 		}
 	},
 	preprocess: sequence([vitePreprocess(), preprocessMeltUI(), mdsvex(mdsvexOptions)])

@@ -5,6 +5,7 @@
 	import { X } from 'lucide-svelte';
 	import LanguageSwitch from '$components/layout/LanguageSwitch.svelte';
 	import ThemeSwitch from '$components/layout/ThemeSwitch.svelte';
+	import { page } from '$app/stores';
 
 	async function getExibitions() {
 		const response = await fetch('/api/exibitions/getMarkdown');
@@ -20,14 +21,22 @@
 	function toggleMenu() {
 		isMenuActive = !isMenuActive;
 	}
+
+	$: isHomePage = $page.url.pathname === '/';
 </script>
 
-<div class="fixed top-0 z-40 flex h-10 w-full items-center justify-center bg-background">
+<div
+	class="fixed top-0 z-40 flex h-10 w-full items-center justify-center {isHomePage
+		? 'text-background text-white'
+		: 'bg-background text-primary'}"
+>
 	<div class="container flex justify-between text-lg">
 		<ul class="flex items-center">
-			<li>
-				<a class="font-bold" href="/">{$LL.navbar.home()}</a>
-			</li>
+			{#if !isHomePage}
+				<li>
+					<a class="font-bold" href="/">{$LL.navbar.home()}</a>
+				</li>
+			{/if}
 		</ul>
 		<button on:click={() => toggleMenu()} class="flex gap-3 font-bold hover:scale-hover"
 			>{$LL.navbar.menu()}</button
@@ -40,7 +49,7 @@
 					x: 1500,
 					easing: quintInOut
 				}}
-				class="left-50 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-dvh flex-col bg-background pb-10 pl-10"
+				class="left-50 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-dvh flex-col bg-background pb-10 pl-10 text-primary"
 			>
 				<button
 					on:click={() => toggleMenu()}
