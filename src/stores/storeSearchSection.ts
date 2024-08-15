@@ -47,7 +47,7 @@ const autocomplete = async (query: string) => {
 			});
 
 			const res = await fetch(
-				`${urlBaseAPIMusiconn}?action=autocomplete&title=${query}&entities=${entities}&max=20&project=${_projectID}&format=json`
+				`${urlBaseAPIMusiconn}?action=autocomplete&title=${query}&entities=${entities}&max=20${projectID ? `&project=${_projectID}` : ''}&format=json`
 			);
 			const results = await res.json();
 			const filteredSuggestions = removeFormSuggestionIfInFilters(results);

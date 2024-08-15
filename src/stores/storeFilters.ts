@@ -2,7 +2,6 @@ import { writable } from 'svelte/store';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { fetchedEvents } from '$stores/storeEvents';
 import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
-import { lighten } from 'polished';
 
 const filtersUrlified = writable<string>('');
 const filters = writable<Filters>({
