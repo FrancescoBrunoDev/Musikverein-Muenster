@@ -47,14 +47,28 @@
 			src="img/lamp_fore.png"
 		/>
 
-		<div class="z-10 flex w-full flex-col gap-12 px-10 pb-10 text-right font-bold text-white">
-			<h1 class="z-10 w-full text-5xl md:text-8xl lg:text-8xl" data-focus-point="0.5" data-speed="-5" data-can-focus data-max-blur="2">
+		<div
+			class="z-10 flex w-full flex-col gap-12 px-10 pb-10 text-right font-bold text-white container"
+		>
+			<h1
+				class="z-10 w-full text-5xl md:text-8xl lg:text-8xl"
+				data-focus-point="0.5"
+				data-speed="-5"
+				data-can-focus
+				data-max-blur="2"
+			>
 				MusikVerein<br />Münster
 			</h1>
 			<div
 				class="flex w-full items-center gap-6 text-5xl font-bold sm:text-6xl md:items-end md:text-7xl lg:text-8xl"
 			>
-				<div class="grid grid-cols-1" data-focus-point="-0.5" data-speed="5" data-can-focus data-max-blur="2">
+				<div
+					class="grid grid-cols-1"
+					data-focus-point="-0.5"
+					data-speed="5"
+					data-can-focus
+					data-max-blur="2"
+				>
 					<a class="transition-transform duration-75 hover:-translate-y-1" href="/timeline"
 						>{$LL.navbar.timeline()}</a
 					>
@@ -77,4 +91,3 @@
 		</div>
 	</div>
 </BackgroundParallax>
-
