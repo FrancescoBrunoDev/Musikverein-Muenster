@@ -1,6 +1,7 @@
 <script>
 	import * as config from '$lib/config';
 	import LL from '$lib/i18n/i18n-svelte';
+	import BackgroundParallax from '../components/BackgroundParallax.svelte';
 
 	async function getExibitions() {
 		const response = await fetch('/api/exibitions/getMarkdown');
@@ -14,11 +15,39 @@
 </svelte:head>
 
 <div class="relative flex h-screen w-screen flex-col justify-end">
-	<img
-		class="absolute h-full w-full bg-cover bg-center object-cover brightness-75"
-		alt="Rathaussaal in Münster"
-		src="img/BW-Background.jpg"
-	/>
+	<BackgroundParallax>
+		<img
+			data-speed="-2"
+			data-tilt="-1"
+			class="fixed h-full w-full bg-cover bg-center object-cover brightness-75"
+			alt="Rathaussaal in Münster"
+			src="img/bg.png"
+		/>
+		<img
+			data-speed="1"
+			data-tilt="0.5"
+			data-focus-point="-0.8"
+			class="fixed h-full w-full bg-cover bg-center object-cover brightness-75"
+			alt="Rathaussaal in Münster"
+			src="img/lamp_back.png"
+		/>
+		<img
+			data-speed="5"
+			data-tilt="2.5"
+			data-focus-point="0"
+			class="fixed h-full w-full bg-cover bg-center object-cover brightness-75"
+			alt="Rathaussaal in Münster"
+			src="img/lamp_middle.png"
+		/>
+		<img
+			data-speed="20"
+			data-tilt="10"
+			data-focus-point="0.8"
+			class="fixed h-full w-full bg-cover bg-center object-cover brightness-75"
+			alt="Rathaussaal in Münster"
+			src="img/lamp_fore.png"
+		/>
+	</BackgroundParallax>
 	<div class="z-10 flex w-full flex-col gap-12 px-10 pb-10 text-right font-bold text-white">
 		<h1 class="z-10 w-full text-5xl md:text-8xl lg:text-8xl">
 			MusikVerein<br />Münster
