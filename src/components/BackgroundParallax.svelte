@@ -14,7 +14,7 @@
     };
 
     const updatePosition = () => {
-        currentX = lerp(currentX, targetX, 0.05);
+        currentX = lerp(currentX, targetX, 0.1);
         currentY = lerp(currentY, targetY, 0.02);
 
         if (background) {
@@ -33,7 +33,7 @@
                 if (focusPoint !== null) {
                     const distanceFromFocus = Math.abs(currentX - Number(focusPoint));
                     const maxBlur = 5;
-                    const minBlur = 1;
+                    const minBlur = element.hasAttribute('data-can-focus') ? 0 : 1;
                     const blur = Math.max(minBlur, distanceFromFocus * maxBlur);
                     filterStyle = `blur(${blur}px)`;
                 }
@@ -61,11 +61,9 @@
     });
 </script>
 
-<div class="fixed inset-0 overflow-hidden" style="perspective: 1000px">
-    <div bind:this={background} class="fixed h-[102%] w-[102%] left-[-1%] top-[-1%]">
+    <div bind:this={background} class="fixed inset-0 scale-[1.01]">
         <slot />
     </div>
-</div>
 
 <style>
     :global([data-speed]) {
