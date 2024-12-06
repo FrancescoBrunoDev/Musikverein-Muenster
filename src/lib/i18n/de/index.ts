@@ -36,10 +36,10 @@ const de = {
 	navbar: {
 		menu: 'Menü',
 		home: 'Home',
-		timeline: 'Zeitleiste',
+		timeline: 'Datenbank',
 		exibitions: 'Ausstellungen',
 		exibitionsNames: {
-			first: 'Erste Ausstellung'
+			first: 'Chronik'
 		}
 	}
 } satisfies Translation;
