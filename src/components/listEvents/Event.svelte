@@ -2,7 +2,7 @@
 	import LL from '$lib/i18n/i18n-svelte';
 	import EventPerformances from './EventPerformances.svelte';
 	import { getTitles, getTitleString } from '$stores/storeEvents';
-	import { filters, filteredEvents } from '$stores/storeFilters';
+	import { filters } from '$stores/storeFilters';
 	import { Circle, FileInput } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
 	let { event }: { event: EventItem } = $props();
@@ -38,7 +38,6 @@
 
 	function handleClickEvent() {
 		isEventOpen = !isEventOpen;
-		console.log(isEventOpen);
 		if (isEventOpen) {
 			getTitles(event);
 		}
