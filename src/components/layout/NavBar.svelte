@@ -7,22 +7,21 @@
 	import ThemeSwitch from '$components/layout/ThemeSwitch.svelte';
 	import { page } from '$app/stores';
 
+	let isHomePage = $state($page.url.pathname === '/');
+
 	async function getExibitions() {
 		const response = await fetch('/api/exibitions/getMarkdown');
 		const exibitions: ExibitionMarkdown[] = await response.json();
 		return exibitions;
 	}
 
-	export let value: Locales;
-	export let handleLocaleChange: any;
+	const { value, handleLocaleChange } = $props<{ value: Locales; handleLocaleChange: any }>();
 
-	let isMenuActive = false;
+	let isMenuActive = $state(false);
 
 	function toggleMenu() {
 		isMenuActive = !isMenuActive;
 	}
-
-	$: isHomePage = $page.url.pathname === '/';
 </script>
 
 <div
@@ -38,7 +37,7 @@
 				</li>
 			{/if}
 		</ul>
-		<button on:click={() => toggleMenu()} class="flex gap-3 font-bold hover:scale-hover"
+		<button onclick={() => toggleMenu()} class="flex gap-3 font-bold hover:scale-hover"
 			>{$LL.navbar.menu()}</button
 		>
 		{#if isMenuActive}
@@ -52,7 +51,7 @@
 				class="left-50 absolute bottom-0 left-0 right-0 top-0 z-50 flex h-dvh flex-col bg-background pb-10 pl-10 text-primary"
 			>
 				<button
-					on:click={() => toggleMenu()}
+					onclick={() => toggleMenu()}
 					class="mr-10 mt-20 self-end hover:scale-hover hover:drop-shadow-2xl md:mr-20"
 				>
 					<X strokeWidth={2.5} size={50} color="hsl(var(--text)" /></button
@@ -64,13 +63,13 @@
 						<div class="grid grid-cols-1">
 							<a
 								class="transition-transform duration-75 hover:-translate-y-1"
-								on:click={() => toggleMenu()}
+								onclick={() => toggleMenu()}
 								href="/timeline">{$LL.navbar.timeline()}</a
 							>
 
 							<a
 								class="group transition-transform duration-75 hover:-translate-y-1"
-								on:click={() => toggleMenu()}
+								onclick={() => toggleMenu()}
 								href="/exibitions">{$LL.navbar.exibitions()}</a
 							>
 							<ul class="pl-5">
@@ -78,7 +77,7 @@
 									<div></div>{:then exibitions}
 									{#each exibitions as exibition}
 										<li class="text-xl transition-transform duration-75 hover:-translate-y-1">
-											<a on:click={() => toggleMenu()} href="/exibitions/{exibition.slug}"
+											<a onclick={() => toggleMenu()} href="/exibitions/{exibition.slug}"
 												>{exibition.title}</a
 											>
 										</li>
