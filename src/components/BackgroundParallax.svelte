@@ -15,7 +15,7 @@
 
     const updatePosition = () => {
         currentX = lerp(currentX, targetX, 0.05);
-        currentY = lerp(currentY, targetY, 0.0);
+        currentY = lerp(currentY, targetY, 0.02);
 
         if (background) {
             background.querySelectorAll('[data-speed]').forEach((element) => {
