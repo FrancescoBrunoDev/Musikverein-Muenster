@@ -11,7 +11,6 @@
 
 	async function handleLocaleChange() {
 		value = value === 'en' ? 'de' : 'en';
-		console.log(value);
 		await loadLocaleAsync(value);
 		setLocale(value);
 		sessionStorage.setItem('lang', value);

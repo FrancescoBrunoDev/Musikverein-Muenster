@@ -24,7 +24,16 @@ async function getImagesUrl(exibitionTitle: string, galleryNumber: string) {
 	}
 }
 
-export async function GET(request) {
+interface RequestParams {
+	exibitionTitle: string;
+	galleryNumber: string;
+}
+
+interface Request {
+	params: RequestParams;
+}
+
+export async function GET(request: Request): Promise<Response> {
 	try {
 		const { exibitionTitle, galleryNumber } = request.params;
 		const images = await getImagesUrl(exibitionTitle, galleryNumber);

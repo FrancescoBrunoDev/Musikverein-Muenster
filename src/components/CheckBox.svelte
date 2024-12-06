@@ -36,7 +36,7 @@
 		>
 			<span
 				class="thumb block rounded-full bg-background transition data-[state=checked]:bg-primary"
-			/>
+			></span>
 		</button>
 		<input use:melt={$input} />
 	</div>
