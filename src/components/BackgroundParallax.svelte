@@ -32,7 +32,7 @@
                 
                 if (focusPoint !== null) {
                     const distanceFromFocus = Math.abs(currentX - Number(focusPoint));
-                    const maxBlur = 5;
+                    const maxBlur = Number(element.getAttribute('data-max-blur')) || 5;
                     const minBlur = element.hasAttribute('data-can-focus') ? 0 : 1;
                     const blur = Math.max(minBlur, distanceFromFocus * maxBlur);
                     filterStyle = `blur(${blur}px)`;
