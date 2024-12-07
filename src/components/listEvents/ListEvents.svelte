@@ -57,7 +57,7 @@
 						const dateB = new Date(b.dates[0].date);
 						return dateA.getTime() - dateB.getTime();
 					}) as event}
-						<Event eventUid={event.uid} />
+						<Event {event} />
 					{/each}
 				</div>
 			</div>
