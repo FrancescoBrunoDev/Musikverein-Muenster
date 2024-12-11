@@ -7,7 +7,7 @@
 	import ThemeSwitch from '$components/layout/ThemeSwitch.svelte';
 	import { page } from '$app/stores';
 
-	let isHomePage = $state($page.url.pathname === '/');
+	let isHomePage = $derived($page.url.pathname === '/');
 
 	async function getExibitions() {
 		const response = await fetch('/api/exibitions/getMarkdown');
