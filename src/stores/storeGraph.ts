@@ -154,28 +154,30 @@ const hasMatchingPerformances = (event: EventItem, filter: Filter) => {
 			}
 		}
 	}
-	if (filter.entity === 'person') {
-		for (const person of event.persons) {
-			if (filter.id === person.person) {
-				return true;
+	switch (filter.entity) {
+		case 'person':
+			for (const person of event.persons) {
+				if (filter.id === person.person) {
+					return true;
+				}
 			}
-		}
-	}
-	if (filter.entity === 'corporation') {
-		for (const corporation of event.corporations) {
-			if (filter.id === corporation.corporation) {
-				return true;
+			break;
+		case 'corporation':
+			for (const corporation of event.corporations) {
+				if (filter.id === corporation.corporation) {
+					return true;
+				}
 			}
-		}
+			break;
+		case 'location':
+			for (const location of event.locations) {
+				if (filter.id === location.location) {
+					return true;
+				}
+			}
+			break;
 	}
 
-	if (filter.entity === 'location') {
-		for (const location of event.locations) {
-			if (filter.id === location.location) {
-				return true;
-			}
-		}
-	}
 	return false;
 };
 

@@ -8,7 +8,9 @@
 
 	// make a function that join all the persons in a string with |
 	async function joinPersons(persons: Person[]) {
-		const titles = await Promise.all(persons.map((person) => getTitleString(person.person, 'person')));
+		const titles = await Promise.all(
+			persons.map((person) => getTitleString(person.person, 'person'))
+		);
 		return titles.join(' | ');
 	}
 </script>
@@ -21,6 +23,7 @@
 	{#await joinPersons(performance.persons)}
 		<div>load</div>
 	{:then title}
+		<span>:</span>
 		<span class="text-sm">{title}</span>
 	{/await}
 {/if}
