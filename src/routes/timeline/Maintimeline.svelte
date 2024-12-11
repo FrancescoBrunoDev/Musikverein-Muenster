@@ -28,7 +28,8 @@
 </script>
 
 <div class="flex h-dvh flex-col py-12">
-	<div transition:slide
+	<div
+		transition:slide
 		class="flex flex-grow content-end items-center justify-center transition-all duration-500"
 		style={`opacity: ${opacitySearchSection};
                 filter: blur(${blurSearchSection}px);
