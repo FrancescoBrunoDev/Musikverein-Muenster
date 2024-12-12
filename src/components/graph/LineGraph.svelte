@@ -17,7 +17,6 @@
 	// Ensure reactivity by using $derived for domains
 	const xDomain = $derived([$startYear, $endYear + 10] as [number, number]);
 	const yDomain = $derived([0, 30] as [number, number]);
-	$inspect($filteredEventsForGraph);
 </script>
 
 <div class="flex h-full justify-center">
