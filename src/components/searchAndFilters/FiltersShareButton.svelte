@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { filtersUrlified, urlifyerFilters, filters } from '$stores/storeFilters';
-	import { Share } from 'lucide-svelte';
+	import { Link } from 'lucide-svelte';
 
 	let isMouseOver: boolean = false;
 
@@ -35,7 +35,7 @@
 			aria-label="Toggle italic"
 			class="z-30 flex h-fit w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-primary p-2 text-background drop-shadow transition-all hover:scale-hover hover:drop-shadow-xl"
 		>
-			<Share size={20} />
+			<Link size={20} />
 		</button>
 	</div>
 {/if}

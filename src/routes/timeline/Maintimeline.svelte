@@ -37,7 +37,9 @@
 	>
 		<div
 			id="searchSectionInTimeline"
-			class="w-5/6 md:w-2/3 lg:w-1/2 {$isSearchSectionInEventsList ? 'invisible' : 'visible'}"
+			class="lg:w-[600px] md:w-[500px] w-5/6 {$isSearchSectionInEventsList
+				? 'invisible'
+				: 'visible'}"
 		>
 			<SearchSection />
 		</div>
