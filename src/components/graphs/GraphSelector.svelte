@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { selectedGraphType } from '$stores/storeGraph';
-	$inspect($selectedGraphType);
 </script>
 
 <div class="flex gap-2 bg-border p-2 rounded-xl">

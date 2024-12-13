@@ -6,10 +6,7 @@
 	import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
 	import { projectID } from '$stores/storeEvents';
 	import { Loader2 } from 'lucide-svelte';
-	import {
-		isSearchSectionInEventsList,
-		isSearchSectionInEventsListOpen
-	} from '$stores/storeSearchSection';
+	import { isSearchSectionInEventsList } from '$stores/storeSearchSection';
 
 	let div: HTMLDivElement | undefined = $state(undefined);
 	let isOpen: boolean = $state(false);
@@ -18,6 +15,7 @@
 		addFilterElement(suggestion);
 		$inputValue = '';
 		$suggestions = [];
+		isOpen = false;
 	};
 
 	$effect(() => {

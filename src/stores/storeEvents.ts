@@ -66,9 +66,10 @@ const getTitle = async (allUids: string[], kind: Entity) => {
 };
 
 const getGeometries = async (locationID: number) => {
-	const res = await fetch(`${urlBaseAPIMusiconn}?action=get${locationID}&props=geometry&format=json`);
+	const res = await fetch(`${urlBaseAPIMusiconn}?action=get&location=${locationID}&props=geometries&format=json`);
 	const json = await res.json();
-	return json;
+
+	return json.location[locationID].geometries;
 }
 
 const getUidsPerEntity = async (kind: Entity, event: EventItem) => {

@@ -3,13 +3,14 @@
 	import SearchSection from '$components/searchAndFilters/SearchSection.svelte';
 	import { isSearchSectionInEventsList } from '$stores/storeSearchSection';
 	import { slide } from 'svelte/transition';
-	import { filteredEventsForGraph, selectedGraphType } from '$stores/storeGraph';
+	import { filteredEventsForGraph, selectedGraphType, fetchOverpassData } from '$stores/storeGraph';
 	import { filters } from '$stores/storeFilters';
 	import GraphSelector from '$components/graphs/GraphSelector.svelte';
 	import Map from '$components/graphs/map/Maps.svelte';
 	import { filteredEvents } from '$stores/storeFilters';
 	import { getGeometries, getTitle, getTitleString } from '$stores/storeEvents';
 	import { onMount } from 'svelte';
+	import Event from '$components/listEvents/Event.svelte';
 
 	let isOver = $state(false);
 	let opacitySearchSection = $derived(isOver ? 0.3 : 1);
@@ -69,23 +70,28 @@
 
 	let allLocations: { name: string; id: number; geometries: any; amount: number }[] = $state([]);
 
-	async function updateLocations() {
+	type EventWithLocations = {
+		locations: { location: number }[];
+	};
+
+	async function updateLocations(_filteredEvents: any) {
 		let locations: { name: string; id: number; geometries: any; amount: number }[] = [];
 
-		for (const [years, events] of Object.entries($filteredEvents)) {
-			for (const event of events) {
-				if (event.locations) {
+		for (const [years, events] of Object.entries(_filteredEvents)) {
+			for (const event of events as EventWithLocations[]) {
+				if (typeof event !== 'string' && event.locations) {
 					for (const location of event.locations) {
 						const existingLocation = locations.find((l) => l.id === Number(location.location));
 						if (!existingLocation) {
-							const arrayId = [location.location];
+							const arrayId = [String(location.location)];
 							await getTitle(arrayId, 'location');
 							const name = await getTitleString(Number(location.location), 'location');
+							const geometries = await getGeometries(Number(location.location));
 
 							locations.push({
 								name: name,
 								id: location.location,
-								geometries: location.location,
+								geometries: geometries,
 								amount: 1
 							});
 						} else {
@@ -100,10 +106,12 @@
 	}
 
 	$effect(() => {
-		updateLocations();
+		updateLocations($filteredEvents);
 	});
 
-	$inspect(allLocations);
+	onMount(() => {
+		fetchOverpassData({ lat: 51.96245420666666, lng: 7.627307654999999 });
+	});
 </script>
 
 <div class="flex h-dvh flex-col py-12 overflow-hidden">
@@ -143,7 +151,13 @@
 		{#if $selectedGraphType === 'Line'}
 			<LineGraphD3 data={dataForLines} />
 		{:else if $selectedGraphType === 'Map'}
-			<Map />
+			{#if allLocations.length > 0}
+				<Map data={allLocations} />
+			{:else}
+				<div
+					class="flex items-center justify-center max-w-3xl w-11/12 rounded-xl h-[300px] bg-border animate-pulse"
+				></div>
+			{/if}
 		{/if}
 	</div>
 	<div class="w-full flex justify-center mt-4">

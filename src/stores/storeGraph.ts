@@ -1,11 +1,14 @@
 import { writable } from 'svelte/store';
+import { persistStore } from '$utils/storeUtils';
 
 import { filters, filteredEvents } from '$stores/storeFilters';
 import { fetchedEvents, startYear, endYear } from '$stores/storeEvents';
+import osmtogeojson from 'osmtogeojson';
 
 const filteredEventsForGraph = writable<DataRecordCoordinates[]>([]);
 const showLinesAsPerformances = writable<boolean>(true);
-const selectedGraphType = writable<'Line' | 'Map'>('Line');
+const selectedGraphType = persistStore<'Line' | 'Map'>('selectedGraphType', 'Line');
+const JSONMuenster = persistStore<any>('JSONMuenster', {});
 
 const updateFilteredEventsAndUdateDataForGraph = async () => {
 	let _filters: Filters = {
@@ -126,6 +129,37 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 	}
 };
 
+const fetchOverpassData = async (centerPoint: { lat: number; lng: number }) => {
+	const radius = 2; // km
+	const bbox = [
+		centerPoint.lat - radius / 111, // 1 degree latitude ~ 111 km
+		centerPoint.lng - radius / (111 * Math.cos(centerPoint.lat * (Math.PI / 180))),
+		centerPoint.lat + radius / 111,
+		centerPoint.lng + radius / (111 * Math.cos(centerPoint.lat * (Math.PI / 180)))
+	];
+
+	const query = `
+		[bbox:${bbox.join(',')}]
+		[out:json]
+		[timeout:90];
+		(
+			way["highway"]["highway"!~"cycleway|footway"](${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]});
+			way["waterway"](${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]});
+			way["landuse"](${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]});
+		);
+		out geom;
+	`;
+
+	const response = await fetch('https://overpass-api.de/api/interpreter', {
+		method: 'POST',
+		body: 'data=' + encodeURIComponent(query)
+	});
+	const result = await response.json();
+	let geojson = osmtogeojson(result); // Convert to GeoJSON
+
+	JSONMuenster.set(geojson);
+}
+
 const hasMatchingPerformances = (event: EventItem, filter: Filter) => {
 	const performances = event.performances || [];
 	// manage the case in witch event.performances does not exist
@@ -187,5 +221,7 @@ export {
 	filteredEventsForGraph,
 	showLinesAsPerformances,
 	selectedGraphType,
+	JSONMuenster,
+	fetchOverpassData,
 	updateFilteredEventsAndUdateDataForGraph
 };
