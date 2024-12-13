@@ -79,7 +79,7 @@
 				/>
 			</button>
 
-			<div class="md:w-[40rem]">
+			<div id="searchSectionBottom" class="md:w-[40rem]">
 				<SearchSection />
 			</div>
 		</div>

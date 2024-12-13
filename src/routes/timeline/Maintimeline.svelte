@@ -76,7 +76,6 @@
 
 		return series;
 	});
-	$inspect(data, $filters);
 </script>
 
 <div class="flex h-dvh flex-col py-12 overflow-hidden">
@@ -97,10 +96,10 @@
 		</div>
 	</div>
 	<div
-		on:mouseover={handleMouseOver}
-		on:mouseout={handleMouseOut}
-		on:blur={handleMouseOut}
-		on:focus={handleMouseOver}
+		onmouseover={handleMouseOver}
+		onmouseout={handleMouseOut}
+		onblur={handleMouseOut}
+		onfocus={handleMouseOver}
 		style={`transform: scale(${scaleGraphSection}); bottom: ${bottomDistance}rem;`}
 		role="presentation"
 		class="flex h-fit items-center justify-center transition-all duration-500"

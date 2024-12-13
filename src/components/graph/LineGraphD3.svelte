@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { scaleLinear, max, line, curveBasis } from 'd3';
+	import { scaleLinear, max, line, curveBasis, bisector } from 'd3';
 	import Axis from '$components/graph/Axis.svelte';
 	import { startYear, endYear } from '$stores/storeEvents';
+	import Tooltip from '$components/graph/Tooltip.svelte';
 
-	type DataPoint = {
+	export type DataPoint = {
 		year: number;
 		value: number;
 	};
@@ -62,11 +63,25 @@
 			return { ...series, data: completeSeriesData };
 		});
 	});
+
+	let mousePosition: number | null = $state(0);
 </script>
 
 <div class="max-w-3xl w-11/12" bind:clientWidth={width}>
 	{#if completeData && width}
-		<svg class="w-full" {width} {height}>
+		<svg
+			class="w-full"
+			{width}
+			{height}
+			onmousemove={(event: MouseEvent) => {
+				const rect = (event.currentTarget as SVGElement).getBoundingClientRect();
+				mousePosition = event.clientX - rect.left - margin.left - 5;
+			}}
+			onmouseleave={() => {
+				mousePosition = null;
+			}}
+			role="img"
+		>
 			<Axis
 				noDomain={true}
 				noTicksLine={true}
@@ -97,6 +112,8 @@
 						stroke={series.color}
 						stroke-width="2"
 					/>
+					<!-- Punto di snap -->
+					<Tooltip {mousePosition} {xScale} {yScale} {margin} {height} {xDomain} {series} />
 				{/each}
 			</g>
 		</svg>

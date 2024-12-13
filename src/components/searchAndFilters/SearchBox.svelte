@@ -10,7 +10,7 @@
 
 	const entities: Entity[] = ['person', 'work', 'corporation', 'location'];
 
-	let timeoutId: number | undefined;
+	let timeoutId: number | undefined = $state(undefined);
 
 	const handleInput = () => {
 		clearTimeout(timeoutId);
@@ -33,9 +33,9 @@
 		<input
 			class="focus-none h-10 w-full cursor-text bg-transparent px-3 placeholder-text/40 outline-none"
 			type="text"
-			id="myInput"
+			id="searchInput"
 			bind:value={$inputValue}
-			on:input={handleInput}
+			oninput={handleInput}
 			placeholder={$LL.filters.search()}
 			autocomplete="off"
 		/>
@@ -46,7 +46,7 @@
 <div class="my-2 flex flex-wrap gap-2 pl-2">
 	{#each entities as entity}
 		<button
-			on:click={() => {
+			onclick={() => {
 				updateEntitiesForSearchBox(entity);
 				if ($inputValue.length > 0) {
 					autocomplete($inputValue);
