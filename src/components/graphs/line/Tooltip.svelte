@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { bisector } from 'd3';
 	import { Tween } from 'svelte/motion';
-	import { cubicOut } from 'svelte/easing';
+	import { expoInOut } from 'svelte/easing';
 	import { startYear } from '$stores/storeEvents';
-	import { type DataPoint, type DataSeries } from '$components/graph/LineGraphD3.svelte';
+	import { type DataPoint, type DataSeries } from '$components/graphs/line/LineGraphD3.svelte';
 	import { filters } from '$stores/storeFilters';
 
 	let { xScale, yScale, margin, height, width, xDomain, series, mousePosition, data } = $props();
 
 	const activeYearTween = new Tween($startYear, {
-		duration: 200,
-		easing: cubicOut
+		duration: 500,
+		easing: expoInOut
 	});
 
 	function getPointOnCurve(data: DataPoint[], year: number) {
@@ -84,7 +84,6 @@
 				const match = series.name.match(/^(\d+)(\D+)/);
 				if (match) {
 					const [id, entity] = match.slice(1);
-					console.log(id, entity, 'hja');
 					return filter.id === Number(id) && filter.entity === String(entity);
 				}
 			});

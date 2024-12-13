@@ -1,41 +1,31 @@
 <script lang="ts">
-	import LineGraphD3 from '$components/graph/LineGraphD3.svelte';
+	import LineGraphD3 from '$components/graphs/line/LineGraphD3.svelte';
 	import SearchSection from '$components/searchAndFilters/SearchSection.svelte';
 	import { isSearchSectionInEventsList } from '$stores/storeSearchSection';
 	import { slide } from 'svelte/transition';
-	import { filteredEventsForGraph } from '$stores/storeGraph';
+	import { filteredEventsForGraph, selectedGraphType } from '$stores/storeGraph';
 	import { filters } from '$stores/storeFilters';
+	import GraphSelector from '$components/graphs/GraphSelector.svelte';
+	import Map from '$components/graphs/map/Maps.svelte';
+	import { filteredEvents } from '$stores/storeFilters';
+	import { getGeometries, getTitle, getTitleString } from '$stores/storeEvents';
+	import { onMount } from 'svelte';
 
-	let opacitySearchSection = $state(1);
-	let blurSearchSection = $state(0);
-	let scaleSearchSection = $state(1);
-	let scaleGraphSection = $state(1);
-	let bottomDistance = $state(7);
+	let isOver = $state(false);
+	let opacitySearchSection = $derived(isOver ? 0.3 : 1);
+	let blurSearchSection = $derived(isOver ? 4 : 0);
+	let scaleSearchSection = $derived(isOver ? 0.99 : 1);
+	let scaleGraphSection = $derived(isOver ? 1.05 : 1);
+	let bottomDistance = $derived(isOver ? 8 : 7);
 
-	function handleMouseOver() {
-		opacitySearchSection = 0.3;
-		blurSearchSection = 4;
-		scaleSearchSection = 0.99;
-		scaleGraphSection = 1.05;
-		bottomDistance = 8;
-	}
-
-	function handleMouseOut() {
-		opacitySearchSection = 1;
-		blurSearchSection = 0;
-		scaleSearchSection = 1;
-		scaleGraphSection = 1;
-		bottomDistance = 7;
-	}
-
-	let data = $derived.by(() => {
+	let dataForLines = $derived.by(() => {
 		let series = [];
 		let hasFiltersOr = $filters.or ? Object.keys($filters.or).length > 0 : false;
 		let hasOnlyFiltersAnd =
 			$filters.and && Object.keys($filters.and).length > 0 && !hasFiltersOr ? true : false;
 
 		series.push({
-			name: 'Main',
+			name: 'All',
 			color: 'hsl(var(--text))',
 			data: $filteredEventsForGraph.map((event: { x: number; eventCount: any }) => ({
 				year: event.x,
@@ -71,11 +61,49 @@
 		}
 
 		if (hasFiltersOr) {
-			series = series.filter((s) => s.name !== 'Main');
+			series = series.filter((s) => s.name !== 'All');
 		}
 
 		return series;
 	});
+
+	let allLocations: { name: string; id: number; geometries: any; amount: number }[] = $state([]);
+
+	async function updateLocations() {
+		let locations: { name: string; id: number; geometries: any; amount: number }[] = [];
+
+		for (const [years, events] of Object.entries($filteredEvents)) {
+			for (const event of events) {
+				if (event.locations) {
+					for (const location of event.locations) {
+						const existingLocation = locations.find((l) => l.id === Number(location.location));
+						if (!existingLocation) {
+							const arrayId = [location.location];
+							await getTitle(arrayId, 'location');
+							const name = await getTitleString(Number(location.location), 'location');
+
+							locations.push({
+								name: name,
+								id: location.location,
+								geometries: location.location,
+								amount: 1
+							});
+						} else {
+							existingLocation.amount++;
+						}
+					}
+				}
+			}
+		}
+
+		allLocations = locations;
+	}
+
+	$effect(() => {
+		updateLocations();
+	});
+
+	$inspect(allLocations);
 </script>
 
 <div class="flex h-dvh flex-col py-12 overflow-hidden">
@@ -96,14 +124,29 @@
 		</div>
 	</div>
 	<div
-		onmouseover={handleMouseOver}
-		onmouseout={handleMouseOut}
-		onblur={handleMouseOut}
-		onfocus={handleMouseOver}
+		onmouseover={() => {
+			isOver = true;
+		}}
+		onmouseout={() => {
+			isOver = false;
+		}}
+		onblur={() => {
+			isOver = true;
+		}}
+		onfocus={() => {
+			isOver = false;
+		}}
 		style={`transform: scale(${scaleGraphSection}); bottom: ${bottomDistance}rem;`}
 		role="presentation"
 		class="flex h-fit items-center justify-center transition-all duration-500"
 	>
-		<LineGraphD3 {data} />
+		{#if $selectedGraphType === 'Line'}
+			<LineGraphD3 data={dataForLines} />
+		{:else if $selectedGraphType === 'Map'}
+			<Map />
+		{/if}
+	</div>
+	<div class="w-full flex justify-center mt-4">
+		<GraphSelector />
 	</div>
 </div>

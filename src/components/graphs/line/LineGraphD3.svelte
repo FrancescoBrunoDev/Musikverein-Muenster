@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { scaleLinear, max, line, curveBumpX } from 'd3';
-	import Axis from '$components/graph/Axis.svelte';
+	import Axis from '$components/graphs/Axis.svelte';
 	import { startYear, endYear } from '$stores/storeEvents';
-	import Tooltip from '$components/graph/Tooltip.svelte';
+	import Tooltip from '$components/graphs/line/Tooltip.svelte';
 
 	export type DataPoint = {
 		year: number;
@@ -53,7 +53,6 @@
 		}
 		return years;
 	});
-
 	let completeData = $derived.by(() => {
 		return data.map((series) => {
 			let completeSeriesData = yearsRange.map((year) => {
@@ -121,7 +120,7 @@
 							{height}
 							{xDomain}
 							{series}
-							{data}
+							data={completeData}
 							{width}
 						/>
 					{/if}

@@ -65,6 +65,12 @@ const getTitle = async (allUids: string[], kind: Entity) => {
 	});
 };
 
+const getGeometries = async (locationID: number) => {
+	const res = await fetch(`${urlBaseAPIMusiconn}?action=get${locationID}&props=geometry&format=json`);
+	const json = await res.json();
+	return json;
+}
+
 const getUidsPerEntity = async (kind: Entity, event: EventItem) => {
 	const uids = new Set();
 
@@ -111,5 +117,6 @@ export {
 	mainLocationID,
 	getTitleString,
 	getTitles,
-	getTitle
+	getTitle,
+	getGeometries
 };

@@ -5,6 +5,7 @@ import { fetchedEvents, startYear, endYear } from '$stores/storeEvents';
 
 const filteredEventsForGraph = writable<DataRecordCoordinates[]>([]);
 const showLinesAsPerformances = writable<boolean>(true);
+const selectedGraphType = writable<'Line' | 'Map'>('Line');
 
 const updateFilteredEventsAndUdateDataForGraph = async () => {
 	let _filters: Filters = {
@@ -185,5 +186,6 @@ export {
 	filteredEvents,
 	filteredEventsForGraph,
 	showLinesAsPerformances,
+	selectedGraphType,
 	updateFilteredEventsAndUdateDataForGraph
 };
