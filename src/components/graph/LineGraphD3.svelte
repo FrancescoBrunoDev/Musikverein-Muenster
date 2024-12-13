@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { scaleLinear, max, line, curveBasis, bisector } from 'd3';
+	import { scaleLinear, max, line, curveBumpX } from 'd3';
 	import Axis from '$components/graph/Axis.svelte';
 	import { startYear, endYear } from '$stores/storeEvents';
 	import Tooltip from '$components/graph/Tooltip.svelte';
@@ -41,7 +41,7 @@
 		line<DataPoint>()
 			.x((d) => xScale(d.year))
 			.y((d) => yScale(d.value))
-			.curve(curveBasis)
+			.curve(curveBumpX)
 	);
 
 	// Ensure each series has a data point for each year in the range

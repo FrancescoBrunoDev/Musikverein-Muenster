@@ -49,11 +49,11 @@
 
 	function getTooltipPosition(x: number, y: number, dimensions: { width: number; height: number }) {
 		const offset = 10;
+		const topMargin = 20;
 
 		const xPos = x + dimensions.width + offset > width ? x - dimensions.width - offset : x + offset;
 
-		const yPos =
-			y + dimensions.height + offset > height ? y - dimensions.height - offset : y + offset;
+		const yPos = topMargin;
 
 		return { x: xPos, y: yPos };
 	}
@@ -66,7 +66,7 @@
 
 		// Calcola la larghezza massima necessaria
 		const maxTextWidth =
-			Math.max(...values.map((v) => `${v.name}: ${formatValue(v.value)}`.length)) * 6.5; // Approssimazione larghezza carattere
+			Math.max(...values.map((v) => `${v.name}: ${formatValue(v.value)}`.length)) * 6.5;
 
 		return {
 			width: Math.max(120, maxTextWidth + padding * 2),
@@ -104,7 +104,6 @@
 		});
 		return values;
 	}
-	$inspect($filters.or, getValues(1880));
 </script>
 
 {#if activeYearTween}
