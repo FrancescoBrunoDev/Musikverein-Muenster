@@ -9,7 +9,7 @@
 		value: number;
 	};
 
-	type DataSeries = {
+	export type DataSeries = {
 		name: string;
 		color: string;
 		data: DataPoint[];
@@ -64,7 +64,7 @@
 		});
 	});
 
-	let mousePosition: number | null = $state(0);
+	let mousePosition: number | null = $state(null);
 </script>
 
 <div class="max-w-3xl w-11/12" bind:clientWidth={width}>
@@ -112,8 +112,19 @@
 						stroke={series.color}
 						stroke-width="2"
 					/>
-					<!-- Punto di snap -->
-					<Tooltip {mousePosition} {xScale} {yScale} {margin} {height} {xDomain} {series} />
+					{#if mousePosition !== null}
+						<Tooltip
+							{mousePosition}
+							{xScale}
+							{yScale}
+							{margin}
+							{height}
+							{xDomain}
+							{series}
+							{data}
+							{width}
+						/>
+					{/if}
 				{/each}
 			</g>
 		</svg>
