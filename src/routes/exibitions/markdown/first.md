@@ -78,11 +78,13 @@ So erstellt man einen Link: [Google](https://www.google.com)
 
 So fügt man ein Bild ein:
 
-![Beispielbild](https://via.placeholder.com/150)
+![Beispielbild](/exibitions/first_exibition/secondgallery/File13749.jpg)
 
-## Code
+oder auch besser
 
-So fügt man Code ein:
+<Gallery gallery={{ title: 'Grimm', cover: '/exibitions/first_exibition/secondgallery/File13749.jpg' }} />
+
+### Piú gallerie
 
 <div class="flex gap-2">
   <Gallery gallery={gallery} className='w-3/6' />
