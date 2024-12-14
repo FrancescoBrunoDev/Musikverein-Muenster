@@ -4,15 +4,13 @@
 	import Modal from '$components/Modal.svelte';
 	import { showModal } from '$stores/storeGeneral';
 
-	export let title: string;
-	export let gallery: string;
-	export let size: string = 'w-full';
+	let { title, gallery, size = 'w-full' } = $props();
 
-	let images: string[] = [];
-	let isGalleryOpen = false;
-	let indexGallery = 0;
+	let images: string[] = $state([]);
+	let indexGallery = $state(0);
 
 	onMount(async () => {
+		images = [];
 		indexGallery = 0;
 		const formattedTitle = title.replace(/\s/g, '_').toLowerCase();
 		const formattedGallery = gallery.replace(/\s/g, '_').toLowerCase();
@@ -36,7 +34,7 @@
 	function handleClick() {
 		$showModal = true;
 	}
-	
+
 	function navigation(direction: 'left' | 'right') {
 		if (direction === 'left') {
 			if (indexGallery === 0) {
@@ -62,7 +60,7 @@
 </script>
 
 <button
-	on:click={handleClick}
+	onclick={handleClick}
 	class="{size} group grid justify-items-stretch overflow-hidden rounded-xl"
 >
 	<div
@@ -77,13 +75,13 @@
 <Modal>
 	<div class="relative">
 		<button
-			on:click={() => navigation('right')}
+			onclick={() => navigation('right')}
 			class="absolute right-0 z-20 h-full transition-all hover:scale-hover hover:drop-shadow-xl"
 		>
 			<ChevronRight size={40} />
 		</button>
 		<button
-			on:click={() => navigation('left')}
+			onclick={() => navigation('left')}
 			class="absolute left-0 z-20 h-full transition-all hover:scale-hover hover:drop-shadow-xl"
 		>
 			<ChevronLeft size={40} />
@@ -94,7 +92,7 @@
 		{#each images as image}
 			{#if image === images[indexGallery]}
 				<button
-					on:click={() => {
+					onclick={() => {
 						indexGallery = images.indexOf(image);
 					}}
 					class="rounded-lg drop-shadow-xl"
@@ -103,7 +101,7 @@
 				</button>
 			{:else}
 				<button
-					on:click={() => {
+					onclick={() => {
 						indexGallery = images.indexOf(image);
 					}}
 					class="rounded-lg brightness-50"

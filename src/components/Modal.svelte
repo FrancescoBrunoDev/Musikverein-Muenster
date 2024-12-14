@@ -42,7 +42,7 @@
 	<div
 		bind:this={modalElement}
 		transition:fade={{ duration: 300 }}
-		class="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center backdrop-blur backdrop-brightness-75"
+		class="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center backdrop-blur-xl backdrop-brightness-50"
 	>
 		<div
 			in:fly={{ y: 100, duration: 400, easing: cubicOut }}

@@ -9,8 +9,41 @@ img: https://picsum.photos/1500/1300
 ---
 
 <script>
-  import Gallery from "$components/markdown/Gallery.svelte"
+  import Gallery from "$components/markdown/gallery/Gallery.svelte"
   import Note from "$components/markdown/Note.svelte"
+
+  const gallery = {
+    title: 'titolo',
+    cover: '/exibitions/first_exibition/firstgallery/00001.png',
+    images: [{
+      src: '/exibitions/first_exibition/firstgallery/00002.png',
+      caption: "halloWorld"
+    },
+    {
+      src: '/exibitions/first_exibition/firstgallery/00003.png',
+      caption: "halloWorld"
+    },
+    {
+      src: '/exibitions/first_exibition/secondgallery/File13749.jpg',
+      caption: "halloWorld"
+    }]
+  }
+    const gallery2 = {
+    title: 'titolo',
+    cover: '/exibitions/first_exibition/firstgallery/00005.png',
+    images: [{
+      src: '/exibitions/first_exibition/firstgallery/00006.png',
+      caption: "halloWorld"
+    },
+    {
+      src: '/exibitions/first_exibition/firstgallery/00007.png',
+      caption: "halloWorld"
+    },
+    {
+      src: '/exibitions/first_exibition/secondgallery/File13749.jpg',
+      caption: "halloWorld"
+    }]
+  }
 </script>
 
 # Markdown
@@ -51,4 +84,7 @@ So fügt man ein Bild ein:
 
 So fügt man Code ein:
 
-<Gallery {title} gallery="firstGallery" size="w-1/2" />
+<div class="flex gap-2">
+  <Gallery gallery={gallery} className='w-3/6' />
+  <Gallery gallery={gallery2} className='w-3/6' />
+</div>

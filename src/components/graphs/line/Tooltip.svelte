@@ -130,12 +130,12 @@
 			stroke-width="1"
 			opacity="0.95"
 		/>
-		<text x="10" y="15" font-size="12" fill="hsl(var(--foreground))">
+		<text x="10" y="15" font-size="12" fill="hsl(var(--text))">
 			Anno: {Math.floor(currentYear)}
 		</text>
 		{#each values as value, i}
 			<circle cx="7" cy={26 + i * 15} r="3" fill={value.color} />
-			<text x="13" y={30 + i * 15} font-size="12">
+			<text x="13" y={30 + i * 15} font-size="12" fill="hsl(var(--text))">
 				{value.name}: {formatValue(value.value)}
 			</text>
 		{/each}

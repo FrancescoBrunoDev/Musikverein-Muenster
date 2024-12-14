@@ -15,15 +15,16 @@
 		class="flex h-screen w-screen items-center bg-cover bg-center"
 		style="background-image: url('{data.meta.img}')"
 	>
-		<h1 class="text-8xl font-serif text-background">{data.meta.title}</h1>
+		<div class="container">
+			<h1 class="text-8xl font-serif text-background">{data.meta.title}</h1>
 
-		<!-- Tags -->
-		<div class="flex gap-2">
-			{#each data.meta.categories as category}
-				<span class="surface-4">&num;{category}</span>
-			{/each}
+			<!-- Tags -->
+			<div class="flex gap-2">
+				{#each data.meta.categories as category}
+					<span class="surface-4">&num;{category}</span>
+				{/each}
+			</div>
 		</div>
-
 		<!-- exibition -->
 	</div>
 	<div class="container mx-auto max-w-3xl content mb-10">

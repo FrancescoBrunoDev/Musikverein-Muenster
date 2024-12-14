@@ -10,7 +10,6 @@
 	import { filteredEvents } from '$stores/storeFilters';
 	import { getGeometries, getTitle, getTitleString } from '$stores/storeEvents';
 	import { onMount } from 'svelte';
-	import Event from '$components/listEvents/Event.svelte';
 
 	let isOver = $state(false);
 	let opacitySearchSection = $derived(isOver ? 0.3 : 1);
@@ -64,7 +63,7 @@
 		if (hasFiltersOr) {
 			series = series.filter((s) => s.name !== 'All');
 		}
-
+		console.log(series);
 		return series;
 	});
 

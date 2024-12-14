@@ -27,8 +27,6 @@
 
 		let searchInput = $derived(searchSection?.querySelector('input'));
 
-		$inspect(searchSection);
-
 		// open the search box when the input is focused
 		if (searchInput) {
 			searchInput.addEventListener('focus', () => {
