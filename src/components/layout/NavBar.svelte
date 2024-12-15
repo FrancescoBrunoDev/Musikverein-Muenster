@@ -48,15 +48,15 @@
 					x: 1500,
 					easing: quintInOut
 				}}
-				class="left-50 absolute bottom-0 right-0 top-0 z-50 left-0 lg:drop-shadow-2xl lg:left-[unset] lg:w-[850px] flex h-dvh flex-col bg-background pb-10 pl-10 text-primary"
+				class="left-50 absolute bottom-0 right-0 top-0 z-50 left-0 lg:drop-shadow-2xl lg:left-[unset] lg:w-[850px] flex h-dvh flex-col bg-background container text-primary py-4"
 			>
 				<button
 					onclick={() => toggleMenu()}
-					class="mr-10 mt-20 self-end hover:scale-hover hover:drop-shadow-2xl md:mr-20"
+					class="self-end hover:scale-hover hover:drop-shadow-2xl"
 				>
 					<X strokeWidth={2.5} size={50} color="hsl(var(--text)" /></button
 				>
-				<div class="flex h-full items-end justify-between pr-10 md:pr-20 container">
+				<div class="flex h-full items-end justify-between">
 					<div
 						class="flex h-full items-center gap-6 text-5xl font-bold sm:text-6xl md:items-end md:text-7xl lg:text-8xl"
 					>

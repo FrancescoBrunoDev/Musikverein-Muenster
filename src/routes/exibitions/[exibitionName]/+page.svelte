@@ -16,7 +16,7 @@
 		style="background-image: url('{data.meta.img}')"
 	>
 		<div class="container">
-			<h1 class="text-8xl font-serif text-background">{data.meta.title}</h1>
+			<h1 class="lg:text-8xl text-4xl font-serif text-background">{data.meta.title}</h1>
 
 			<!-- Tags -->
 			<div class="flex gap-2">
