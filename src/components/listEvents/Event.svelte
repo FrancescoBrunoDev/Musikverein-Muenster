@@ -5,6 +5,8 @@
 	import { filters } from '$stores/storeFilters';
 	import { Circle, FileInput } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
+	import { cn } from '$lib/utils';
+	import Modal from '$components/ui/Modal.svelte';
 	let { event }: { event: EventItem } = $props();
 
 	let date: string = $derived.by(() => calculateDate(event));
@@ -102,17 +104,20 @@
 </script>
 
 <div
-	class={`relative w-fit overflow-hidden rounded-xl border-2 text-primary transition-all duration-100 ${
-		isEventOpen
-			? 'flex h-fit flex-shrink-0 flex-col'
-			: 'flex flex-col justify-center gap-2 hover:scale-hover'
-	}`}
+	class={cn(
+		`relative w-fit overflow-hidden rounded-xl border-2 text-primary transition-all duration-100`,
+		{
+			'flex h-fit flex-shrink-0 flex-col': isEventOpen,
+			'flex flex-col justify-center gap-2 hover:scale-hover': !isEventOpen
+		}
+	)}
 >
 	<button
 		onclick={() => handleClickEvent()}
-		class={`z-10 flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out ${
-			isEventOpen ? 'relative left-0 right-0 top-0 h-fit w-80 py-2' : 'h-32 w-24'
-		}`}
+		class={cn(`flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out`, {
+			'relative left-0 right-0 top-0 h-fit w-80 py-2': isEventOpen,
+			'h-32 w-24': !isEventOpen
+		})}
 		>{date}
 
 		{#if !isEventOpen}

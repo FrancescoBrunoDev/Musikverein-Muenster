@@ -50,7 +50,7 @@
 			class={cn(
 				`${direction == 'top' && `-top-[${height + 10}px]`} rounded-xl p-2 z-50 divide-y bg-background shadow-primary dark:border-2 drop-shadow-xl absolute right-0`,
 				{
-					'top-12': direction === 'bottom'
+					'top-14 -right-2': direction === 'bottom'
 				}
 			)}
 			transition:fly={{ duration: 150, y: -10 }}

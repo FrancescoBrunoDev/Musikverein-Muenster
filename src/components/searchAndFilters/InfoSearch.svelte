@@ -1,15 +1,16 @@
 <script lang="ts">
 	import LL from '$lib/i18n/i18n-svelte';
-	import Modal from '$components/Modal.svelte';
+	import Modal from '$components/ui/Modal.svelte';
 	import { Info } from 'lucide-svelte';
-	import { showModal } from '$stores/storeGeneral';
+
+	let isOpen = $state(false);
 </script>
 
-<button on:click={() => ($showModal = !$showModal)}>
+<button onclick={() => (isOpen = !isOpen)}>
 	<Info size={25} stroke-width={40} />
 </button>
 
-<Modal>
+<Modal {isOpen}>
 	<div class="rounded-xl bg-background p-2 dark:bg-primary dark:text-background">
 		<h3 class="text-lg font-bold">{$LL.filters.infoSearch.title()}</h3>
 		<p>{$LL.filters.infoSearch.description()}</p>

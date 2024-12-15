@@ -43,30 +43,28 @@
 	});
 </script>
 
-<div class="container w-screen max-w-6xl overflow-x-hidden" bind:this={container}>
-	<div class="flex flex-col overflow-x-hidden">
-		{#each Object.keys($filteredEvents) as year}
-			<div class="flex flex-col overflow-x-hidden">
-				<div class="flex flex-row gap-2 align-middle">
-					<div class="text-7xl">{year}</div>
-					<div>{$filteredEvents[year].length}</div>
-				</div>
-				<div class="flex flex-wrap items-start gap-2 pb-4 leading-tight">
-					{#each $filteredEvents[year].slice().sort((a, b) => {
-						const dateA = new Date(a.dates[0].date);
-						const dateB = new Date(b.dates[0].date);
-						return dateA.getTime() - dateB.getTime();
-					}) as event}
-						<Event {event} />
-					{/each}
-				</div>
+<div class="flex flex-col" bind:this={container}>
+	{#each Object.keys($filteredEvents) as year}
+		<div class="flex flex-col">
+			<div class="flex flex-row gap-2 align-middle">
+				<div class="text-7xl">{year}</div>
+				<div>{$filteredEvents[year].length}</div>
 			</div>
-		{/each}
-	</div>
+			<div class="flex flex-wrap items-start gap-2 pb-4 leading-tight">
+				{#each $filteredEvents[year].slice().sort((a, b) => {
+					const dateA = new Date(a.dates[0].date);
+					const dateB = new Date(b.dates[0].date);
+					return dateA.getTime() - dateB.getTime();
+				}) as event}
+					<Event {event} />
+				{/each}
+			</div>
+		</div>
+	{/each}
 </div>
 
 {#if Object.keys($filteredEvents).length > 0 && $isSearchSectionInEventsList}
-	<div class="sticky bottom-0 z-30 flex h-fit w-screen justify-center md:bottom-3">
+	<div class="sticky bottom-0 flex h-fit justify-center md:bottom-3">
 		<div
 			transition:slide={{ duration: 500, easing: cubicOut }}
 			class="flex h-fit w-screen flex-col justify-center rounded-b-none rounded-t-xl md:border-2 bg-background px-8 pb-4 pt-1 shadow-2xl md:w-fit md:rounded-xl border-x-2 border-t-2 md:pb-2"

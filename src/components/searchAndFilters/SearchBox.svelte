@@ -5,12 +5,6 @@
 	import SuggestionSearch from '$components/searchAndFilters/SuggestionSearch.svelte';
 	import { entitiesForSearchBox, updateEntitiesForSearchBox } from '$stores/storeFilters';
 	import { suggestions, inputValue } from '$stores/storeSearchSection';
-	import InfoSearch from './InfoSearch.svelte';
-	import MenuDropdown from '$components/ui/MenuDropdown.svelte';
-	import CheckBox from '$components/CheckBox.svelte';
-	import { isMoveToActive } from '$stores/storeFilters';
-	import { Settings } from 'lucide-svelte';
-	import { isSearchSectionInEventsList } from '$stores/storeSearchSection';
 
 	const entities: Entity[] = ['person', 'work', 'corporation', 'location'];
 
@@ -44,12 +38,6 @@
 			autocomplete="off"
 		/>
 	</div>
-	<InfoSearch />
-	<MenuDropdown icon={Settings} direction={$isSearchSectionInEventsList ? 'top' : 'bottom'}>
-		<div>
-			<CheckBox title={'show move option on  filter hover'} bind:value={$isMoveToActive} />
-		</div>
-	</MenuDropdown>
 </div>
 <div class="my-2 flex flex-wrap gap-2 pl-2">
 	{#each entities as entity}
