@@ -6,7 +6,6 @@ import { fetchedEvents, startYear, endYear } from '$stores/storeEvents';
 import osmtogeojson from 'osmtogeojson';
 import { type DataSeries } from "$components/graphs/line/LineGraphD3.svelte";
 
-const showLinesAsPerformances = writable<boolean>(true);
 const selectedGraphType = persistStore<'Line' | 'Map'>('selectedGraphType', 'Line');
 const JSONMuenster = persistStore<any>('JSONMuenster', {});
 const dataForLineGraph = writable<DataSeries[]>([]);
@@ -239,7 +238,6 @@ const fetchOverpassData = async (centerPoint: { lat: number; lng: number }) => {
 		(
 			way["highway"]["highway"!~"cycleway|footway"](${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]});
 			way["waterway"](${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]});
-			way["landuse"](${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]});
 		);
 		out geom;
 	`;
@@ -312,7 +310,6 @@ const hasMatchingPerformances = (event: EventItem, filter: Filter) => {
 
 export {
 	filteredEvents,
-	showLinesAsPerformances,
 	selectedGraphType,
 	JSONMuenster,
 	dataForLineGraph,

@@ -3,9 +3,9 @@
 	import { fly } from 'svelte/transition';
 	import { quintInOut } from 'svelte/easing';
 	import { X } from 'lucide-svelte';
-	import LanguageSwitch from '$components/layout/LanguageSwitch.svelte';
 	import ThemeSwitch from '$components/layout/ThemeSwitch.svelte';
 	import { page } from '$app/stores';
+	import Button from '$components/ui/Button.svelte';
 
 	let isHomePage = $derived($page.url.pathname === '/');
 
@@ -48,7 +48,7 @@
 					x: 1500,
 					easing: quintInOut
 				}}
-				class="left-50 absolute bottom-0 right-0 top-0 z-50 left-0 lg:drop-shadow-2xl lg:left-[unset] lg:w-[850px] flex h-dvh flex-col bg-background container text-primary py-4"
+				class="left-50 absolute bottom-0 right-0 top-0 z-50 left-0 lg:drop-shadow-2xl lg:left-[unset] lg:w-[850px] flex h-dvh flex-col bg-background container text-primary py-8"
 			>
 				<button
 					onclick={() => toggleMenu()}
@@ -87,7 +87,7 @@
 						</div>
 					</div>
 					<div class="flex flex-col gap-y-2">
-						<LanguageSwitch {value} {handleLocaleChange} />
+						<Button label={value === 'en' ? 'de' : 'en'} action={handleLocaleChange} />
 						<ThemeSwitch />
 					</div>
 				</div>

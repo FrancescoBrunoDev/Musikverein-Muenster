@@ -1,21 +1,8 @@
 <script lang="ts">
-	import { createSwitch, melt } from '@melt-ui/svelte';
-	import { createEventDispatcher } from 'svelte';
-	export let title: string;
-
-	const dispatch = createEventDispatcher();
+	let { title, value = $bindable() } = $props();
 
 	function titleToId(title: string): string {
 		return title.replaceAll(' ', '-');
-	}
-
-	const {
-		elements: { root, input },
-		states: { checked }
-	} = createSwitch();
-
-	$: {
-		dispatch('change', $checked);
 	}
 </script>
 
@@ -29,23 +16,27 @@
 			{title}
 		</label>
 		<button
-			use:melt={$root}
-			class="button-checkbox relative h-6 cursor-default rounded-full bg-destructive transition-all duration-100 hover:cursor-pointer hover:shadow-lg data-[state=checked]:bg-green-600 dark:bg-red-900 dark:data-[state=checked]:bg-green-700"
+			class="button-checkbox relative h-6 cursor-default rounded-full data-[state=checked]:bg-primary bg-border dark:border-primary dark:border-2 transition-all duration-100 hover:cursor-pointer hover:shadow-lg"
 			id={titleToId(title)}
 			aria-labelledby="{titleToId(title)}-label"
+			onclick={() => {
+				value = !value;
+			}}
+			data-state={value ? 'checked' : 'unchecked'}
 		>
 			<span
-				class="thumb block rounded-full bg-background transition data-[state=checked]:bg-primary"
+				class="thumb block rounded-full bg-background dark:bg-primary dark:data-[state=checked]:bg-background transition"
+				data-state={value ? 'checked' : 'unchecked'}
 			></span>
 		</button>
-		<input use:melt={$input} />
+		<input type="hidden" bind:value />
 	</div>
 </form>
 
 <style>
 	.button-checkbox {
-		--w: 2rem;
-		--padding: 0.18rem;
+		--w: 2.3rem;
+		--padding: 2px;
 		width: var(--w);
 	}
 
@@ -57,6 +48,6 @@
 	}
 
 	:global([data-state='checked']) .thumb {
-		transform: translateX(calc(var(--w) - var(--size) - var(--padding)));
+		transform: translateX(calc(var(--w) - var(--size) - var(--padding) - 3px));
 	}
 </style>

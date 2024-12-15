@@ -1,16 +1,11 @@
 <script lang="ts">
+	import Button from '$components/ui/Button.svelte';
 	import { toggleDarkMode, themeKind } from '$stores/storeTheme';
 	import { draw } from 'svelte/transition';
 	import { expoInOut } from 'svelte/easing';
 </script>
 
-<button
-	on:click={() => {
-		toggleDarkMode();
-	}}
-	aria-label="Toggle italic"
-	class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-background transition-all hover:scale-hover hover:drop-shadow-xl"
->
+<Button action={toggleDarkMode}>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width="24"
@@ -37,4 +32,4 @@
 			/>
 		{/if}</svg
 	>
-</button>
+</Button>

@@ -7,7 +7,8 @@
 	import { setLocale } from '$lib/i18n/i18n-svelte';
 	import { loadLocaleAsync } from '$lib/i18n/i18n-util.async';
 
-	let value: Locales = 'en';
+	let value: Locales = $state('en');
+	let { children } = $props();
 
 	async function handleLocaleChange() {
 		value = value === 'en' ? 'de' : 'en';
@@ -39,6 +40,6 @@
 <div class="subpixel-antialiased">
 	<div class="grid h-screen justify-items-center">
 		<NavBar {value} {handleLocaleChange} />
-		<slot />
+		{@render children?.()}
 	</div>
 </div>

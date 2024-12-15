@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { fetchedEvents } from '$stores/storeEvents';
 import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
+import { persistStore } from '$utils/storeUtils';
 
 const filtersUrlified = writable<string>('');
 const filters = writable<Filters>({
@@ -28,7 +29,7 @@ const colorFilters = writable([
 const filteredEvents = writable<Events>({});
 const entitiesForSearchBox = writable<Entity[]>(['person', 'corporation', 'work', 'location']);
 const isAFilterDragged = writable<boolean>(false);
-const isMoveToActive = writable<boolean>(false);
+const isMoveToActive = persistStore<boolean>("isMoveToActive", false);
 
 const UpdateSelectedMethodFilter = (method: Method) => {
 	SelectedMethodFilter.set(method);
@@ -54,20 +55,20 @@ const deUrlifyerFilters = async (filtersUrl: FiltersForUrl) => {
 	const filtersOr =
 		filtersUrl.fo && filtersUrl.fo !== '_'
 			? filtersUrl.fo
-					.split(',')
-					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+				.split(',')
+				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 	const filtersAnd =
 		filtersUrl.fa && filtersUrl.fa !== '_'
 			? filtersUrl.fa
-					.split(',')
-					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+				.split(',')
+				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 	const filtersNot =
 		filtersUrl.fn && filtersUrl.fn !== '_'
 			? filtersUrl.fn
-					.split(',')
-					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+				.split(',')
+				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 
 	function whichEntityIs(entity: string) {
@@ -300,7 +301,7 @@ const makeFilterPersonBothPersonAndComposer = (selected: Filter, method: Method)
 		const newMethodFilters: Filter[] = methodFilters.flatMap((f) => {
 			if (f.id === selected.id && f.entity === selected.entity) {
 				return [
-					{ ...f, entity: 'person', color: lightenColor(f.color, 30) },
+					{ ...f, entity: 'person', color: f.color ? lightenColor(f.color, 30) : '#ffffff' },
 					{ ...f, entity: 'composer' }
 				];
 			}

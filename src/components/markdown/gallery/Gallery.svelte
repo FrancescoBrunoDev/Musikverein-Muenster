@@ -7,22 +7,8 @@
 
 	let isOpen = $state(false);
 	let selected = $state(0);
-	let isAnimating = $state(false);
 	let coverLoaded: HTMLImageElement | null = $state(null);
-
-	const handleClose = () => {
-		isAnimating = false;
-		// with a delay to allow the animation to finish
-		setTimeout(() => {
-			isOpen = false;
-		}, 500);
-	};
-
-	$effect(() => {
-		if (isOpen) {
-			isAnimating = true;
-		}
-	});
+	$inspect(isOpen);
 </script>
 
 <button
@@ -53,4 +39,4 @@
 	/>
 </button>
 
-<GalleryOverlay {isAnimating} {handleClose} {gallery} {selected} />
+<GalleryOverlay bind:isOpen {gallery} {selected} />
