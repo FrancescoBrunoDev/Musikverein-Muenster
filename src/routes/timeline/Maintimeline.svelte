@@ -3,8 +3,7 @@
 	import SearchSection from '$components/searchAndFilters/SearchSection.svelte';
 	import { isSearchSectionInEventsList } from '$stores/storeSearchSection';
 	import { slide } from 'svelte/transition';
-	import { filteredEventsForGraph, selectedGraphType, fetchOverpassData } from '$stores/storeGraph';
-	import { filters } from '$stores/storeFilters';
+	import { selectedGraphType, fetchOverpassData, dataForLineGraph } from '$stores/storeGraph';
 	import GraphSelector from '$components/graphs/GraphSelector.svelte';
 	import Map from '$components/graphs/map/Maps.svelte';
 	import { filteredEvents } from '$stores/storeFilters';
@@ -17,55 +16,6 @@
 	let scaleSearchSection = $derived(isOver ? 0.99 : 1);
 	let scaleGraphSection = $derived(isOver ? 1.05 : 1);
 	let bottomDistance = $derived(isOver ? 8 : 7);
-
-	let dataForLines = $derived.by(() => {
-		let series = [];
-		let hasFiltersOr = $filters.or ? Object.keys($filters.or).length > 0 : false;
-		let hasOnlyFiltersAnd =
-			$filters.and && Object.keys($filters.and).length > 0 && !hasFiltersOr ? true : false;
-
-		series.push({
-			name: 'All',
-			color: 'hsl(var(--text))',
-			data: $filteredEventsForGraph.map((event: { x: number; eventCount: any }) => ({
-				year: event.x,
-				value: event.eventCount
-			}))
-		});
-
-		if (hasOnlyFiltersAnd) return series;
-
-		for (let item of $filteredEventsForGraph) {
-			for (let filterName in item.filters) {
-				let filter = item.filters[filterName];
-				let existingSeries:
-					| { name: string; color: string; data: { year: number; value: any }[] }
-					| undefined = series.find((s) => s.name === filterName);
-				if (!existingSeries) {
-					existingSeries = {
-						name: filterName,
-						color: filter.color || 'hsl(var(--border))',
-						data: []
-					};
-					if (filter.color) {
-						series.push(existingSeries);
-					} else {
-						series.unshift(existingSeries);
-					}
-				}
-				existingSeries.data.push({
-					year: item.x,
-					value: filter.count
-				});
-			}
-		}
-
-		if (hasFiltersOr) {
-			series = series.filter((s) => s.name !== 'All');
-		}
-		console.log(series);
-		return series;
-	});
 
 	let allLocations: { name: string; id: number; geometries: any; amount: number }[] = $state([]);
 
@@ -148,7 +98,7 @@
 		class="flex h-fit items-center justify-center transition-all duration-500"
 	>
 		{#if $selectedGraphType === 'Line'}
-			<LineGraphD3 data={dataForLines} />
+			<LineGraphD3 data={$dataForLineGraph} />
 		{:else if $selectedGraphType === 'Map'}
 			{#if allLocations.length > 0}
 				<Map data={allLocations} />

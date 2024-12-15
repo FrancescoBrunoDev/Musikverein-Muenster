@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import { entitiesForSearchBox, filters } from '$stores/storeFilters';
 import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
 import { projectID } from '$stores/storeEvents';
@@ -9,10 +9,7 @@ const isSearchSectionInEventsList = writable<boolean>(false);
 const isSearchSectionInEventsListOpen = writable<boolean>(false);
 
 const autocomplete = async (query: string) => {
-	let _entitiesForSearchBox: string[] = [];
-	entitiesForSearchBox.subscribe((res: string[]) => {
-		_entitiesForSearchBox = res;
-	});
+	let _entitiesForSearchBox: string[] = get(entitiesForSearchBox);
 
 	function removeFormSuggestionIfInFilters(results: AutocompleteResult[]) {
 		let _results: AutocompleteResult[] = results;
@@ -41,10 +38,7 @@ const autocomplete = async (query: string) => {
 	const entities = _entitiesForSearchBox.join('|');
 	if (entities.length !== 0) {
 		try {
-			let _projectID: number = 1;
-			projectID.subscribe((res: number) => {
-				_projectID = res;
-			});
+			let _projectID: number = get(projectID);
 
 			const res = await fetch(
 				`${urlBaseAPIMusiconn}?action=autocomplete&title=${query}&entities=${entities}&max=20${projectID ? `&project=${_projectID}` : ''}&format=json`

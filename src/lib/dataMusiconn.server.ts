@@ -1,5 +1,6 @@
 import { startYear, endYear, mainLocationID } from '$stores/storeEvents';
 import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
+import { get } from 'svelte/store';
 
 const getLocationEventsAndChildLocation = async (locationId: number) => {
 
@@ -27,10 +28,7 @@ const getLocationEventsAndChildLocation = async (locationId: number) => {
 
 const getAllEvents = async () => {
 	try {
-		let _mainLocationID: number = 1;
-		mainLocationID.subscribe((res: number) => {
-			_mainLocationID = res;
-		});
+		let _mainLocationID: number = get(mainLocationID);
 		const allEventIds = await getLocationEventsAndChildLocation(_mainLocationID);
 
 		const batchSize = 300;
@@ -63,14 +61,8 @@ const joinEventByYear = async () => {
 		const allEvents = batch.event;
 		for (const key in allEvents) {
 			const event = allEvents[key];
-			let startYearValue: number = 0;
-			let endYearValue: number = 3000;
-			startYear.subscribe((res: number) => {
-				startYearValue = res;
-			});
-			endYear.subscribe((res: number) => {
-				endYearValue = res;
-			});
+			let startYearValue: number = get(startYear);
+			let endYearValue: number = get(endYear);
 			// se la data è antecedente al 1850 o successiva la 1900 non la considero
 			if (
 				event.dates[0].date.split('-')[0] < startYearValue ||

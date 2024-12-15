@@ -11,6 +11,7 @@
 
 	export type DataSeries = {
 		name: string;
+		id: string;
 		color: string;
 		data: DataPoint[];
 	};

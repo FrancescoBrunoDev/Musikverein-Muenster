@@ -2,9 +2,8 @@
 	import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 	import { fetchedEvents } from '$stores/storeEvents';
 	import { filters } from '$stores/storeFilters';
-	import type { PageData } from './$types';
 
-	export let data: PageData;
+	const { data } = $props();
 	// clean filter from precedent
 	filters.set({
 		and: [],

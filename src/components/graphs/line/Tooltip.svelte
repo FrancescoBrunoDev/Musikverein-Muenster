@@ -79,24 +79,9 @@
 
 		data.forEach((series: DataSeries) => {
 			let point = getPointOnCurve(series.data, year);
-			const filter = $filters.or.find((filter) => {
-				// split the series.name from 760person to 760 and person
-				const match = series.name.match(/^(\d+)(\D+)/);
-				if (match) {
-					const [id, entity] = match.slice(1);
-					return filter.id === Number(id) && filter.entity === String(entity);
-				}
-			});
-			const formattedName =
-				((typeof filter?.name === 'object' && 'lastName' in filter.name
-					? filter.name.lastName + ', ' + filter.name.abbreviatedFirstName
-					: '') ||
-					(typeof filter?.name === 'object' && 'title' in filter.name ? filter.name.title : '') ||
-					filter?.name) ??
-				series.name;
 
 			values.push({
-				name: String(formattedName),
+				name: series.name,
 				value: point.value,
 				color: series.color
 			});

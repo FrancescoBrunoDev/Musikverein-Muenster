@@ -86,7 +86,7 @@ oder auch besser
 
 ### Piú gallerie
 
-<div class="flex gap-2">
-  <Gallery gallery={gallery} className='w-3/6' />
-  <Gallery gallery={gallery2} className='w-3/6' />
+<div class="w-full flex flex-col gap-2">
+  <Gallery gallery={gallery} className="h-fit" />
+  <Gallery gallery={gallery2} className="h-fit"  />
 </div>
