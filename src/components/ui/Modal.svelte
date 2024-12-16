@@ -6,8 +6,7 @@
 	import { cn } from '$lib/utils';
 	import Button from '$components/ui/Button.svelte';
 
-	let { children, isOpen } = $props();
-	$inspect(isOpen);
+	let { children, isOpen = $bindable() } = $props();
 </script>
 
 <Portal>

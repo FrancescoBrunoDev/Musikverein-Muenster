@@ -11,10 +11,14 @@
 	import { cubicOut } from 'svelte/easing';
 	import { ChevronUp } from 'lucide-svelte';
 	import EventWithModal from '$components/listEvents/EventWithModal.svelte';
+	import EventModal from '$components/listEvents/EventModal.svelte';
 
 	function toggleSearchSection() {
 		$isSearchSectionInEventsListOpen = !$isSearchSectionInEventsListOpen;
 	}
+
+	let selectedEventModal: EventItem | null = $state(null);
+	let isModalOpen = $state(false);
 
 	onMount(() => {
 		const searchSection = document.getElementById('searchSectionInTimeline');
@@ -56,7 +60,11 @@
 					return dateA.getTime() - dateB.getTime();
 				}) as event}
 					{#if $showEventAsModal}
-						<EventWithModal {event} />
+						<EventWithModal
+							bind:isEventOpen={isModalOpen}
+							bind:selectedEvent={selectedEventModal}
+							{event}
+						/>
 					{:else}
 						<Event {event} />
 					{/if}
@@ -66,13 +74,17 @@
 	{/each}
 </div>
 
+{#if $showEventAsModal}
+	<EventModal event={selectedEventModal} bind:isEventOpen={isModalOpen} />
+{/if}
+
 {#if Object.keys($filteredEvents).length > 0 && $isSearchSectionInEventsList}
 	<div class="sticky bottom-0 flex h-fit justify-center md:bottom-3">
 		<div
 			transition:slide={{ duration: 500, easing: cubicOut }}
 			class="flex h-fit w-full flex-col justify-center rounded-b-none rounded-t-xl border-x-2 border-t-2 bg-background px-8 pb-4 pt-1 shadow-2xl md:w-fit md:rounded-xl md:border-2 md:pb-2"
 		>
-			<button on:click={toggleSearchSection} class="flex h-fit w-full items-center justify-center">
+			<button onclick={toggleSearchSection} class="flex h-fit w-full items-center justify-center">
 				<ChevronUp
 					class={$isSearchSectionInEventsListOpen ? 'rotate-180' : ''}
 					size={30}
