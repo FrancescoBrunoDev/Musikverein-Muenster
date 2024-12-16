@@ -96,7 +96,13 @@
 		class="relative flex h-fit items-center justify-center transition-all duration-500"
 	>
 		{#if $selectedGraphType === 'Line'}
-			<LineGraphD3 data={$dataForLineGraph} />
+			{#if $dataForLineGraph.length > 0}
+				<LineGraphD3 data={$dataForLineGraph} />
+			{:else}
+				<div
+					class="flex h-[300px] w-11/12 max-w-3xl animate-pulse items-center justify-center rounded-xl bg-border"
+				></div>
+			{/if}
 		{:else if $selectedGraphType === 'Map'}
 			{#if allLocations.length > 0}
 				<Map data={allLocations} />

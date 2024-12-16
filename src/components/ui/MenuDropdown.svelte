@@ -47,7 +47,7 @@
 		<div
 			id="dropdown"
 			class={cn(
-				`${direction == 'top' && `-top-[${height + 10}px]`} absolute right-0 z-50 divide-y rounded-xl bg-background p-2 shadow-primary drop-shadow-xl dark:border-2`,
+				`${direction == 'top' && `-top-[${height + 10}px]`} absolute right-0 z-50 divide-y rounded-xl border-2 bg-background p-2 shadow-primary drop-shadow-xl dark:border-2`,
 				{
 					'-right-2 top-14': direction === 'bottom'
 				}

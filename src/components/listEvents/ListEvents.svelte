@@ -12,8 +12,6 @@
 	import { ChevronUp } from 'lucide-svelte';
 	import EventWithModal from '$components/listEvents/EventWithModal.svelte';
 
-	let container: HTMLElement;
-
 	function toggleSearchSection() {
 		$isSearchSectionInEventsListOpen = !$isSearchSectionInEventsListOpen;
 	}
@@ -44,7 +42,7 @@
 	});
 </script>
 
-<div class="flex flex-col" bind:this={container}>
+<div class="flex flex-col">
 	{#each Object.keys($filteredEvents) as year}
 		<div class="flex flex-col">
 			<div class="flex flex-row gap-2 align-middle">
