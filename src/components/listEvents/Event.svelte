@@ -34,12 +34,12 @@
 
 <div
 	class={cn(
-		`relative overflow-hidden rounded-xl border-2 text-primary transition-all duration-100 bg-background`,
+		`relative overflow-hidden rounded-xl border-2 bg-background text-primary transition-all duration-100`,
 		{
-			'flex h-fit flex-shrink-0 flex-col': isOpen,
-			'flex flex-col justify-center gap-2 hover:scale-hover w-24': !isOpen,
+			'flex flex-shrink-0 flex-col': isOpen,
+			'flex w-24 flex-col justify-center gap-2 hover:scale-hover': !isOpen,
 			'w-80': isEventOpen,
-			'w-full': isModalOpen
+			'h-full w-full': isModalOpen
 		}
 	)}
 >
@@ -89,7 +89,11 @@
 		{/if}
 	</button>
 	{#if isOpen}
-		<div class="flex flex-col gap-4 p-2">
+		<div
+			class={cn('flex flex-col gap-4 p-2', {
+				'overflow-y-scroll': isOpen
+			})}
+		>
 			{#if event.corporations}
 				<div class="flex flex-col gap-1">
 					<div>
@@ -139,15 +143,23 @@
 					</div>
 				</div>
 			{/if}
-			<div class="rounded-xl border-2 p-2">
-				<div class="w-full text-base font-bold dark:font-semibold">
+			<div
+				class={cn({
+					'overflow-y-scroll': isModalOpen
+				})}
+			>
+				<div class="w-full text-base font-bold dark:font-semibold sticky top-0 bg-background">
 					{$LL.filters.entities.performances()}
 				</div>
-				{#if event.performances}
-					<div class="divide flex flex-col gap-1 divide-y-2 dark:font-light">
+				<div
+					class={cn('rounded-xl  divide flex flex-col gap-1 divide-y-2 dark:font-light', {
+						'overflow-y-scroll': isModalOpen
+					})}
+				>
+					{#if event.performances}
 						<EventPerformances {event} />
-					</div>
-				{/if}
+					{/if}
+				</div>
 			</div>
 		</div>
 	{/if}

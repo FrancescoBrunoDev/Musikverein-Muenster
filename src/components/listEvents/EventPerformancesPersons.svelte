@@ -2,9 +2,9 @@
 	import LL from '$lib/i18n/i18n-svelte';
 	import { getTitleString } from '$stores/storeEvents';
 
-	export let performance: EventPerformance;
+	let { performance }: { performance: EventPerformance } = $props();
 
-	let isPersonOpen = false;
+	let isPersonOpen = $state(false);
 
 	// make a function that join all the persons in a string with |
 	async function joinPersons(persons: Person[]) {
@@ -16,8 +16,8 @@
 </script>
 
 <button
-	on:click={() => (isPersonOpen = !isPersonOpen)}
-	class="font-bold hover:scale-hover dark:font-semibold">{$LL.events.performedBy()}</button
+	onclick={() => (isPersonOpen = !isPersonOpen)}
+	class="font-bold hover:scale-hover dark:font-semibold pl-1">{$LL.events.performedBy()}</button
 >
 {#if isPersonOpen}
 	{#await joinPersons(performance.persons)}

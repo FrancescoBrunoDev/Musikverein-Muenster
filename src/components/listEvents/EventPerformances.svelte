@@ -29,14 +29,40 @@
 	function handleClickAllPerformances() {
 		isPerformanceOpen = !isPerformanceOpen;
 	}
+
+	function toRoman(num: number): string {
+		const roman = {
+			M: 1000,
+			CM: 900,
+			D: 500,
+			CD: 400,
+			C: 100,
+			XC: 90,
+			L: 50,
+			XL: 40,
+			X: 10,
+			IX: 9,
+			V: 5,
+			IV: 4,
+			I: 1
+		};
+		let str = '';
+		for (let i of Object.keys(roman)) {
+			let q = Math.floor(num / roman[i as keyof typeof roman]);
+			num -= q * roman[i as keyof typeof roman];
+			str += i.repeat(q);
+		}
+		return str;
+	}
 </script>
 
-{#each event.performances as performance}
+{#each event.performances as performance, index}
 	{#await getTitleString(performance.work, 'work') then title}
 		{#if $filters.or.length === 0 && $filters.and.length === 0 && $filters.not.length === 0}
-			<span in:fly={{ y: 20, duration: 100, delay: 200 }}
-				>{title} <EventPerformancesPersons {performance} /></span
-			>
+			<div in:fly={{ y: 20, duration: 100, delay: 200 }}>
+				<span class=" font-bold">{toRoman(index + 1)}</span>. {title}
+				<EventPerformancesPersons {performance} />
+			</div>
 		{:else if hasMatchingFilter(performance)}
 			<div in:fly={{ y: 20, duration: 100, delay: 200 }} class="flex items-center gap-1">
 				<div class="flex flex-col gap-1">
@@ -56,12 +82,18 @@
 						{/if}
 					{/each}
 				</div>
-				<span>{title}<EventPerformancesPersons {performance} /></span>
+				<div>
+					<span class=" font-bold">{toRoman(index + 1)}</span>. {title}<EventPerformancesPersons
+						{performance}
+					/>
+				</div>
 			</div>
 		{:else if isPerformanceOpen}
-			<span in:fly={{ y: 20, duration: 100, delay: 200 }}>{title}</span><span
-				><EventPerformancesPersons {performance} /></span
-			>
+			<div in:fly={{ y: 20, duration: 100, delay: 200 }}>
+				<span class=" font-bold">{toRoman(index + 1)}</span>. {title}<span
+					><EventPerformancesPersons {performance} /></span
+				>
+			</div>
 		{/if}
 	{:catch error}
 		<div>Error: {error.message}</div>
