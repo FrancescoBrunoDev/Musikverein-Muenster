@@ -35,13 +35,13 @@
 
 <div
 	class={cn(
-		`relative flex w-fit flex-col justify-center gap-2 overflow-hidden rounded-xl border-2 text-primary transition-all duration-100 hover:scale-hover`
+		`relative w-fit overflow-hidden rounded-xl border-2 text-primary transition-all duration-100 flex flex-col justify-center gap-2 hover:scale-hover`
 	)}
 >
 	<button
 		onclick={() => handleClickEvent()}
 		class={cn(
-			`h-32 w-24 flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out`
+			`flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out h-32 w-24`
 		)}
 		>{date}
 
@@ -68,66 +68,73 @@
 <Modal isOpen={isEventOpen}>
 	<div
 		class={cn(
-			`flex h-full w-full flex-col rounded-xl bg-background text-primary transition-all duration-100`
+			`w-full rounded-xl text-primary transition-all duration-100 bg-background flex h-full flex-col`
 		)}
 	>
 		<div
 			class={cn(
-				`sticky left-0 right-0 top-0 h-fit rounded-xl bg-background p-2 font-bold transition-all duration-100 ease-in-out`
-			)}}
+				`sticky font-bold  transition-all duration-100 ease-in-out left-0 right-0 top-0 h-fit p-2 bg-background rounded-xl`
+			)}
 		>
-			<div class="pb-2 text-center">
-				{ate}}
+			<div class="text-center pb-2">
+				{date}
 				<div class="dark:font-semibold">
-					{#if vent.locations}}{#each vent.locations as location}{#await etTitleString(location.location, 'location')}}
+					{#if event.locations}
+						{#each event.locations as location}
+							{#await getTitleString(location.location, 'location')}
 								<div>loading</div>
 							{:then title}
-								<div transition:fly={ y: 10, duration: 100, delay: 200 }}}>{itle}}</div>
+								<div transition:fly={{ y: 10, duration: 100, delay: 200 }}>{title}</div>
 							{:catch error}
-								<div>Error: {rror.message}}</div>
+								<div>Error: {error.message}</div>
 							{/await}
 						{/each}
 					{/if}
 				</div>
 			</div>
-			{#if vent.corporations}}<div class="flex flex-col gap-1">
+			{#if event.corporations}
+				<div class="flex flex-col gap-1">
 					<div>
 						<div class="text-base font-bold dark:font-semibold">
-							{LL.filters.entities.corporation()}}
+							{$LL.filters.entities.corporation()}
 						</div>
-						{#each vent.corporations as corporation}{#if orporation.subject == 2}}{#await etTitleString(corporation.corporation, 'corporation')}}
+						{#each event.corporations as corporation}
+							{#if corporation.subject == 2}
+								{#await getTitleString(corporation.corporation, 'corporation')}
 									<div>loading</div>
 								{:then title}
 									<div class="flex items-center gap-1">
-										{#each bject
-											.values($filters)
-											.flat() as filter}{#if ilter.entity === 'corporation' && filter.id == corporation.corporation}}<Circle
+										{#each Object.values($filters).flat() as filter}
+											{#if filter.entity === 'corporation' && filter.id == corporation.corporation}
+												<Circle
 													class="flex-shrink-0"
-													fill={ilter.color}}
-													size={0}}
-													stroke-opacity={}}
-												></Circle>
+													fill={filter.color}
+													size={10}
+													stroke-opacity={0}
+												/>
 											{/if}
 										{/each}
-										<span class="text-sm">{itle}}</span>
+										<span class="text-sm">{title}</span>
 									</div>
 								{:catch error}
-									<div>Error: {rror.message}}</div>
+									<div>Error: {error.message}</div>
 								{/await}
 							{/if}
 						{/each}
 					</div>
 					<div class="flex w-fit items-center gap-2">
 						<div class="text-base font-bold dark:font-semibold">
-							{LL.filters.entities.source()}}
+							{$LL.filters.entities.source()}
 						</div>
-						{#each vent.sources as source}{#if ource.url}}<a
+						{#each event.sources as source}
+							{#if source.url}
+								<a
 									class="hover:scale-hover"
-									href={ource.url}}
+									href={source.url}
 									target="_blank"
 									rel="noopener noreferrer"
 								>
-									<FileInput strokeWidth={.25}}></FileInput>
+									<FileInput strokeWidth={2.25} />
 								</a>
 							{/if}
 						{/each}
@@ -135,13 +142,14 @@
 				</div>
 			{/if}
 		</div>
-		<div class="flex flex-col gap-4 overflow-y-scroll p-2">
+		<div class="flex flex-col gap-4 p-2 overflow-y-scroll">
 			<div class="rounded-xl border-2 p-2">
 				<div class="w-full text-base font-bold dark:font-semibold">
-					{LL.filters.entities.performances()}}
+					{$LL.filters.entities.performances()}
 				</div>
-				{#if vent.performances}}<div class="divide flex flex-col gap-1 divide-y-2 dark:font-light">
-						<EventPerformances {event}></EventPerformances>
+				{#if event.performances}
+					<div class="divide flex flex-col gap-1 divide-y-2 dark:font-light">
+						<EventPerformances {event} />
 					</div>
 				{/if}
 			</div>
