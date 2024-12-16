@@ -20,7 +20,7 @@
 
 	let width = $state(800);
 	let height = $state(300);
-	let margin = $state({ top: 20, right: 30, bottom: 30, left: 40 });
+	let margin = $state({ top: 20, right: 0, bottom: 30, left: 20 });
 
 	let xDomain = $state([$startYear, $endYear + 10] as [number, number]);
 
@@ -67,7 +67,7 @@
 	let mousePosition: number | null = $state(null);
 </script>
 
-<div class="max-w-3xl w-11/12" bind:clientWidth={width}>
+<div class="max-w-3xl w-full" bind:clientWidth={width}>
 	{#if completeData && width}
 		<svg
 			class="w-full"

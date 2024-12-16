@@ -31,7 +31,12 @@ const de = {
 	},
 	events: {
 		showAllPerformances: 'Zeige alle Aufführungen',
-		performedBy: 'Aufgeführt von'
+		performedBy: 'Aufgeführt von',
+		settings: {
+			title: 'Einstellungen',
+			showMoreOptionsOnFilterOver: 'Zeige mehr Optionen bei Filterung',
+			showEventAsModal: 'Zeige Ereignis als Modal',
+		}
 	},
 	navbar: {
 		menu: 'Menü',

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { filteredEvents } from '$stores/storeFilters';
+	import { filteredEvents, showEventAsModal } from '$stores/storeFilters';
 	import Event from '$components/listEvents/Event.svelte';
 	import SearchSection from '$components/searchAndFilters/SearchSection.svelte';
 	import {
@@ -10,6 +10,7 @@
 	import { slide } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { ChevronUp } from 'lucide-svelte';
+	import EventWithModal from '$components/listEvents/EventWithModal.svelte';
 
 	let container: HTMLElement;
 
@@ -56,7 +57,11 @@
 					const dateB = new Date(b.dates[0].date);
 					return dateA.getTime() - dateB.getTime();
 				}) as event}
-					<Event {event} />
+					{#if $showEventAsModal}
+						<EventWithModal {event} />
+					{:else}
+						<Event {event} />
+					{/if}
 				{/each}
 			</div>
 		</div>
@@ -67,7 +72,7 @@
 	<div class="sticky bottom-0 flex h-fit justify-center md:bottom-3">
 		<div
 			transition:slide={{ duration: 500, easing: cubicOut }}
-			class="flex h-fit w-screen flex-col justify-center rounded-b-none rounded-t-xl md:border-2 bg-background px-8 pb-4 pt-1 shadow-2xl md:w-fit md:rounded-xl border-x-2 border-t-2 md:pb-2"
+			class="flex h-fit w-full flex-col justify-center rounded-b-none rounded-t-xl md:border-2 bg-background px-8 pb-4 pt-1 shadow-2xl md:w-fit md:rounded-xl border-x-2 border-t-2 md:pb-2"
 		>
 			<button on:click={toggleSearchSection} class="flex h-fit w-full items-center justify-center">
 				<ChevronUp

@@ -5,29 +5,40 @@
 
 	let ref: Node | null = $state(null);
 	let portal: HTMLDivElement | null = $state(null);
+	let shouldRemovePortal = $state(false);
+	let isAppended = $state(false);
+
+	$effect(() => {
+		if (ref && portal && !isAppended) {
+			portal.appendChild(ref);
+			isAppended = true;
+		}
+	});
 
 	onMount(() => {
-		// Search for existing portal
 		const existingPortal = document.querySelector('.portal');
 
 		if (existingPortal) {
-			// Use the existing portal if it exists
 			portal = existingPortal as HTMLDivElement;
+			shouldRemovePortal = false;
 		} else {
-			// Create a new portal if it doesn't exist
 			portal = document.createElement('div');
 			portal.className = 'portal';
 			document.body.appendChild(portal);
-		}
-
-		// Append the ref to the portal
-		if (ref) {
-			portal.appendChild(ref);
+			shouldRemovePortal = true;
 		}
 	});
 
 	onDestroy(() => {
-		if (portal) {
+		if (ref && portal && isAppended) {
+			try {
+				portal.removeChild(ref);
+			} catch (error) {
+				console.error('Errore durante la rimozione del nodo:', error);
+			}
+		}
+
+		if (shouldRemovePortal && portal && document.body.contains(portal)) {
 			document.body.removeChild(portal);
 		}
 	});

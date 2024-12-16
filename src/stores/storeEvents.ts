@@ -1,5 +1,6 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
+import { filters } from '$stores/storeFilters';
 
 const fetchedEvents = writable<Events>(undefined);
 const allTitles = writable<allTitles>({
@@ -109,6 +110,84 @@ const getTitleString = (uid: number, kind: Entity): Promise<string> => {
 	});
 };
 
+function getCountersForEvent({ event }: { event: EventItem }) {
+	const filtersMap = new Map();
+	const _filters = get(filters);
+
+	const incrementCounter = (id: number, condition: boolean) => {
+		if (condition) {
+			const filter = filtersMap.get(id);
+			if (filter) {
+				filter.counter++;
+			}
+		}
+	};
+
+	Object.values(_filters).forEach((methods) => {
+		methods.forEach((filter) => {
+			if (!filtersMap.has(filter.id)) {
+				filtersMap.set(filter.id, {
+					counter: 0,
+					color: filter.color || ''
+				});
+			}
+
+			if (!event.performances) return;
+
+			const { entity, id } = filter;
+			const filterId = Number(id);
+
+			switch (entity) {
+				case 'composer':
+				case 'work':
+				case 'person':
+					event.performances.forEach((performance) => {
+						if (entity === 'composer' && performance.composers) {
+							incrementCounter(filterId, filter.id == performance.composers[0].person);
+						} else if (entity === 'work') {
+							incrementCounter(filterId, filter.id == performance.work);
+						} else if (entity === 'person' && performance.persons) {
+							performance.persons.forEach((person) => {
+								incrementCounter(filterId, filter.id == person.person);
+							});
+						}
+					});
+					break;
+				case 'corporation':
+					if (event.corporations) {
+						event.corporations.forEach((corporation) => {
+							incrementCounter(filterId, filter.id == corporation.corporation);
+						});
+					}
+					break;
+			}
+		});
+	});
+
+	const filtersArrayWithCounter = Object.fromEntries(filtersMap);
+	return filtersArrayWithCounter;
+}
+
+function getFormattedDate({ event }: { event: EventItem }) {
+	let dateStr = event?.dates[0].date;
+	if (dateStr && dateStr !== '00.00') {
+		// handle date format 00.00 or day undefined
+		if (dateStr.endsWith('-00')) {
+			let dateObj = new Date(dateStr.slice(0, -2) + '01');
+			return dateObj.toLocaleDateString('it-IT', { month: '2-digit' }) + '.?';
+		} else {
+			let dateObj = new Date(dateStr);
+			let formattedDate = dateObj.toLocaleDateString('it-IT', {
+				day: '2-digit',
+				month: '2-digit'
+			});
+			return formattedDate.split('/').join('.');
+		}
+	} else {
+		return '?';
+	}
+}
+
 export {
 	fetchedEvents,
 	allTitles,
@@ -119,5 +198,7 @@ export {
 	getTitleString,
 	getTitles,
 	getTitle,
-	getGeometries
+	getGeometries,
+	getCountersForEvent,
+	getFormattedDate
 };

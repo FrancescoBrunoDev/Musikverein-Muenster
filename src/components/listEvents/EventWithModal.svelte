@@ -11,6 +11,8 @@
 	import { Circle, FileInput } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
 	import { cn } from '$lib/utils';
+	import Modal from '$components/ui/Modal.svelte';
+	import { onDestroy } from 'svelte';
 
 	let { event }: { event: EventItem } = $props();
 
@@ -29,65 +31,67 @@
 			getTitles(event);
 		}
 	}
-	$inspect(isEventOpen);
 </script>
 
 <div
 	class={cn(
-		`relative w-fit overflow-hidden rounded-xl border-2 text-primary transition-all duration-100`,
-		{
-			'flex h-fit flex-shrink-0 flex-col': isEventOpen,
-			'flex flex-col justify-center gap-2 hover:scale-hover': !isEventOpen
-		}
+		`relative w-fit overflow-hidden rounded-xl border-2 text-primary transition-all duration-100 flex flex-col justify-center gap-2 hover:scale-hover`
 	)}
 >
 	<button
 		onclick={() => handleClickEvent()}
-		class={cn(`flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out`, {
-			'relative left-0 right-0 top-0 h-fit w-80 py-2': isEventOpen,
-			'h-32 w-24': !isEventOpen
-		})}
+		class={cn(
+			`flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out h-32 w-24`
+		)}
 		>{date}
 
-		{#if !isEventOpen}
-			<div class="flex flex-wrap justify-center gap-2">
-				{#each Object.keys(filtersArrayWithCounter) as key}
-					{#if filtersArrayWithCounter[key].counter > 0}
-						<span class="flex items-center gap-1 text-sm font-light">
-							{filtersArrayWithCounter[key].counter}
-							<Circle
-								class="flex-shrink-0"
-								fill={filtersArrayWithCounter[key].color}
-								size={10}
-								stroke-opacity={0}
-							/>
-						</span>
-					{/if}
-				{/each}
-			</div>
-		{/if}
-		{#if !isEventOpen}
-			<div class="flex flex-wrap justify-center gap-1"></div>
-		{/if}
-		{#if isEventOpen}
-			<br />
-			<span class="text-sm dark:font-semibold">
-				{#if event.locations}
-					{#each event.locations as location}
-						{#await getTitleString(location.location, 'location')}
-							<div>loading</div>
-						{:then title}
-							<div transition:fly={{ y: 10, duration: 100, delay: 200 }}>{title}</div>
-						{:catch error}
-							<div>Error: {error.message}</div>
-						{/await}
-					{/each}
+		<div class="flex flex-wrap justify-center gap-2">
+			{#each Object.keys(filtersArrayWithCounter) as key}
+				{#if filtersArrayWithCounter[key].counter > 0}
+					<span class="flex items-center gap-1 text-sm font-light">
+						{filtersArrayWithCounter[key].counter}
+						<Circle
+							class="flex-shrink-0"
+							fill={filtersArrayWithCounter[key].color}
+							size={10}
+							stroke-opacity={0}
+						/>
+					</span>
 				{/if}
-			</span>
-		{/if}
+			{/each}
+		</div>
+
+		<div class="flex flex-wrap justify-center gap-1"></div>
 	</button>
-	{#if isEventOpen}
-		<div class="flex w-80 flex-col gap-4 p-2">
+</div>
+
+<Modal isOpen={isEventOpen}>
+	<div
+		class={cn(
+			`w-full rounded-xl text-primary transition-all duration-100 bg-background flex h-full flex-col`
+		)}
+	>
+		<div
+			class={cn(
+				`sticky font-bold  transition-all duration-100 ease-in-out left-0 right-0 top-0 h-fit p-2 bg-background rounded-xl`
+			)}
+		>
+			<div class="text-center pb-2">
+				{date}
+				<div class="dark:font-semibold">
+					{#if event.locations}
+						{#each event.locations as location}
+							{#await getTitleString(location.location, 'location')}
+								<div>loading</div>
+							{:then title}
+								<div transition:fly={{ y: 10, duration: 100, delay: 200 }}>{title}</div>
+							{:catch error}
+								<div>Error: {error.message}</div>
+							{/await}
+						{/each}
+					{/if}
+				</div>
+			</div>
 			{#if event.corporations}
 				<div class="flex flex-col gap-1">
 					<div>
@@ -137,6 +141,8 @@
 					</div>
 				</div>
 			{/if}
+		</div>
+		<div class="flex flex-col gap-4 p-2 overflow-y-scroll">
 			<div class="rounded-xl border-2 p-2">
 				<div class="w-full text-base font-bold dark:font-semibold">
 					{$LL.filters.entities.performances()}
@@ -148,5 +154,5 @@
 				{/if}
 			</div>
 		</div>
-	{/if}
-</div>
+	</div>
+</Modal>

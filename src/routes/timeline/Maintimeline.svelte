@@ -63,7 +63,7 @@
 	});
 </script>
 
-<div class="flex h-dvh flex-col py-12 overflow-hidden">
+<div class="flex h-[95dvh] flex-col pb-12 overflow-hidden">
 	<div
 		transition:slide
 		class="flex flex-grow content-end items-center justify-center transition-all duration-500"
@@ -73,9 +73,7 @@
 	>
 		<div
 			id="searchSectionInTimeline"
-			class="lg:w-[600px] md:w-[500px] w-5/6 {$isSearchSectionInEventsList
-				? 'invisible'
-				: 'visible'}"
+			class="lg:w-[600px] md:w-[500px] {$isSearchSectionInEventsList ? 'invisible' : 'visible'}"
 		>
 			<SearchSection />
 		</div>
@@ -95,7 +93,7 @@
 		}}
 		style={`transform: scale(${scaleGraphSection}); bottom: ${bottomDistance}rem;`}
 		role="presentation"
-		class="flex h-fit items-center justify-center transition-all duration-500"
+		class="flex h-fit items-center justify-center transition-all duration-500 relative"
 	>
 		{#if $selectedGraphType === 'Line'}
 			<LineGraphD3 data={$dataForLineGraph} />

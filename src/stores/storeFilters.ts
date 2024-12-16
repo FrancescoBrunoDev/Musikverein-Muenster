@@ -30,6 +30,7 @@ const filteredEvents = writable<Events>({});
 const entitiesForSearchBox = writable<Entity[]>(['person', 'corporation', 'work', 'location']);
 const isAFilterDragged = writable<boolean>(false);
 const isMoveToActive = persistStore<boolean>("isMoveToActive", false);
+const showEventAsModal = persistStore<boolean>("showEventAsModal", true);
 
 const UpdateSelectedMethodFilter = (method: Method) => {
 	SelectedMethodFilter.set(method);
@@ -407,6 +408,7 @@ export {
 	filtersUrlified,
 	isAFilterDragged,
 	isMoveToActive,
+	showEventAsModal,
 	UpdateSelectedMethodFilter,
 	addFilterElement,
 	removeFilterElement,

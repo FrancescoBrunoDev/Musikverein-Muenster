@@ -101,6 +101,20 @@ type RootTranslation = {
 		 * P​e​r​f​o​r​m​e​d​ ​b​y
 		 */
 		performedBy: string
+		settings: {
+			/**
+			 * S​e​t​t​i​n​g​s
+			 */
+			title: string
+			/**
+			 * S​h​o​w​ ​m​o​r​e​ ​o​p​t​i​o​n​s​ ​o​n​ ​f​i​l​t​e​r​ ​o​v​e​r
+			 */
+			showMoreOptionsOnFilterOver: string
+			/**
+			 * S​h​o​w​ ​e​v​e​n​t​ ​a​s​ ​m​o​d​a​l
+			 */
+			showEventAsModal: string
+		}
 	}
 	navbar: {
 		/**
@@ -216,6 +230,20 @@ export type TranslationFunctions = {
 		 * Performed by
 		 */
 		performedBy: () => LocalizedString
+		settings: {
+			/**
+			 * Settings
+			 */
+			title: () => LocalizedString
+			/**
+			 * Show more options on filter over
+			 */
+			showMoreOptionsOnFilterOver: () => LocalizedString
+			/**
+			 * Show event as modal
+			 */
+			showEventAsModal: () => LocalizedString
+		}
 	}
 	navbar: {
 		/**

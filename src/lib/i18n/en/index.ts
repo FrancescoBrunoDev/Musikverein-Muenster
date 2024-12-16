@@ -30,7 +30,12 @@ const en = {
 	},
 	events: {
 		showAllPerformances: 'Show all performances',
-		performedBy: 'Performed by'
+		performedBy: 'Performed by',
+		settings: {
+			title: 'Settings',
+			showMoreOptionsOnFilterOver: 'Show more options on filter over',
+			showEventAsModal: 'Show event as modal',
+		}
 	},
 	navbar: {
 		menu: 'Menu',
