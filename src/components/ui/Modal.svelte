@@ -7,6 +7,7 @@
 	import Button from '$components/ui/Button.svelte';
 
 	let { children, isOpen } = $props();
+	$inspect(isOpen);
 </script>
 
 <Portal>

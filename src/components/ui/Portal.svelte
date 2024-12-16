@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	let { children } = $props();
 
-	let ref: Node | null = $state(null);
+	let ref: HTMLDivElement | null = $state(null);
 	let portal: HTMLDivElement | null = $state(null);
 	let shouldRemovePortal = $state(false);
-	let isAppended = $state(false);
 
 	$effect(() => {
 		const existingPortal = document.querySelector('.portal');
@@ -20,15 +19,16 @@
 			document.body.appendChild(portal);
 			shouldRemovePortal = true;
 		}
+
+		// Sposta il contenuto nel portale
+		if (ref && portal) {
+			portal.appendChild(ref);
+		}
 	});
 
 	onDestroy(() => {
-		if (ref && portal && isAppended) {
-			try {
-				portal.removeChild(ref);
-			} catch (error) {
-				console.error('Errore durante la rimozione del nodo:', error);
-			}
+		if (ref && portal && portal.contains(ref)) {
+			portal.removeChild(ref);
 		}
 
 		if (shouldRemovePortal && portal && document.body.contains(portal)) {
