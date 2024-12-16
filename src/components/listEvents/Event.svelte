@@ -29,7 +29,6 @@
 			getTitles(event);
 		}
 	}
-	$inspect(isEventOpen);
 </script>
 
 <div

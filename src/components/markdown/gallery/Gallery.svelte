@@ -8,7 +8,6 @@
 	let isOpen = $state(false);
 	let selected = $state(0);
 	let coverLoaded: HTMLImageElement | null = $state(null);
-	$inspect(isOpen);
 </script>
 
 <button

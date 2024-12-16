@@ -37,7 +37,6 @@
 		}
 	});
 
-	$inspect(height);
 	const Icon = $derived(icon);
 </script>
 
