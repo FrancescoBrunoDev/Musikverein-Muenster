@@ -9,13 +9,6 @@
 	let isAppended = $state(false);
 
 	$effect(() => {
-		if (ref && portal && !isAppended) {
-			portal.appendChild(ref);
-			isAppended = true;
-		}
-	});
-
-	onMount(() => {
 		const existingPortal = document.querySelector('.portal');
 
 		if (existingPortal) {

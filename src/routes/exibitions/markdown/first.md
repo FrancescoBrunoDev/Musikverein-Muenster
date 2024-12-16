@@ -5,7 +5,7 @@ categories:
   - sveltekit
   - svelte
 published: true
-img: https://picsum.photos/1500/1300
+img: /exibitions/first_exibition/secondgallery/File13749.jpg
 ---
 
 <script>
