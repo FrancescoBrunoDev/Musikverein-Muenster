@@ -6,9 +6,9 @@
 	let { children } = $props();
 </script>
 
-<section class="container">
-	<div class="sticky z-40 sm:top-16 top-10 right-0 flex justify-end">
-		<div class=" flex gap-2 bg-background p-2 rounded-xl drop-shadow-xl">
+<section class="container isolate">
+	<div class="sticky right-0 top-10 z-40 flex justify-end sm:top-16">
+		<div class="flex gap-2 rounded-xl bg-background p-2 drop-shadow-xl">
 			<SettingsTimeline />
 		</div>
 	</div>

@@ -2,7 +2,7 @@
 	import { selectedGraphType } from '$stores/storeGraph';
 </script>
 
-<div class="flex gap-2 bg-border p-2 rounded-xl">
+<div class="flex gap-2 rounded-xl bg-border p-2">
 	<button
 		class="px-2 text-primary transition-colors"
 		class:selected={$selectedGraphType === 'Line'}

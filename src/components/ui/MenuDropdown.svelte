@@ -47,9 +47,9 @@
 		<div
 			id="dropdown"
 			class={cn(
-				`${direction == 'top' && `-top-[${height + 10}px]`} rounded-xl p-2 z-50 divide-y bg-background shadow-primary dark:border-2 drop-shadow-xl absolute right-0`,
+				`${direction == 'top' && `-top-[${height + 10}px]`} absolute right-0 z-50 divide-y rounded-xl bg-background p-2 shadow-primary drop-shadow-xl dark:border-2`,
 				{
-					'top-14 -right-2': direction === 'bottom'
+					'-right-2 top-14': direction === 'bottom'
 				}
 			)}
 			transition:fly={{ duration: 150, y: -10 }}

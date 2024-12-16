@@ -1,6 +1,6 @@
-import { writable, get } from 'svelte/store';
-import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
 import { filters } from '$stores/storeFilters';
+import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
+import { get, writable } from 'svelte/store';
 
 const fetchedEvents = writable<Events>(undefined);
 const allTitles = writable<allTitles>({
@@ -67,11 +67,13 @@ const getTitle = async (allUids: string[], kind: Entity) => {
 };
 
 const getGeometries = async (locationID: number) => {
-	const res = await fetch(`${urlBaseAPIMusiconn}?action=get&location=${locationID}&props=geometries&format=json`);
+	const res = await fetch(
+		`${urlBaseAPIMusiconn}?action=get&location=${locationID}&props=geometries&format=json`
+	);
 	const json = await res.json();
 
 	return json.location[locationID].geometries;
-}
+};
 
 const getUidsPerEntity = async (kind: Entity, event: EventItem) => {
 	const uids = new Set();
@@ -189,16 +191,16 @@ function getFormattedDate({ event }: { event: EventItem }) {
 }
 
 export {
-	fetchedEvents,
 	allTitles,
-	projectID,
-	startYear,
 	endYear,
-	mainLocationID,
-	getTitleString,
-	getTitles,
-	getTitle,
-	getGeometries,
+	fetchedEvents,
 	getCountersForEvent,
-	getFormattedDate
+	getFormattedDate,
+	getGeometries,
+	getTitle,
+	getTitles,
+	getTitleString,
+	mainLocationID,
+	projectID,
+	startYear
 };

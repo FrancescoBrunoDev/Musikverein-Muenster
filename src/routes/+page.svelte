@@ -14,7 +14,7 @@
 	<title>{config.title}</title>
 </svelte:head>
 <BackgroundParallax>
-	<div class="fixed flex inset-0 flex-col justify-end">
+	<div class="fixed inset-0 flex flex-col justify-end">
 		<img
 			data-speed="-2"
 			data-tilt="-4"
@@ -48,7 +48,7 @@
 		/>
 
 		<div
-			class="z-10 flex w-full flex-col gap-12 px-10 pb-10 text-right font-bold text-white container"
+			class="container z-10 flex w-full flex-col gap-12 px-10 pb-10 text-right font-bold text-white"
 		>
 			<h1
 				class="z-10 w-full text-5xl md:text-8xl lg:text-8xl"

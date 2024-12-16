@@ -1,7 +1,7 @@
-import { get, writable } from 'svelte/store';
+import { projectID } from '$stores/storeEvents';
 import { entitiesForSearchBox, filters } from '$stores/storeFilters';
 import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
-import { projectID } from '$stores/storeEvents';
+import { get, writable } from 'svelte/store';
 
 const suggestions = writable<AutocompleteResult[]>([]);
 const inputValue = writable<string>('');
@@ -68,9 +68,9 @@ const autocomplete = async (query: string) => {
 };
 
 export {
-	suggestions,
+	autocomplete,
 	inputValue,
 	isSearchSectionInEventsList,
 	isSearchSectionInEventsListOpen,
-	autocomplete
+	suggestions
 };

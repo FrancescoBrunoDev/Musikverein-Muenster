@@ -1,8 +1,8 @@
-import { writable } from 'svelte/store';
-import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { fetchedEvents } from '$stores/storeEvents';
 import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
+import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { persistStore } from '$utils/storeUtils';
+import { writable } from 'svelte/store';
 
 const filtersUrlified = writable<string>('');
 const filters = writable<Filters>({
@@ -29,8 +29,8 @@ const colorFilters = writable([
 const filteredEvents = writable<Events>({});
 const entitiesForSearchBox = writable<Entity[]>(['person', 'corporation', 'work', 'location']);
 const isAFilterDragged = writable<boolean>(false);
-const isMoveToActive = persistStore<boolean>("isMoveToActive", false);
-const showEventAsModal = persistStore<boolean>("showEventAsModal", true);
+const isMoveToActive = persistStore<boolean>('isMoveToActive', false);
+const showEventAsModal = persistStore<boolean>('showEventAsModal', true);
 
 const UpdateSelectedMethodFilter = (method: Method) => {
 	SelectedMethodFilter.set(method);
@@ -56,20 +56,20 @@ const deUrlifyerFilters = async (filtersUrl: FiltersForUrl) => {
 	const filtersOr =
 		filtersUrl.fo && filtersUrl.fo !== '_'
 			? filtersUrl.fo
-				.split(',')
-				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+					.split(',')
+					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 	const filtersAnd =
 		filtersUrl.fa && filtersUrl.fa !== '_'
 			? filtersUrl.fa
-				.split(',')
-				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+					.split(',')
+					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 	const filtersNot =
 		filtersUrl.fn && filtersUrl.fn !== '_'
 			? filtersUrl.fn
-				.split(',')
-				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+					.split(',')
+					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 
 	function whichEntityIs(entity: string) {
@@ -401,21 +401,21 @@ const updateEntitiesForSearchBox = (selected: Entity) => {
 };
 
 export {
+	addFilterElement,
+	changeFilterPersonOrComposer,
 	colorFilters,
-	filters,
-	filteredEvents,
+	deUrlifyerFilters,
 	entitiesForSearchBox,
+	filteredEvents,
+	filters,
 	filtersUrlified,
 	isAFilterDragged,
 	isMoveToActive,
-	showEventAsModal,
-	UpdateSelectedMethodFilter,
-	addFilterElement,
-	removeFilterElement,
-	updateEntitiesForSearchBox,
-	changeFilterPersonOrComposer,
-	urlifyerFilters,
-	deUrlifyerFilters,
+	makeFilterPersonBothPersonAndComposer,
 	moveFilterElement,
-	makeFilterPersonBothPersonAndComposer
+	removeFilterElement,
+	showEventAsModal,
+	updateEntitiesForSearchBox,
+	UpdateSelectedMethodFilter,
+	urlifyerFilters
 };

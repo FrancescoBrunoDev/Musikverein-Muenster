@@ -1,10 +1,10 @@
-import { get, writable } from 'svelte/store';
 import { persistStore } from '$utils/storeUtils';
+import { get, writable } from 'svelte/store';
 
-import { filters, filteredEvents } from '$stores/storeFilters';
-import { fetchedEvents, startYear, endYear } from '$stores/storeEvents';
+import { type DataSeries } from '$components/graphs/line/LineGraphD3.svelte';
+import { endYear, fetchedEvents, startYear } from '$stores/storeEvents';
+import { filteredEvents, filters } from '$stores/storeFilters';
 import osmtogeojson from 'osmtogeojson';
-import { type DataSeries } from "$components/graphs/line/LineGraphD3.svelte";
 
 const selectedGraphType = persistStore<'Line' | 'Map'>('selectedGraphType', 'Line');
 const JSONMuenster = persistStore<any>('JSONMuenster', {});
@@ -23,36 +23,36 @@ const updateLineData = async () => {
 	// for each filter in or and and make a new entry in test
 	if (_filters.or.length > 1) {
 		_dataForLineGraph.push({
-			name: "or",
-			id: "or",
-			color: "hsl(var(--border))",
+			name: 'or',
+			id: 'or',
+			color: 'hsl(var(--border))',
 			data: []
 		});
 	}
 
 	_dataForLineGraph.push({
-		name: "and",
-		id: "and",
-		color: "hsl(var(--text))",
+		name: 'and',
+		id: 'and',
+		color: 'hsl(var(--text))',
 		data: []
 	});
 
 	if (_filters.or.length > 0 && _filters.and.length === 0) {
-		_dataForLineGraph = _dataForLineGraph.filter(filter => filter.name !== "and");
+		_dataForLineGraph = _dataForLineGraph.filter((filter) => filter.name !== 'and');
 	}
 
-	_filters.or.forEach(filter => {
+	_filters.or.forEach((filter) => {
 		const formattedName =
 			((typeof filter?.name === 'object' && 'lastName' in filter.name
 				? filter.name.lastName + ', ' + filter.name.abbreviatedFirstName
 				: '') ||
 				(typeof filter?.name === 'object' && 'title' in filter.name ? filter.name.title : '') ||
 				filter?.name) ??
-			"";
+			'';
 		_dataForLineGraph.push({
 			name: String(formattedName),
 			id: String(filter.id),
-			color: filter.color || "hsl(var(--text))",
+			color: filter.color || 'hsl(var(--text))',
 			data: []
 		});
 	});
@@ -61,18 +61,20 @@ const updateLineData = async () => {
 		const events = _fetchedEvents[year as keyof Events] || [];
 
 		// add for each filter in test the year and value as 0
-		_dataForLineGraph.forEach(filter => {
+		_dataForLineGraph.forEach((filter) => {
 			filter.data.push({ year: year, value: 0 });
 		});
 
 		if (_filters.or.length === 0 && _filters.and.length === 0 && _filters.not.length === 0) {
 			// update the test value for and
-			const index = _dataForLineGraph.findIndex(filter => filter.name === "and");
-			_dataForLineGraph[index].data[_dataForLineGraph[index].data.length - 1].value += events.length;
+			const index = _dataForLineGraph.findIndex((filter) => filter.name === 'and');
+			_dataForLineGraph[index].data[_dataForLineGraph[index].data.length - 1].value +=
+				events.length;
 		} else if (_filters.or.length === 0 && _filters.and.length === 0 && _filters.not.length > 0) {
 			// handle the case there are only not filters
-			const index = _dataForLineGraph.findIndex(filter => filter.name === "and");
-			_dataForLineGraph[index].data[_dataForLineGraph[index].data.length - 1].value += events.length;
+			const index = _dataForLineGraph.findIndex((filter) => filter.name === 'and');
+			_dataForLineGraph[index].data[_dataForLineGraph[index].data.length - 1].value +=
+				events.length;
 			events.forEach((event) => {
 				const notConditions = _filters.not.some((filter) => hasMatchingPerformances(event, filter));
 
@@ -96,32 +98,31 @@ const updateLineData = async () => {
 				}
 
 				if (andConditions) {
-					const index = _dataForLineGraph.findIndex(filter => filter.name === "and");
+					const index = _dataForLineGraph.findIndex((filter) => filter.name === 'and');
 					_dataForLineGraph[index].data[_dataForLineGraph[index].data.length - 1].value += 1;
 				}
 
 				if (orConditions) {
 					// update the test value for or
 					if (_filters.or.length > 1) {
-						const index = _dataForLineGraph.findIndex(filter => filter.name === "or");
+						const index = _dataForLineGraph.findIndex((filter) => filter.name === 'or');
 						_dataForLineGraph[index].data[_dataForLineGraph[index].data.length - 1].value += 1;
 					}
 
 					// update the value for the filter that has matched
-					_filters.or.forEach(filter => {
+					_filters.or.forEach((filter) => {
 						if (hasMatchingPerformances(event, filter)) {
-							const index = _dataForLineGraph.findIndex(f => f.id === String(filter.id));
+							const index = _dataForLineGraph.findIndex((f) => f.id === String(filter.id));
 							_dataForLineGraph[index].data[_dataForLineGraph[index].data.length - 1].value += 1;
 						}
 					});
 				}
-			})
+			});
 		}
-
 	}
 	// update dataForLineGraph
 	dataForLineGraph.set(_dataForLineGraph);
-}
+};
 
 const updateFilteredEventsAndUdateDataForGraph = async () => {
 	updateLineData();
@@ -169,7 +170,6 @@ const updateFilteredEventsAndUdateDataForGraph = async () => {
 						return { ...currentEvents }; // Return a copy of the modified object
 					});
 				} else if ((andConditions || orConditions) && !notConditions) {
-
 					filteredEvents.update((currentEvents) => {
 						currentEvents[year] = currentEvents[year] || [];
 						currentEvents[year].push(event);
@@ -250,7 +250,7 @@ const fetchOverpassData = async (centerPoint: { lat: number; lng: number }) => {
 	let geojson = osmtogeojson(result); // Convert to GeoJSON
 
 	JSONMuenster.set(geojson);
-}
+};
 
 const hasMatchingPerformances = (event: EventItem, filter: Filter) => {
 	const performances = event.performances || [];
@@ -309,11 +309,11 @@ const hasMatchingPerformances = (event: EventItem, filter: Filter) => {
 };
 
 export {
-	filteredEvents,
-	selectedGraphType,
-	JSONMuenster,
 	dataForLineGraph,
 	fetchOverpassData,
+	filteredEvents,
+	JSONMuenster,
+	selectedGraphType,
 	updateFilteredEventsAndUdateDataForGraph,
 	updateLineData
 };

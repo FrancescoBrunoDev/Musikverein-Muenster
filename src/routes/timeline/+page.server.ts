@@ -1,5 +1,5 @@
-import type { PageServerLoad } from './$types';
 import { joinEventByYear } from '$lib/dataMusiconn.server';
+import type { PageServerLoad } from './$types';
 
 let cachedEvents: Events;
 

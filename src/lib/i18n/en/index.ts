@@ -34,7 +34,7 @@ const en = {
 		settings: {
 			title: 'Settings',
 			showMoreOptionsOnFilterOver: 'Show more options on filter over',
-			showEventAsModal: 'Show event as modal',
+			showEventAsModal: 'Show event as modal'
 		}
 	},
 	navbar: {

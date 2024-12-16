@@ -76,7 +76,7 @@
 					{/if}
 
 					<button
-						class="text-left w-full"
+						class="w-full text-left"
 						onclick={() => handleFilterFromSuggestion({ suggestion })}
 						id={suggestion[2]}>{suggestion[0]}</button
 					>

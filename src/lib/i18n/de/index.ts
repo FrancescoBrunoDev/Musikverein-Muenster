@@ -35,7 +35,7 @@ const de = {
 		settings: {
 			title: 'Einstellungen',
 			showMoreOptionsOnFilterOver: 'Zeige mehr Optionen bei Filterung',
-			showEventAsModal: 'Zeige Ereignis als Modal',
+			showEventAsModal: 'Zeige Ereignis als Modal'
 		}
 	},
 	navbar: {

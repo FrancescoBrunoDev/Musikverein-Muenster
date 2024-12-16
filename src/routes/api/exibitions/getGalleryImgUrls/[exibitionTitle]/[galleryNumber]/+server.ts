@@ -1,6 +1,5 @@
 import { json } from '@sveltejs/kit';
 
-
 async function getImagesUrl(exibitionTitle: string, galleryNumber: string) {
 	try {
 		const imageModules = import.meta.glob('/static/exibitions/*/*/*.{jpg,jpeg,png,gif}');

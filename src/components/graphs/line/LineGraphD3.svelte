@@ -67,7 +67,7 @@
 	let mousePosition: number | null = $state(null);
 </script>
 
-<div class="max-w-3xl w-full" bind:clientWidth={width}>
+<div class="w-full max-w-3xl" bind:clientWidth={width}>
 	{#if completeData && width}
 		<svg
 			class="w-full"

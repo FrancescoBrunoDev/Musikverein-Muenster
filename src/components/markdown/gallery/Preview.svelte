@@ -11,7 +11,7 @@
 			onclick={() => (selected = index)}
 		>
 			<img
-				class={cn('object-cover h-full w-full transition-all duration-500 group-hover:scale-105', {
+				class={cn('h-full w-full object-cover transition-all duration-500 group-hover:scale-105', {
 					'brightness-50': selected === index
 				})}
 				src={image.src}

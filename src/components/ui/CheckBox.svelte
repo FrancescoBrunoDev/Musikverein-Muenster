@@ -16,7 +16,7 @@
 			{title}
 		</label>
 		<button
-			class="button-checkbox relative h-6 cursor-default rounded-full data-[state=checked]:bg-primary bg-border dark:border-primary dark:border-2 transition-all duration-100 hover:cursor-pointer hover:shadow-lg"
+			class="button-checkbox relative h-6 cursor-default rounded-full bg-border transition-all duration-100 hover:cursor-pointer hover:shadow-lg data-[state=checked]:bg-primary dark:border-2 dark:border-primary"
 			id={titleToId(title)}
 			aria-labelledby="{titleToId(title)}-label"
 			onclick={() => {
@@ -25,7 +25,7 @@
 			data-state={value ? 'checked' : 'unchecked'}
 		>
 			<span
-				class="thumb block rounded-full bg-background dark:bg-primary dark:data-[state=checked]:bg-background transition"
+				class="thumb block rounded-full bg-background transition dark:bg-primary dark:data-[state=checked]:bg-background"
 				data-state={value ? 'checked' : 'unchecked'}
 			></span>
 		</button>

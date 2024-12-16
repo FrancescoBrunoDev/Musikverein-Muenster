@@ -45,4 +45,4 @@ const toggleDarkMode = () => {
 	}
 };
 
-export { toggleDarkMode, checkIfThemeDataExists, setFirstThemeData, themeKind };
+export { checkIfThemeDataExists, setFirstThemeData, themeKind, toggleDarkMode };

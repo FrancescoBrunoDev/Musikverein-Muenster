@@ -1,8 +1,8 @@
 import { preprocessMeltUI } from '@melt-ui/pp';
-import sequence from 'svelte-sequential-preprocessor';
 import adapter from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex } from 'mdsvex';
+import sequence from 'svelte-sequential-preprocessor';
 
 /** @type {import('mdsvex').MdsvexOptions} */
 const mdsvexOptions = {

@@ -1,9 +1,8 @@
-import { startYear, endYear, mainLocationID } from '$stores/storeEvents';
+import { endYear, mainLocationID, startYear } from '$stores/storeEvents';
 import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
 import { get } from 'svelte/store';
 
 const getLocationEventsAndChildLocation = async (locationId: number) => {
-
 	try {
 		const res = await fetch(
 			`${urlBaseAPIMusiconn}?action=get&location=${locationId}&props=childs|events&format=json`

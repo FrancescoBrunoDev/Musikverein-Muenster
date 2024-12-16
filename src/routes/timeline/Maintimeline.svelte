@@ -15,7 +15,7 @@
 	let blurSearchSection = $derived(isOver ? 4 : 0);
 	let scaleSearchSection = $derived(isOver ? 0.99 : 1);
 	let scaleGraphSection = $derived(isOver ? 1.05 : 1);
-	let bottomDistance = $derived(isOver ? 8 : 7);
+	let bottomDistance = $derived(isOver ? 1 : 0);
 
 	let allLocations: { name: string; id: number; geometries: any; amount: number }[] = $state([]);
 
@@ -63,7 +63,7 @@
 	});
 </script>
 
-<div class="flex h-[95dvh] flex-col pb-12 overflow-hidden">
+<div class="flex h-[95dvh] flex-col overflow-hidden pb-12">
 	<div
 		transition:slide
 		class="flex flex-grow content-end items-center justify-center transition-all duration-500"
@@ -73,7 +73,7 @@
 	>
 		<div
 			id="searchSectionInTimeline"
-			class="lg:w-[600px] md:w-[500px] {$isSearchSectionInEventsList ? 'invisible' : 'visible'}"
+			class="md:w-[500px] lg:w-[600px] {$isSearchSectionInEventsList ? 'invisible' : 'visible'}"
 		>
 			<SearchSection />
 		</div>
@@ -93,7 +93,7 @@
 		}}
 		style={`transform: scale(${scaleGraphSection}); bottom: ${bottomDistance}rem;`}
 		role="presentation"
-		class="flex h-fit items-center justify-center transition-all duration-500 relative"
+		class="relative flex h-fit items-center justify-center transition-all duration-500"
 	>
 		{#if $selectedGraphType === 'Line'}
 			<LineGraphD3 data={$dataForLineGraph} />
@@ -102,12 +102,12 @@
 				<Map data={allLocations} />
 			{:else}
 				<div
-					class="flex items-center justify-center max-w-3xl w-11/12 rounded-xl h-[300px] bg-border animate-pulse"
+					class="flex h-[300px] w-11/12 max-w-3xl animate-pulse items-center justify-center rounded-xl bg-border"
 				></div>
 			{/if}
 		{/if}
 	</div>
-	<div class="w-full flex justify-center mt-4">
+	<div class="mt-4 flex w-full justify-center">
 		<GraphSelector />
 	</div>
 </div>

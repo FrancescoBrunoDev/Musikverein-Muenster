@@ -16,7 +16,7 @@
 		style="background-image: url('{data.meta.img}')"
 	>
 		<div class="container">
-			<h1 class="lg:text-8xl text-4xl font-serif text-background">{data.meta.title}</h1>
+			<h1 class="font-serif text-4xl text-background lg:text-8xl">{data.meta.title}</h1>
 
 			<!-- Tags -->
 			<div class="flex gap-2">
@@ -27,7 +27,7 @@
 		</div>
 		<!-- exibition -->
 	</div>
-	<div class="container mx-auto max-w-3xl content mb-10">
+	<div class="content container mx-auto mb-10 max-w-3xl">
 		<svelte:component this={data.content} />
 	</div>
 </section>

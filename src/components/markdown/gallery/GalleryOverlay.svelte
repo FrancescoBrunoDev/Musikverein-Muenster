@@ -31,7 +31,7 @@
 			)}
 		>
 			<div
-				class="mx-auto flex w-screen flex-col items-center px-4 py-12 md:px-12 md:py-12 relative h-full dark:text-text text-background"
+				class="relative mx-auto flex h-full w-screen flex-col items-center px-4 py-12 text-background dark:text-text md:px-12 md:py-12"
 			>
 				<button class="absolute right-4 top-4" onclick={() => (isOpen = false)}>
 					<X />

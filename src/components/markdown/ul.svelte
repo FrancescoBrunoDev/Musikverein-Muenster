@@ -1,1 +1,1 @@
-<ul class="text-base list-disc pl-4 py-2"><slot /></ul>
+<ul class="list-disc py-2 pl-4 text-base"><slot /></ul>

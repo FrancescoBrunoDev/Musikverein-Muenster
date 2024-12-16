@@ -34,7 +34,7 @@
 </script>
 
 <div
-	class="max-w-3xl w-11/12 rounded-xl overflow-hidden loader"
+	class="loader w-11/12 max-w-3xl overflow-hidden rounded-xl"
 	class:loaded={data.length > 0}
 	class:loading={data.length === 0}
 	bind:clientWidth={width}
