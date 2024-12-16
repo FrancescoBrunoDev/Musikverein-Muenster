@@ -12,10 +12,11 @@
 	import { fly } from 'svelte/transition';
 	import { cn } from '$lib/utils';
 
-	let { event }: { event: EventItem } = $props();
+	let { event, isModalOpen = false }: { event: EventItem; isModalOpen: boolean } = $props();
 
 	let date: string = $derived.by(() => getFormattedDate({ event }));
 	let isEventOpen = $state(false);
+	let isOpen = $derived(isModalOpen || isEventOpen);
 	let filtersArrayWithCounter: {
 		[key: string]: {
 			counter: number;
@@ -33,22 +34,24 @@
 
 <div
 	class={cn(
-		`relative w-fit overflow-hidden rounded-xl border-2 text-primary transition-all duration-100`,
+		`relative overflow-hidden rounded-xl border-2 text-primary transition-all duration-100 bg-background`,
 		{
-			'flex h-fit flex-shrink-0 flex-col': isEventOpen,
-			'flex flex-col justify-center gap-2 hover:scale-hover': !isEventOpen
+			'flex h-fit flex-shrink-0 flex-col': isOpen,
+			'flex flex-col justify-center gap-2 hover:scale-hover w-24': !isOpen,
+			'w-80': isEventOpen,
+			'w-full': isModalOpen
 		}
 	)}
 >
 	<button
 		onclick={() => handleClickEvent()}
 		class={cn(`flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out`, {
-			'relative left-0 right-0 top-0 h-fit w-80 py-2': isEventOpen,
-			'h-24 w-24': !isEventOpen
+			'relative left-0 right-0 top-0 h-fit py-2': isOpen,
+			'h-24': !isOpen
 		})}
 		>{date}
 
-		{#if !isEventOpen}
+		{#if !isOpen}
 			<div class="flex flex-wrap justify-center gap-2">
 				{#each Object.keys(filtersArrayWithCounter) as key}
 					{#if filtersArrayWithCounter[key].counter > 0}
@@ -65,10 +68,10 @@
 				{/each}
 			</div>
 		{/if}
-		{#if !isEventOpen}
+		{#if !isOpen}
 			<div class="flex flex-wrap justify-center gap-1"></div>
 		{/if}
-		{#if isEventOpen}
+		{#if isOpen}
 			<br />
 			<span class="text-sm dark:font-semibold">
 				{#if event.locations}
@@ -85,8 +88,8 @@
 			</span>
 		{/if}
 	</button>
-	{#if isEventOpen}
-		<div class="flex w-80 flex-col gap-4 p-2">
+	{#if isOpen}
+		<div class="flex flex-col gap-4 p-2">
 			{#if event.corporations}
 				<div class="flex flex-col gap-1">
 					<div>

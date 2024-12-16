@@ -12,6 +12,7 @@
 	import { ChevronUp } from 'lucide-svelte';
 	import EventWithModal from '$components/listEvents/EventWithModal.svelte';
 	import EventModal from '$components/listEvents/EventModal.svelte';
+	import { cn } from '$lib/utils';
 
 	function toggleSearchSection() {
 		$isSearchSectionInEventsListOpen = !$isSearchSectionInEventsListOpen;
@@ -66,7 +67,7 @@
 							{event}
 						/>
 					{:else}
-						<Event {event} />
+						<Event {event} isModalOpen={false} />
 					{/if}
 				{/each}
 			</div>
