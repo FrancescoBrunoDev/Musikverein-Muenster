@@ -44,7 +44,7 @@
 		onclick={() => handleClickEvent()}
 		class={cn(`flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out`, {
 			'relative left-0 right-0 top-0 h-fit w-80 py-2': isEventOpen,
-			'h-32 w-24': !isEventOpen
+			'h-24 w-24': !isEventOpen
 		})}
 		>{date}
 

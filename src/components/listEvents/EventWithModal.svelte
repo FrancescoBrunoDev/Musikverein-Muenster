@@ -36,7 +36,7 @@
 			handleClickEvent();
 		}}
 		class={cn(
-			'h-32 w-24 flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out'
+			'h-24 w-24 flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out'
 		)}
 		>{date}
 
