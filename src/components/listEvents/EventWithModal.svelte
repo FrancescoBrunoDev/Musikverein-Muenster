@@ -12,7 +12,6 @@
 	import { fly } from 'svelte/transition';
 	import { cn } from '$lib/utils';
 	import Modal from '$components/ui/Modal.svelte';
-	import { onDestroy } from 'svelte';
 
 	let { event }: { event: EventItem } = $props();
 
@@ -35,13 +34,13 @@
 
 <div
 	class={cn(
-		`relative w-fit overflow-hidden rounded-xl border-2 text-primary transition-all duration-100 flex flex-col justify-center gap-2 hover:scale-hover`
+		'relative flex w-fit flex-col justify-center gap-2 overflow-hidden rounded-xl border-2 text-primary transition-all duration-100 hover:scale-hover'
 	)}
 >
 	<button
 		onclick={() => handleClickEvent()}
 		class={cn(
-			`flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out h-32 w-24`
+			'h-32 w-24 flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out'
 		)}
 		>{date}
 
@@ -68,15 +67,15 @@
 <Modal isOpen={isEventOpen}>
 	<div
 		class={cn(
-			`w-full rounded-xl text-primary transition-all duration-100 bg-background flex h-full flex-col`
+			'flex h-full w-full flex-col rounded-xl bg-background text-primary transition-all duration-100'
 		)}
 	>
 		<div
 			class={cn(
-				`sticky font-bold  transition-all duration-100 ease-in-out left-0 right-0 top-0 h-fit p-2 bg-background rounded-xl`
+				'sticky left-0  right-0 top-0 h-fit rounded-xl bg-background p-2 font-bold transition-all duration-100 ease-in-out'
 			)}
 		>
-			<div class="text-center pb-2">
+			<div class="pb-2 text-center">
 				{date}
 				<div class="dark:font-semibold">
 					{#if event.locations}
@@ -142,7 +141,7 @@
 				</div>
 			{/if}
 		</div>
-		<div class="flex flex-col gap-4 p-2 overflow-y-scroll">
+		<div class="flex flex-col gap-4 overflow-y-scroll p-2">
 			<div class="rounded-xl border-2 p-2">
 				<div class="w-full text-base font-bold dark:font-semibold">
 					{$LL.filters.entities.performances()}
