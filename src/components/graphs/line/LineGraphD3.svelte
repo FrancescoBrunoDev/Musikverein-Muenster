@@ -3,7 +3,6 @@
 	import Axis from '$components/graphs/Axis.svelte';
 	import { startYear, endYear } from '$stores/storeEvents';
 	import Tooltip from '$components/graphs/line/Tooltip.svelte';
-	import { themeKind } from '$stores/storeTheme';
 
 	export type DataPoint = {
 		year: number;
