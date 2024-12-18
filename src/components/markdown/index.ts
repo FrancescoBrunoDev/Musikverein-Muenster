@@ -6,4 +6,5 @@ import img from './img.svelte';
 import ol from './ol.svelte';
 import p from './p.svelte';
 import ul from './ul.svelte';
-export { blockquote, h1, h2, h3, img, ol, p, ul };
+import li from './li.svelte';
+export { blockquote, h1, h2, h3, img, ol, p, ul, li };

@@ -6,7 +6,6 @@
 
 	let isOpen = $state(false);
 	let markdownData = $state({ content: '', meta: { title: '' } });
-	$inspect(markdownData);
 
 	async function loadMarkdownContent({ locale }: { locale: Locales }) {
 		try {
@@ -30,11 +29,15 @@
 	<Info size={25} stroke-width={40} />
 </button>
 
-<Modal {isOpen}>
+<Modal bind:isOpen>
 	<div
-		class="rounded-xl bg-background p-3 dark:bg-primary dark:text-background max-h-[90dvh] overflow-y-auto"
+		class="rounded-xl bg-background dark:bg-primary dark:text-background max-h-[80dvh] overflow-y-auto"
 	>
-		<h3 class="mb-10 text-3xl font-bold">{markdownData.meta.title}</h3>
-		<Markdown />
+		<h3 class="mb-10 text-3xl font-bold px-4 pt-4 pb-0 sticky top-0 bg-background">
+			{markdownData.meta.title}
+		</h3>
+		<div class="px-4 pb-4 content">
+			<Markdown />
+		</div>
 	</div>
 </Modal>
