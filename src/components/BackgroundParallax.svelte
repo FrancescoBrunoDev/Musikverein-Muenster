@@ -7,6 +7,13 @@
 	let currentY = 0;
 	let targetX = 0;
 	let targetY = 0;
+	let isMouseDevice = $state(false);
+
+	let { children } = $props();
+
+	const checkIfMouseDevice = () => {
+		return window.matchMedia('(pointer: fine)').matches;
+	};
 
 	// Lerp function for smooth interpolation
 	const lerp = (start: number, end: number, factor: number) => {
@@ -14,6 +21,8 @@
 	};
 
 	const updatePosition = () => {
+		if (!isMouseDevice) return;
+
 		currentX = lerp(currentX, targetX, 0.1);
 		currentY = lerp(currentY, targetY, 0.02);
 
@@ -48,22 +57,30 @@
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
+		if (!isMouseDevice) return;
+
 		targetX = (e.clientX / window.innerWidth - 0.5) * 2;
 		targetY = (e.clientY / window.innerHeight - 0.5) * 2;
 	};
 
 	onMount(() => {
-		window.addEventListener('mousemove', handleMouseMove);
-		animationFrame = requestAnimationFrame(updatePosition);
+		isMouseDevice = checkIfMouseDevice();
+		if (isMouseDevice) {
+			window.addEventListener('mousemove', handleMouseMove);
+			animationFrame = requestAnimationFrame(updatePosition);
+		}
+
 		return () => {
-			window.removeEventListener('mousemove', handleMouseMove);
-			cancelAnimationFrame(animationFrame);
+			if (isMouseDevice) {
+				window.removeEventListener('mousemove', handleMouseMove);
+				cancelAnimationFrame(animationFrame);
+			}
 		};
 	});
 </script>
 
 <div bind:this={background} class="fixed inset-0 scale-[1.01]">
-	<slot />
+	{@render children?.()}
 </div>
 
 <style>
