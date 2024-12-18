@@ -41,7 +41,7 @@
 </script>
 
 <div class="relative" id={'menu-dropdown-' + direction}>
-	<Button {label} icon={Icon} action={handleClick} />
+	<Button {label} icon={Icon} action={handleClick} size="md" />
 
 	{#if isOpen}
 		<div

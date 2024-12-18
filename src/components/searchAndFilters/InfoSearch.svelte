@@ -3,6 +3,7 @@
 	import { Info } from 'lucide-svelte';
 	import { error } from '@sveltejs/kit';
 	import { locale } from '$stores/storeGeneral';
+	import Button from '$components/ui/Button.svelte';
 
 	let isOpen = $state(false);
 	let markdownData = $state({ content: '', meta: { title: '' } });
@@ -25,9 +26,7 @@
 	let Markdown: any = $derived(markdownData.content);
 </script>
 
-<button onclick={() => (isOpen = !isOpen)}>
-	<Info size={25} stroke-width={40} />
-</button>
+<Button action={() => (isOpen = !isOpen)} size="md" icon={Info} light={true} />
 
 <Modal bind:isOpen>
 	<div
