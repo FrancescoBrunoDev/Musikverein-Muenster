@@ -39,7 +39,7 @@
 			'flex flex-shrink-0 flex-col': isOpen,
 			'flex w-24 flex-col justify-center gap-2 hover:scale-hover': !isOpen,
 			'w-80': isEventOpen,
-			'h-full w-full': isModalOpen
+			'h-full w-full border-0 dark:border-2': isModalOpen
 		}
 	)}
 >

@@ -42,12 +42,14 @@
 					if (format_mobile) {
 						axis = axisBottom(scale)
 							.tickFormat((d) => formatMobile(d))
-							.tickSizeOuter(tickOuter);
+							.tickSizeOuter(tickOuter)
+							.ticks(10);
 						transform = `translate(0, ${height - margin.bottom})`;
 					} else {
 						axis = axisBottom(scale)
 							.tickFormat((d) => yearFormatter(Number(d)))
-							.tickSizeOuter(tickOuter);
+							.tickSizeOuter(tickOuter)
+							.ticks(tickNumber);
 						transform = `translate(0, ${height - margin.bottom})`;
 					}
 					break;

@@ -25,6 +25,10 @@ const de = {
 			asA: 'als'
 		}
 	},
+	graphs: {
+		line: 'Linie',
+		map: 'Karte',
+	},
 	events: {
 		showAllPerformances: 'Zeige alle Aufführungen',
 		performedBy: 'Aufgeführt von',

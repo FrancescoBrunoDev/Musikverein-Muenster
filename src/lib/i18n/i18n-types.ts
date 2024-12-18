@@ -82,6 +82,16 @@ type RootTranslation = {
 			asA: string
 		}
 	}
+	graphs: {
+		/**
+		 * L​i​n​e
+		 */
+		line: string
+		/**
+		 * M​a​p
+		 */
+		map: string
+	}
 	events: {
 		/**
 		 * S​h​o​w​ ​a​l​l​ ​p​e​r​f​o​r​m​a​n​c​e​s
@@ -200,6 +210,16 @@ export type TranslationFunctions = {
 			 */
 			asA: () => LocalizedString
 		}
+	}
+	graphs: {
+		/**
+		 * Line
+		 */
+		line: () => LocalizedString
+		/**
+		 * Map
+		 */
+		map: () => LocalizedString
 	}
 	events: {
 		/**

@@ -45,6 +45,15 @@
 			.curve(curveBumpX)
 	);
 
+	let xAxisTicks = $derived.by(() => {
+		const tickInterval = width < 600 ? 10 : 5;
+		let ticks = [];
+		for (let i = xDomain[0]; i <= xDomain[1]; i += tickInterval) {
+			ticks.push(i);
+		}
+		return ticks;
+	});
+
 	// Ensure each series has a data point for each year in the range
 	let yearsRange = $derived.by(() => {
 		let [minYear, maxYear] = xDomain;
@@ -92,6 +101,7 @@
 				position="bottom"
 				textColor="hsl(var(--text))"
 				removeFirstAndLastTicks={true}
+				tickNumber={xAxisTicks.length}
 			/>
 			<Axis
 				noDomain={true}

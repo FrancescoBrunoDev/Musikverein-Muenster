@@ -29,9 +29,7 @@
 <Button action={() => (isOpen = !isOpen)} size="md" icon={Info} light={true} />
 
 <Modal bind:isOpen>
-	<div
-		class="rounded-xl bg-background dark:bg-primary dark:text-background max-h-[80dvh] overflow-y-auto"
-	>
+	<div class="rounded-xl bg-background max-h-[80dvh] overflow-y-auto dark:border-2">
 		<h3 class="mb-10 text-3xl font-bold px-4 pt-4 pb-0 sticky top-0 bg-background">
 			{markdownData.meta.title}
 		</h3>

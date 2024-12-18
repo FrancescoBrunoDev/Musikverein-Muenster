@@ -3,6 +3,7 @@
 	import LL from '$lib/i18n/i18n-svelte';
 	import BackgroundParallax from '../components/BackgroundParallax.svelte';
 	import { locale } from '$stores/storeGeneral';
+	import { slide } from 'svelte/transition';
 
 	async function getExibitions() {
 		const response = await fetch(`/api/exibitions/getMarkdown/${$locale}`);
@@ -78,9 +79,8 @@
 						class="group transition-transform duration-75 hover:-translate-y-1"
 						href="/{$locale}/exibitions/">{$LL.navbar.exibitions()}</a
 					>
-					<ul class="pl-5">
-						{#await getExibitions()}
-							<div></div>{:then exibitions}
+					<ul transition:slide class="">
+						{#await getExibitions() then exibitions}
 							{#each exibitions as exibition}
 								<li class="text-xl transition-transform duration-75 hover:-translate-y-1">
 									<a href="/{$locale}/exibitions/{exibition.slug}">{exibition.title}</a>

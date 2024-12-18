@@ -1,3 +1,4 @@
+import { map } from 'd3';
 import type { BaseTranslation } from '../i18n-types';
 
 const en = {
@@ -23,6 +24,10 @@ const en = {
 			makeItBothComposerAndPerformer: 'both composer and performer',
 			asA: 'as a'
 		}
+	},
+	graphs: {
+		line: 'Line',
+		map: 'Map',
 	},
 	events: {
 		showAllPerformances: 'Show all performances',
