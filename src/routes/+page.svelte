@@ -2,9 +2,10 @@
 	import * as config from '$lib/config';
 	import LL from '$lib/i18n/i18n-svelte';
 	import BackgroundParallax from '../components/BackgroundParallax.svelte';
+	import { locale } from '$stores/storeGeneral';
 
 	async function getExibitions() {
-		const response = await fetch('/api/exibitions/getMarkdown');
+		const response = await fetch(`/api/exibitions/getMarkdown/${$locale}`);
 		const exibitions = await response.json();
 		return exibitions;
 	}
@@ -73,15 +74,16 @@
 						>{$LL.navbar.database()}</a
 					>
 
-					<a class="group transition-transform duration-75 hover:-translate-y-1" href="/exibitions"
-						>{$LL.navbar.exibitions()}</a
+					<a
+						class="group transition-transform duration-75 hover:-translate-y-1"
+						href="/{$locale}/exibitions/">{$LL.navbar.exibitions()}</a
 					>
 					<ul class="pl-5">
 						{#await getExibitions()}
 							<div></div>{:then exibitions}
 							{#each exibitions as exibition}
 								<li class="text-xl transition-transform duration-75 hover:-translate-y-1">
-									<a href="/exibitions/{exibition.slug}">{exibition.title}</a>
+									<a href="/{$locale}/exibitions/{exibition.slug}">{exibition.title}</a>
 								</li>
 							{/each}
 						{/await}

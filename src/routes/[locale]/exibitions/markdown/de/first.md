@@ -1,6 +1,6 @@
 ---
-title: First exibition
-description: First exibition.
+title: Erste Ausstellung  
+description: Erste Ausstellung.  
 categories:
   - sveltekit
   - svelte
@@ -84,7 +84,7 @@ oder auch besser
 
 <Gallery gallery={{ title: 'Grimm', cover: '/exibitions/first_exibition/secondgallery/File13749.jpg' }} />
 
-### Piú gallerie
+### Mehr Gallery
 
 <div class="w-full flex flex-col gap-2">
   <Gallery gallery={gallery} className="h-fit" />

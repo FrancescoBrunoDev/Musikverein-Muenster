@@ -1,6 +1,15 @@
 <script lang="ts">
+	import { locale } from '$stores/storeGeneral';
+	import { goto } from '$app/navigation';
+
 	let { data } = $props();
 	let Markdown = $derived(data.content);
+
+	$effect(() => {
+		if (data.locale !== $locale) {
+			goto(`/${$locale}/exibitions/${data.exibitionName}`);
+		}
+	});
 </script>
 
 <!-- SEO -->

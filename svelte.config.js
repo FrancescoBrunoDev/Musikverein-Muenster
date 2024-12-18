@@ -8,7 +8,7 @@ import sequence from 'svelte-sequential-preprocessor';
 const mdsvexOptions = {
 	extensions: ['.md'],
 	layout: {
-		_: 'src/routes/exibitions/mdsvex.svelte'
+		_: 'src/routes/[locale]/exibitions/mdsvex.svelte'
 	}
 };
 
