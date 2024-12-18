@@ -9,7 +9,7 @@
 		--text: 0, 60%, 1%;
 		--background: 0, 60%, 99%; /* white */
 		--primary: 0, 60%, 1%; /* black */
-		--secondary: 0, 60%, 99%; /* white */
+		--secondary: 240 5.9% 90%;
 		--white: 0, 60%, 99%;
 		--accent: 0, 51%, 46%;
 		--destructive: 0 84.2% 60.2%;
@@ -22,7 +22,7 @@
 		--text: 0, 60%, 99%;
 		--background: 0, 60%, 1%; /* black */
 		--primary: 0, 60%, 99%; /* white */
-		--secondary: 0, 60%, 1%; /* black */
+		--secondary: 240 3.7% 25.9%;
 		--white: 0, 60%, 99%;
 		--accent: 0, 51%, 54%;
 		--destructive: 0 62.8% 30.6%;

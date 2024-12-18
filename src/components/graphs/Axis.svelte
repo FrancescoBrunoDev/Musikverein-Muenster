@@ -16,7 +16,7 @@
 		formatString = '$.0f',
 		format_mobile = false,
 		noTicksLine = false,
-		textColor = 'hsl(var(--border))',
+		textColor = 'hsl(var(--secondary))',
 		removeFirstAndLastTicks = false,
 		removeFirstTick = false
 	} = $props();

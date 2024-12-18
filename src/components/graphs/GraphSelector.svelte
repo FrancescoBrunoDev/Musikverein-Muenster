@@ -3,7 +3,7 @@
 	import { LL } from '$lib/i18n/i18n-svelte';
 </script>
 
-<div class="flex gap-2 rounded-xl bg-border p-2">
+<div class="flex gap-2 rounded-xl bg-secondary p-2">
 	<button
 		class="px-2 text-primary transition-colors"
 		class:selected={$selectedGraphType === 'Line'}

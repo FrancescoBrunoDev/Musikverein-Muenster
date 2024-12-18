@@ -3,6 +3,7 @@ import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
 import { updateFilteredEventsAndUdateDataForGraph } from '$stores/storeGraph';
 import { persistStore } from '$utils/storeUtils';
 import { writable } from 'svelte/store';
+import { get } from 'svelte/store';
 
 const filtersUrlified = writable<string>('');
 const filters = writable<Filters>({
@@ -11,7 +12,7 @@ const filters = writable<Filters>({
 	not: []
 });
 
-const SelectedMethodFilter = writable<Method>('and');
+const selectedMethodFilter = persistStore<Method>('methodFilter', 'and');
 const colorFilters = writable([
 	'#04c0c7',
 	'#e7871a',
@@ -32,8 +33,8 @@ const isAFilterDragged = writable<boolean>(false);
 const isMoveToActive = persistStore<boolean>('isMoveToActive', false);
 const showEventAsModal = persistStore<boolean>('showEventAsModal', true);
 
-const UpdateSelectedMethodFilter = (method: Method) => {
-	SelectedMethodFilter.set(method);
+const updateSelectedMethodFilter = (method: Method) => {
+	selectedMethodFilter.set(method);
 };
 
 const urlifyerFilters = () => {
@@ -56,20 +57,20 @@ const deUrlifyerFilters = async (filtersUrl: FiltersForUrl) => {
 	const filtersOr =
 		filtersUrl.fo && filtersUrl.fo !== '_'
 			? filtersUrl.fo
-					.split(',')
-					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+				.split(',')
+				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 	const filtersAnd =
 		filtersUrl.fa && filtersUrl.fa !== '_'
 			? filtersUrl.fa
-					.split(',')
-					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+				.split(',')
+				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 	const filtersNot =
 		filtersUrl.fn && filtersUrl.fn !== '_'
 			? filtersUrl.fn
-					.split(',')
-					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+				.split(',')
+				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 
 	function whichEntityIs(entity: string) {
@@ -107,10 +108,8 @@ const deUrlifyerFilters = async (filtersUrl: FiltersForUrl) => {
 };
 
 const pickColor = () => {
-	let _colorFilters: string[] = [];
-	colorFilters.subscribe((res) => {
-		_colorFilters = res;
-	});
+	let _colorFilters: string[] = get(colorFilters);
+
 	const color = _colorFilters[0];
 	_colorFilters.splice(0, 1);
 	colorFilters.set(_colorFilters);
@@ -122,9 +121,7 @@ const addFilterElement = async (selected: any, method?: Method) => {
 	if (method) {
 		_method = method;
 	} else {
-		SelectedMethodFilter.subscribe((res) => {
-			_method = res;
-		});
+		_method = get(selectedMethodFilter);
 	}
 	const filter: Filter = {
 		name: selected.suggestion[0],
@@ -235,10 +232,8 @@ const moveFilterElement = (selected: Filter, method: Method, moveTo: Method) => 
 };
 
 const removeFilterElement = (selected: Filter, method: Method) => {
-	let _colorFilters;
-	colorFilters.subscribe((res) => {
-		_colorFilters = res;
-	});
+	let _colorFilters = get(colorFilters) as string[];
+
 	filters.update((currentFilters) => {
 		const index = currentFilters[method].findIndex(
 			(f) => f.id === selected.id && f.entity === selected.entity
@@ -248,7 +243,8 @@ const removeFilterElement = (selected: Filter, method: Method) => {
 		}
 		const filterToRemove = currentFilters[method][index];
 		currentFilters[method].splice(index, 1);
-		_colorFilters.push(filterToRemove.color);
+
+		if (filterToRemove.color) _colorFilters.push(filterToRemove.color);
 		return currentFilters;
 	});
 	cleanDoubleFilters();
@@ -411,11 +407,12 @@ export {
 	filtersUrlified,
 	isAFilterDragged,
 	isMoveToActive,
+	selectedMethodFilter,
 	makeFilterPersonBothPersonAndComposer,
 	moveFilterElement,
 	removeFilterElement,
 	showEventAsModal,
 	updateEntitiesForSearchBox,
-	UpdateSelectedMethodFilter,
+	updateSelectedMethodFilter,
 	urlifyerFilters
 };

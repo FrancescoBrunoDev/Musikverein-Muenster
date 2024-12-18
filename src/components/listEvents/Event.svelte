@@ -9,8 +9,9 @@
 	} from '$stores/storeEvents';
 	import { filters } from '$stores/storeFilters';
 	import { Circle, FileInput } from 'lucide-svelte';
-	import { fly } from 'svelte/transition';
+	import { fly, slide } from 'svelte/transition';
 	import { cn } from '$lib/utils';
+	import { cubicOut } from 'svelte/easing';
 
 	let { event, isModalOpen = false }: { event: EventItem; isModalOpen: boolean } = $props();
 
@@ -152,6 +153,7 @@
 					{$LL.filters.entities.performances()}
 				</div>
 				<div
+					transition:slide={{ duration: 500, easing: cubicOut }}
 					class={cn('divide  flex flex-col gap-1 divide-y-2 rounded-xl dark:font-light', {
 						'overflow-y-scroll': isModalOpen
 					})}

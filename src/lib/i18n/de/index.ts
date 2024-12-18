@@ -46,6 +46,9 @@ const de = {
 		exibitionsNames: {
 			first: 'Chronik'
 		}
+	},
+	commons: {
+		year: 'Jahr',
 	}
 } satisfies Translation;
 

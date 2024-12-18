@@ -25,7 +25,7 @@ const updateLineData = async () => {
 		_dataForLineGraph.push({
 			name: 'or',
 			id: 'or',
-			color: 'hsl(var(--border))',
+			color: 'hsl(var(--secondary))',
 			data: []
 		});
 	}

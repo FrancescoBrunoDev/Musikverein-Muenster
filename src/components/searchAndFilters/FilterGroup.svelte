@@ -5,11 +5,10 @@
 	import { filters, moveFilterElement, isAFilterDragged } from '$stores/storeFilters';
 
 	type GroupedFilters = { [key: string]: Filter[] };
-	export let method: Method;
-	export let color = '';
-	let groupedFilters: GroupedFilters = {};
+	let { method, color = '' }: { method: Method; color: string } = $props();
+	let groupedFilters: GroupedFilters = $state({});
 
-	$: {
+	$effect(() => {
 		groupedFilters = $filters[method]?.reduce((grouped: GroupedFilters, filter: Filter) => {
 			if (!grouped[filter.entity]) {
 				grouped[filter.entity] = [];
@@ -18,7 +17,7 @@
 			grouped[filter.entity].push(filter);
 			return grouped;
 		}, {});
-	}
+	});
 
 	function handleDrop(event: DragEvent) {
 		isAFilterDragged.set(false);
@@ -34,8 +33,8 @@
 		0 || $isAFilterDragged
 		? 'opacity-100'
 		: 'opacity-10'}"
-	on:drop={handleDrop}
-	on:dragover={(event) => event.preventDefault()}
+	ondrop={handleDrop}
+	ondragover={(event) => event.preventDefault()}
 	role="listbox"
 	aria-dropeffect="move"
 	tabindex="0"
@@ -53,15 +52,15 @@
 	<div class="absolute h-full w-1 rounded-full bg-{color}"></div>
 	<div
 		class="ml-3 pb-2 transition-all duration-200 {$isAFilterDragged
-			? 'min-h-10 rounded outline-dotted outline-border'
+			? 'min-h-10 rounded outline-dotted outline-secondary'
 			: 'min-h-1 border-background'}"
 	>
 		{#each Object.keys(groupedFilters) as entity}
-			<div class="grid pl-2" transition:slide={{ axis: 'y', delay: 150 }}>
+			<div class="grid pl-2 text-primary" transition:slide={{ axis: 'y', delay: 150 }}>
 				<h2 class="mb-2 text-sm font-bold">
 					{entity === 'person'
 						? $LL.filters.entities['performer']()
-						: $LL.filters.entities[entity]()}
+						: $LL.filters.entities[entity as Entity]()}
 				</h2>
 
 				<div class="flex flex-wrap gap-2">

@@ -140,6 +140,12 @@ type RootTranslation = {
 			first: string
 		}
 	}
+	commons: {
+		/**
+		 * Y​e​a​r
+		 */
+		year: string
+	}
 }
 
 export type TranslationFunctions = {
@@ -268,6 +274,12 @@ export type TranslationFunctions = {
 			 */
 			first: () => LocalizedString
 		}
+	}
+	commons: {
+		/**
+		 * Year
+		 */
+		year: () => LocalizedString
 	}
 }
 

@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { scaleLinear, max, line, curveBumpX } from 'd3';
+	import { scaleLinear, max, line, curveBumpX, color } from 'd3';
 	import Axis from '$components/graphs/Axis.svelte';
 	import { startYear, endYear } from '$stores/storeEvents';
 	import Tooltip from '$components/graphs/line/Tooltip.svelte';
+	import { themeKind } from '$stores/storeTheme';
 
 	export type DataPoint = {
 		year: number;
@@ -111,7 +112,7 @@
 				{margin}
 				scale={yScale}
 				position="left"
-				textColor="hsl(var(--border))"
+				textColor="hsl(var(--secondary))"
 				removeFirstTick={true}
 			/>
 			<g>

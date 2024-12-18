@@ -100,7 +100,7 @@
 				<LineGraphD3 data={$dataForLineGraph} />
 			{:else}
 				<div
-					class="flex h-[300px] w-11/12 max-w-3xl animate-pulse items-center justify-center rounded-xl bg-border"
+					class="flex h-[300px] w-11/12 max-w-3xl animate-pulse items-center justify-center rounded-xl bg-secondary"
 				></div>
 			{/if}
 		{:else if $selectedGraphType === 'Map'}
@@ -108,7 +108,7 @@
 				<Map data={allLocations} />
 			{:else}
 				<div
-					class="flex h-[300px] w-11/12 max-w-3xl animate-pulse items-center justify-center rounded-xl bg-border"
+					class="flex h-[300px] w-11/12 max-w-3xl animate-pulse items-center justify-center rounded-xl bg-secondary"
 				></div>
 			{/if}
 		{/if}

@@ -47,7 +47,7 @@
 					<path
 						d={pathGenerator(feature)}
 						fill="none"
-						stroke="hsl(var(--border))"
+						stroke="hsl(var(--secondary))"
 						stroke-width="1"
 					/>
 				{/each}

@@ -4,7 +4,7 @@
 	import { expoInOut } from 'svelte/easing';
 	import { startYear } from '$stores/storeEvents';
 	import { type DataPoint, type DataSeries } from '$components/graphs/line/LineGraphD3.svelte';
-	import { filters } from '$stores/storeFilters';
+	import { LL } from '$lib/i18n/i18n-svelte';
 
 	let { xScale, yScale, margin, height, width, xDomain, series, mousePosition, data } = $props();
 
@@ -111,17 +111,21 @@
 			height={dimensions.height}
 			rx="4"
 			fill="hsl(var(--background))"
-			stroke="hsl(var(--border))"
+			stroke="hsl(var(--secondary))"
 			stroke-width="1"
 			opacity="0.95"
 		/>
 		<text x="10" y="15" font-size="12" fill="hsl(var(--text))">
-			Anno: {Math.floor(currentYear)}
+			{$LL.commons.year()}: {Math.floor(currentYear)}
 		</text>
 		{#each values as value, i}
+			{@const title =
+				value.name === 'or' || value.name === 'and' || value.name === 'not'
+					? $LL.filters.methods[value.name]()
+					: value.name}
 			<circle cx="7" cy={26 + i * 15} r="3" fill={value.color} />
 			<text x="13" y={30 + i * 15} font-size="12" fill="hsl(var(--text))">
-				{value.name}: {formatValue(value.value)}
+				{title}: {formatValue(value.value)}
 			</text>
 		{/each}
 	</g>

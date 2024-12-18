@@ -1,11 +1,12 @@
 import { browser } from '$app/environment';
-import { writable } from 'svelte/store';
+import { persistStore } from '$utils/storeUtils';
+import { get } from 'svelte/store';
 
-const themeKind = writable<ThemeKind>('base');
+const themeKind = persistStore<ThemeKind>('theme', 'base');
 
 const checkIfThemeDataExists = () => {
 	if (browser) {
-		const themeData = localStorage.getItem('theme');
+		const themeData = get(themeKind);
 		if (themeData) {
 			return themeData;
 		} else {
@@ -17,11 +18,11 @@ const checkIfThemeDataExists = () => {
 
 const setFirstThemeData = () => {
 	if (browser) {
-		if (localStorage.getItem('theme') === 'dark') {
+		if (get(themeKind) === 'dark') {
 			themeKind.set('dark');
 			document.body.classList.remove('base');
 			document.body.classList.add('dark');
-		} else if (localStorage.getItem('theme') === 'base') {
+		} else if (get(themeKind) === 'base') {
 			themeKind.set('base');
 			document.body.classList.remove('dark');
 			document.body.classList.add('base');
@@ -31,16 +32,14 @@ const setFirstThemeData = () => {
 
 const toggleDarkMode = () => {
 	if (browser) {
-		if (localStorage.getItem('theme') === 'dark') {
+		if (get(themeKind) === 'dark') {
 			themeKind.set('base');
 			document.body.classList.remove('dark');
 			document.body.classList.add('base');
-			localStorage.setItem('theme', 'base');
-		} else if (localStorage.getItem('theme') === 'base') {
+		} else if (get(themeKind) === 'base') {
 			themeKind.set('dark');
 			document.body.classList.remove('base');
 			document.body.classList.add('dark');
-			localStorage.setItem('theme', 'dark');
 		}
 	}
 };

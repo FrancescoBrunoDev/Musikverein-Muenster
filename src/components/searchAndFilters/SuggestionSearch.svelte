@@ -103,7 +103,7 @@
 				</div>
 			{/each}
 		{:else}
-			<div class="flex h-full items-center justify-center text-border">
+			<div class="flex h-full items-center justify-center text-secondary">
 				<p>No suggestions</p>
 			</div>
 		{/if}

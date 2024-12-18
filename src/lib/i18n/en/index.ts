@@ -27,7 +27,7 @@ const en = {
 	},
 	graphs: {
 		line: 'Line',
-		map: 'Map',
+		map: 'Map'
 	},
 	events: {
 		showAllPerformances: 'Show all performances',
@@ -46,6 +46,9 @@ const en = {
 		exibitionsNames: {
 			first: 'First Exibition'
 		}
+	},
+	commons: {
+		year: 'Year',
 	}
 } satisfies BaseTranslation;
 
