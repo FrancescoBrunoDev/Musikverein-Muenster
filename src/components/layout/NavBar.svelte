@@ -77,7 +77,7 @@
 								{#await getExibitions()}
 									<div></div>{:then exibitions}
 									{#each exibitions as exibition}
-										<li class="text-xl transition-transform duration-75 hover:-translate-y-1">
+										<li class="text-2xl transition-transform duration-75 hover:-translate-y-1">
 											<a onclick={() => toggleMenu()} href="/{$locale}/exibitions/{exibition.slug}"
 												>{exibition.title}</a
 											>

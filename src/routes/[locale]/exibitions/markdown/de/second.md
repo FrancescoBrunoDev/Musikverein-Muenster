@@ -1,6 +1,6 @@
 ---
-title: Second exibition
-description: Second exibition.
+title: Zweite Ausstellung
+description: Zweite Ausstellung.
 categories:
   - sveltekit
   - svelte
