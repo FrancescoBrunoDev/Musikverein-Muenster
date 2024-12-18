@@ -12,7 +12,6 @@
 	import { ChevronUp } from 'lucide-svelte';
 	import EventWithModal from '$components/listEvents/EventWithModal.svelte';
 	import EventModal from '$components/listEvents/EventModal.svelte';
-	import { cn } from '$lib/utils';
 
 	function toggleSearchSection() {
 		$isSearchSectionInEventsListOpen = !$isSearchSectionInEventsListOpen;
@@ -22,7 +21,7 @@
 	let isModalOpen = $state(false);
 
 	onMount(() => {
-		const searchSection = document.getElementById('searchSectionInTimeline');
+		const searchSection = document.getElementById('mainSearchSection');
 
 		if (searchSection) {
 			const observer = new IntersectionObserver(

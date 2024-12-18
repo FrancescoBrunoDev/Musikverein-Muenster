@@ -2,14 +2,27 @@
 	import { slide } from 'svelte/transition';
 	import { addFilterElement, entitiesForSearchBox } from '$stores/storeFilters';
 	import { suggestions, inputValue } from '$stores/storeSearchSection';
-	import { onMount } from 'svelte';
 	import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
 	import { projectID } from '$stores/storeEvents';
 	import { Loader2 } from 'lucide-svelte';
 	import { isSearchSectionInEventsList } from '$stores/storeSearchSection';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 
 	let div: HTMLDivElement | undefined = $state(undefined);
 	let isOpen: boolean = $state(false);
+	let searchSection: HTMLDivElement | null = $state(null);
+	let searchInput: HTMLInputElement | null = $state(null);
+
+	onMount(() => {
+		if (browser) {
+			searchSection = $isSearchSectionInEventsList
+				? (document.getElementById('searchSectionBottom') as HTMLDivElement)
+				: (document.getElementById('mainSearchSection') as HTMLDivElement);
+
+			searchInput = searchSection?.querySelector('input') ?? null;
+		}
+	});
 
 	const handleFilterFromSuggestion = (suggestion: any) => {
 		addFilterElement(suggestion);
@@ -19,14 +32,6 @@
 	};
 
 	$effect(() => {
-		let searchSection = $derived.by(() => {
-			return $isSearchSectionInEventsList
-				? (document.getElementById('searchSectionBottom') as HTMLDivElement)
-				: (document.getElementById('searchSectionInTimeline') as HTMLDivElement);
-		});
-
-		let searchInput = $derived(searchSection?.querySelector('input'));
-
 		// open the search box when the input is focused
 		if (searchInput) {
 			searchInput.addEventListener('focus', () => {

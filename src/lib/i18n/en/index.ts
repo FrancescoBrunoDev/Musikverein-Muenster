@@ -22,10 +22,6 @@ const en = {
 			checkboxPerformanceEvent: "show the 'or' events as performances in the graph",
 			makeItBothComposerAndPerformer: 'both composer and performer',
 			asA: 'as a'
-		},
-		infoSearch: {
-			title: 'Search Guide',
-			description: 'Search for entities and events in the graph'
 		}
 	},
 	events: {
@@ -40,7 +36,7 @@ const en = {
 	navbar: {
 		menu: 'Menu',
 		home: 'Home',
-		timeline: 'Timeline',
+		database: 'Database',
 		exibitions: 'Exibitions',
 		exibitionsNames: {
 			first: 'First Exibition'

@@ -81,16 +81,6 @@ type RootTranslation = {
 			 */
 			asA: string
 		}
-		infoSearch: {
-			/**
-			 * S​e​a​r​c​h​ ​G​u​i​d​e
-			 */
-			title: string
-			/**
-			 * S​e​a​r​c​h​ ​f​o​r​ ​e​n​t​i​t​i​e​s​ ​a​n​d​ ​e​v​e​n​t​s​ ​i​n​ ​t​h​e​ ​g​r​a​p​h
-			 */
-			description: string
-		}
 	}
 	events: {
 		/**
@@ -126,9 +116,9 @@ type RootTranslation = {
 		 */
 		home: string
 		/**
-		 * T​i​m​e​l​i​n​e
+		 * D​a​t​a​b​a​s​e
 		 */
-		timeline: string
+		database: string
 		/**
 		 * E​x​i​b​i​t​i​o​n​s
 		 */
@@ -210,16 +200,6 @@ export type TranslationFunctions = {
 			 */
 			asA: () => LocalizedString
 		}
-		infoSearch: {
-			/**
-			 * Search Guide
-			 */
-			title: () => LocalizedString
-			/**
-			 * Search for entities and events in the graph
-			 */
-			description: () => LocalizedString
-		}
 	}
 	events: {
 		/**
@@ -255,9 +235,9 @@ export type TranslationFunctions = {
 		 */
 		home: () => LocalizedString
 		/**
-		 * Timeline
+		 * Database
 		 */
-		timeline: () => LocalizedString
+		database: () => LocalizedString
 		/**
 		 * Exibitions
 		 */

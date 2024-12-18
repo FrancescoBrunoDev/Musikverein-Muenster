@@ -69,8 +69,8 @@
 					data-can-focus
 					data-max-blur="2"
 				>
-					<a class="transition-transform duration-75 hover:-translate-y-1" href="/timeline"
-						>{$LL.navbar.timeline()}</a
+					<a class="transition-transform duration-75 hover:-translate-y-1" href="/database"
+						>{$LL.navbar.database()}</a
 					>
 
 					<a class="group transition-transform duration-75 hover:-translate-y-1" href="/exibitions"

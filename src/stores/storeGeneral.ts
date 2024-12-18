@@ -1,3 +1,7 @@
+import { persistStore } from "$utils/storeUtils";
+
 const urlBaseAPIMusiconn = 'https://performance.musiconn.de/api';
 
-export { urlBaseAPIMusiconn };
+const locale = persistStore<Locales>('lang', "en");
+
+export { urlBaseAPIMusiconn, locale };

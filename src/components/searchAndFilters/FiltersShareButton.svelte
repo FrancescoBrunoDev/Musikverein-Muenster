@@ -8,7 +8,7 @@
 
 	function handleClick() {
 		urlifyerFilters();
-		navigator.clipboard.writeText(`${window.location.origin}/timeline/${$filtersUrlified}`);
+		navigator.clipboard.writeText(`${window.location.origin}/database/${$filtersUrlified}`);
 		// change the text of the button to "copied in clipboard" and put the check emoji
 		text = 'copied in clipboard 🎉';
 	}

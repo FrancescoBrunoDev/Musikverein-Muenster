@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
-	export let underlinedText: number;
-	export let content: string;
+	let { underlinedText, content }: { underlinedText: string; content: string } = $props();
 
-	let isOpen: boolean = false;
+	let isOpen: boolean = $state(false);
 </script>
 
 <span class="relative">
 	<span
-		on:mouseenter={() => (isOpen = true)}
-		on:mouseleave={() => (isOpen = false)}
+		onmouseenter={() => (isOpen = true)}
+		onmouseleave={() => (isOpen = false)}
 		role="tooltip"
 		class="cursor-help font-bold underline decoration-wavy">{underlinedText}</span
 	>

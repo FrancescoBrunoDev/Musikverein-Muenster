@@ -1,5 +1,6 @@
 <script lang="ts">
-	export let data;
+	let { data } = $props();
+	let Markdown = $derived(data.content);
 </script>
 
 <!-- SEO -->
@@ -28,6 +29,6 @@
 		<!-- exibition -->
 	</div>
 	<div class="content container mx-auto mb-10 max-w-3xl">
-		<svelte:component this={data.content} />
+		<Markdown />
 	</div>
 </section>

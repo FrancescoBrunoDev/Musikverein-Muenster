@@ -6,6 +6,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { setLocale } from '$lib/i18n/i18n-svelte';
 	import { loadLocaleAsync } from '$lib/i18n/i18n-util.async';
+	import { locale } from '$stores/storeGeneral';
 
 	let value: Locales = $state('en');
 	let { children } = $props();
@@ -14,13 +15,15 @@
 		value = value === 'en' ? 'de' : 'en';
 		await loadLocaleAsync(value);
 		setLocale(value);
-		sessionStorage.setItem('lang', value);
+		locale.set(value);
 	}
 
-	onMount(() => {
-		const valueFromSession = sessionStorage.getItem('lang') || 'en';
-		value = valueFromSession as Locales;
-		sessionStorage.setItem('lang', valueFromSession);
+	onMount(async () => {
+		const valueFromSession = $locale || 'en';
+		value = $locale as Locales;
+		await loadLocaleAsync(valueFromSession);
+		setLocale(valueFromSession);
+		locale.set(valueFromSession as Locales);
 	});
 
 	onDestroy(() => {

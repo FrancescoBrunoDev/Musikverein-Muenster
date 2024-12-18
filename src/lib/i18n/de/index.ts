@@ -23,10 +23,6 @@ const de = {
 			checkboxPerformanceEvent: "zeige die 'oder' Ereignisse als Aufführungen im Graphen",
 			makeItBothComposerAndPerformer: 'sowohl Komponist als auch Interpret',
 			asA: 'als'
-		},
-		infoSearch: {
-			title: 'Suchanleitung',
-			description: 'Suche nach Entitäten und Ereignissen im Graphen'
 		}
 	},
 	events: {
@@ -41,7 +37,7 @@ const de = {
 	navbar: {
 		menu: 'Menü',
 		home: 'Home',
-		timeline: 'Datenbank',
+		database: 'Datenbank',
 		exibitions: 'Ausstellungen',
 		exibitionsNames: {
 			first: 'Chronik'

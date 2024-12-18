@@ -72,7 +72,7 @@
                 transform: scale(${scaleSearchSection});`}
 	>
 		<div
-			id="searchSectionInTimeline"
+			id="mainSearchSection"
 			class="md:w-[500px] lg:w-[600px] {$isSearchSectionInEventsList ? 'invisible' : 'visible'}"
 		>
 			<SearchSection />
