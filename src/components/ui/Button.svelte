@@ -18,12 +18,12 @@
 	onclick={action}
 	type="button"
 	class={cn(
-		'flex p-2 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary text-background transition-all hover:scale-hover hover:drop-shadow-xl',
-		{ 'bg-background text-text border-2': light },
-		{ 'w-8 h-8': size === 'sm' },
-		{ 'w-10 h-10': size === 'md' },
-		{ 'w-12 h-12': size === 'lg' },
-		{ 'px-3 w-fit': label }
+		'flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary p-2 text-background transition-all hover:scale-hover hover:drop-shadow-xl',
+		{ 'border-2 bg-background text-text': light },
+		{ 'h-8 w-8': size === 'sm' },
+		{ 'h-10 w-10': size === 'md' },
+		{ 'h-12 w-12': size === 'lg' },
+		{ 'w-fit px-3': label }
 	)}
 	aria-label={formattedLabel}
 >

@@ -128,7 +128,7 @@ type FiltersForUrl = {
 	[key: string]: string;
 };
 
-type Locales = "de" | "en";
+type Locales = 'de' | 'en';
 
 type ThemeKind = 'base' | 'dark';
 

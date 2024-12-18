@@ -148,11 +148,11 @@
 					'overflow-y-scroll': isModalOpen
 				})}
 			>
-				<div class="w-full text-base font-bold dark:font-semibold sticky top-0 bg-background">
+				<div class="sticky top-0 w-full bg-background text-base font-bold dark:font-semibold">
 					{$LL.filters.entities.performances()}
 				</div>
 				<div
-					class={cn('rounded-xl  divide flex flex-col gap-1 divide-y-2 dark:font-light', {
+					class={cn('divide  flex flex-col gap-1 divide-y-2 rounded-xl dark:font-light', {
 						'overflow-y-scroll': isModalOpen
 					})}
 				>

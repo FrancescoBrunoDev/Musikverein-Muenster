@@ -1,10 +1,12 @@
-import { json, error } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 
 async function getExibitions({ locale }: { locale: Locales }) {
 	let exibitions: ExibitionMarkdown[] = [];
 
-	const paths = import.meta.glob('/src/routes/[locale]/exibitions/markdown/**/*.md', { eager: true });
-	console.log(paths);
+	const paths = import.meta.glob('/src/routes/[locale]/exibitions/markdown/**/*.md', {
+		eager: true
+	});
+
 	for (const path in paths) {
 		const file = paths[path];
 		// Verifica se il file appartiene alla locale corretta
@@ -43,8 +45,7 @@ export async function GET(request: Request): Promise<Response> {
 
 		const exibitions = await getExibitions(params);
 		return json(exibitions);
-	}
-	catch (err) {
+	} catch (err) {
 		throw error(500, 'Error fetching exhibitions');
 	}
 }

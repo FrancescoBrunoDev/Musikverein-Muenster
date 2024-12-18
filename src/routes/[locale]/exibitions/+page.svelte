@@ -16,11 +16,11 @@
 	<title>{config.title}</title>
 </svelte:head>
 
-<section class="flex h-screen items-center container">
-	<ul class="flex gap-4 flex-col">
+<section class="container flex h-screen items-center">
+	<ul class="flex flex-col gap-4">
 		{#each data.exibitions as exibition}
 			<li class="transition-transform duration-75 hover:-translate-y-1">
-				<a href="/{$locale}/exibitions/{exibition.slug}" class="sm:text-6xl text-4xl font-bold"
+				<a href="/{$locale}/exibitions/{exibition.slug}" class="text-4xl font-bold sm:text-6xl"
 					>{exibition.title}</a
 				>
 				<p class="description">{exibition.description}</p>

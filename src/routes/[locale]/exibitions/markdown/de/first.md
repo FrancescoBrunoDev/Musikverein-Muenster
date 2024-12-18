@@ -1,6 +1,6 @@
 ---
-title: Erste Ausstellung  
-description: Erste Ausstellung.  
+title: Erste Ausstellung
+description: Erste Ausstellung.
 categories:
   - sveltekit
   - svelte

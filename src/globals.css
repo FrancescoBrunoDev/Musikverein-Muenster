@@ -57,7 +57,7 @@
 
 .content {
 	a {
-		@apply underline underline-offset-1 decoration-text decoration-2;
+		@apply underline decoration-text decoration-2 underline-offset-1;
 	}
 	strong {
 		font-weight: 700;
