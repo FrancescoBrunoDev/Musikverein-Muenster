@@ -1,6 +1,6 @@
+import { urlBaseAPIMusiconn } from '$states/stateGeneral.svelte';
 import { projectID } from '$stores/storeEvents';
 import { entitiesForSearchBox, filters } from '$stores/storeFilters';
-import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
 import { get, writable } from 'svelte/store';
 
 const suggestions = writable<AutocompleteResult[]>([]);

@@ -6,12 +6,12 @@
 	import ThemeSwitch from '$components/layout/ThemeSwitch.svelte';
 	import { page } from '$app/stores';
 	import Button from '$components/ui/Button.svelte';
-	import { locale } from '$stores/storeGeneral';
+	import { locale } from '$states/stateGeneral.svelte';
 
 	let isHomePage = $derived($page.url.pathname === '/');
 
 	async function getExibitions() {
-		const response = await fetch(`/api/exibitions/getMarkdown/${$locale}`);
+		const response = await fetch(`/api/exibitions/getMarkdown/${locale.current}`);
 		const exibitions: ExibitionMarkdown[] = await response.json();
 		return exibitions;
 	}
@@ -71,15 +71,16 @@
 							<a
 								class="group transition-transform duration-75 hover:-translate-y-1"
 								onclick={() => toggleMenu()}
-								href="{$locale}/exibitions/">{$LL.navbar.exibitions()}</a
+								href="{locale.current}/exibitions/">{$LL.navbar.exibitions()}</a
 							>
 							<ul class="pl-5">
 								{#await getExibitions()}
 									<div></div>{:then exibitions}
 									{#each exibitions as exibition}
 										<li class="text-2xl transition-transform duration-75 hover:-translate-y-1">
-											<a onclick={() => toggleMenu()} href="/{$locale}/exibitions/{exibition.slug}"
-												>{exibition.title}</a
+											<a
+												onclick={() => toggleMenu()}
+												href="/{locale.current}/exibitions/{exibition.slug}">{exibition.title}</a
 											>
 										</li>
 									{/each}

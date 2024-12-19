@@ -4,15 +4,16 @@ import { detectLocale } from '$lib/i18n/i18n-util';
 import { loadLocaleAsync } from '$lib/i18n/i18n-util.async';
 import { navigatorDetector, sessionStorageDetector } from 'typesafe-i18n/detectors';
 import type { LayoutLoad } from './$types';
+import { locale } from '$states/stateGeneral.svelte';
 
 export const load: LayoutLoad = async (event) => {
 	if (browser) {
 		const deafultLocale = 'en';
-		const locale =
-			detectLocale(sessionStorageDetector) || detectLocale(navigatorDetector) || deafultLocale;
+		const _locale =
+			detectLocale(sessionStorageDetector) || detectLocale(navigatorDetector) || locale.current || deafultLocale;
 
-		await loadLocaleAsync(locale);
-		setLocale(locale);
+		await loadLocaleAsync(_locale);
+		setLocale(_locale);
 	}
 	return event.data;
 };

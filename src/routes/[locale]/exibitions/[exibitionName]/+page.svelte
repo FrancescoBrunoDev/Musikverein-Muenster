@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { locale } from '$stores/storeGeneral';
+	import { locale } from '$states/stateGeneral.svelte.js';
 	import { goto } from '$app/navigation';
 
 	let { data } = $props();
 	let Markdown = $derived(data.content);
 
 	$effect(() => {
-		if (data.locale !== $locale) {
-			goto(`/${$locale}/exibitions/${data.exibitionName}`);
+		if (data.locale !== locale.current) {
+			goto(`/${locale.current}/exibitions/${data.exibitionName}`);
 		}
 	});
 </script>

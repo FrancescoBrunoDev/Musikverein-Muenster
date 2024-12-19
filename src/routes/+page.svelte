@@ -1,12 +1,12 @@
 <script>
 	import * as config from '$lib/config';
 	import LL from '$lib/i18n/i18n-svelte';
-	import BackgroundParallax from '../components/BackgroundParallax.svelte';
-	import { locale } from '$stores/storeGeneral';
+	import BackgroundParallax from '$components/BackgroundParallax.svelte';
+	import { locale } from '$states/stateGeneral.svelte';
 	import { slide } from 'svelte/transition';
 
 	async function getExibitions() {
-		const response = await fetch(`/api/exibitions/getMarkdown/${$locale}`);
+		const response = await fetch(`/api/exibitions/getMarkdown/${locale.current}`);
 		const exibitions = await response.json();
 		return exibitions;
 	}
@@ -77,13 +77,13 @@
 
 					<a
 						class="group transition-transform duration-75 hover:-translate-y-1"
-						href="/{$locale}/exibitions/">{$LL.navbar.exibitions()}</a
+						href="/{locale.current}/exibitions/">{$LL.navbar.exibitions()}</a
 					>
 					<ul transition:slide class="">
 						{#await getExibitions() then exibitions}
 							{#each exibitions as exibition}
 								<li class="text-2xl transition-transform duration-75 hover:-translate-y-1">
-									<a href="/{$locale}/exibitions/{exibition.slug}">{exibition.title}</a>
+									<a href="/{locale.current}/exibitions/{exibition.slug}">{exibition.title}</a>
 								</li>
 							{/each}
 						{/await}

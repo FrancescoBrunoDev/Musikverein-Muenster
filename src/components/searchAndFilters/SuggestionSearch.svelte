@@ -2,7 +2,7 @@
 	import { slide } from 'svelte/transition';
 	import { addFilterElement, entitiesForSearchBox } from '$stores/storeFilters';
 	import { suggestions, inputValue } from '$stores/storeSearchSection';
-	import { urlBaseAPIMusiconn } from '$stores/storeGeneral';
+	import { urlBaseAPIMusiconn } from '$states/stateGeneral.svelte';
 	import { projectID } from '$stores/storeEvents';
 	import { Loader2 } from 'lucide-svelte';
 	import { isSearchSectionInEventsList } from '$stores/storeSearchSection';

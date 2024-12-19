@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Button from '$components/ui/Button.svelte';
-	import { toggleDarkMode, themeKind } from '$stores/storeTheme';
+	import { toggleTheme, themeKind } from '$states/stateGeneral.svelte';
 	import { draw } from 'svelte/transition';
 	import { expoInOut } from 'svelte/easing';
 </script>
 
-<Button action={toggleDarkMode}>
+<Button action={toggleTheme}>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width="24"
@@ -18,7 +18,7 @@
 		stroke-linejoin="round"
 		class="lucide lucide-sun-medium"
 	>
-		{#if $themeKind === 'dark'}
+		{#if themeKind.current === 'dark'}
 			<path
 				in:draw={{ duration: 1000, easing: expoInOut, delay: 500 }}
 				out:draw={{ duration: 1000, easing: expoInOut }}

@@ -2,7 +2,7 @@
 	import Modal from '$components/ui/Modal.svelte';
 	import { Info } from 'lucide-svelte';
 	import { error } from '@sveltejs/kit';
-	import { locale } from '$stores/storeGeneral';
+	import { locale } from '$states/stateGeneral.svelte';
 	import Button from '$components/ui/Button.svelte';
 
 	let isOpen = $state(false);
@@ -21,7 +21,7 @@
 	}
 
 	$effect(() => {
-		loadMarkdownContent({ locale: $locale });
+		loadMarkdownContent({ locale: locale.current });
 	});
 	let Markdown: any = $derived(markdownData.content);
 </script>
