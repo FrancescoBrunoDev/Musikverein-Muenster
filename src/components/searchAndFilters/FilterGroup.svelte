@@ -5,8 +5,14 @@
 	import { filters, moveFilterElement, isAFilterDragged } from '$stores/storeFilters';
 	import { cn } from '$lib/utils';
 
+	interface Props {
+		method: Method;
+		color?: string;
+	}
+
 	type GroupedFilters = { [key: string]: Filter[] };
-	let { method, color = '' }: { method: Method; color: string } = $props();
+
+	let { method, color = '' }: Props = $props();
 	let groupedFilters: GroupedFilters = $state({});
 
 	$effect(() => {

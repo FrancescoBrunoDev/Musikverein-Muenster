@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 
-	let { fallbackCaption, images, selected = $bindable() } = $props();
+	interface Props {
+		fallbackCaption: string;
+		images: { src: string; caption?: string }[];
+		selected?: number;
+	}
+
+	let { fallbackCaption, images, selected = $bindable() }: Props = $props();
 </script>
 
 <div class="row-span-1 flex gap-2 overflow-x-scroll">

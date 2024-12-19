@@ -40,7 +40,7 @@
 		</div>
 	{/if}
 	{#if !isSearchSectionInEventsList}
-		<div class="place-self-end order-3">
+		<div class="order-3 place-self-end">
 			<FiltersShareButton />
 		</div>
 	{/if}

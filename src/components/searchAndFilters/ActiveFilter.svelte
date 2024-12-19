@@ -12,7 +12,12 @@
 	import ButtonMoveFilterTo from './ButtonMoveFilterTo.svelte';
 	import LL from '$lib/i18n/i18n-svelte';
 
-	let { filter, method }: { filter: Filter; method: Method } = $props();
+	interface Props {
+		filter: Filter;
+		method: Method;
+	}
+
+	let { filter, method }: Props = $props();
 
 	const possibleMethods: Method[] = ['or', 'and', 'not'];
 	const {

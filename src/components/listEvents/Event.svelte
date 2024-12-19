@@ -13,7 +13,12 @@
 	import { cn } from '$lib/utils';
 	import { cubicOut } from 'svelte/easing';
 
-	let { event, isModalOpen = false }: { event: EventItem; isModalOpen: boolean } = $props();
+	interface Props {
+		event: EventItem;
+		isModalOpen?: boolean;
+	}
+
+	let { event, isModalOpen = false }: Props = $props();
 
 	let date: string = $derived.by(() => getFormattedDate({ event }));
 	let isEventOpen = $state(false);

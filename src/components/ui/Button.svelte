@@ -1,14 +1,23 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
 
+	interface Props {
+		label?: string;
+		icon?: any;
+		action?: () => void;
+		children?: () => any;
+		light?: boolean;
+		size?: 'sm' | 'md' | 'lg';
+	}
+
 	let {
-		label = null,
+		label = undefined,
 		icon = null,
-		action = null,
-		children = null,
+		action = undefined,
+		children = undefined,
 		light = false,
 		size = 'md'
-	} = $props();
+	}: Props = $props();
 
 	const Icon = $derived(icon);
 	let formattedLabel = $derived(label?.replace(/\s/g, '-').toLowerCase());

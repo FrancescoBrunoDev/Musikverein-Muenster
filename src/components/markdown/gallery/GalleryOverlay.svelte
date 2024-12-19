@@ -6,6 +6,13 @@
 	import { fly } from 'svelte/transition';
 	import { quadInOut } from 'svelte/easing';
 	import Portal from '$components/ui/Portal.svelte';
+	import type { Gallery } from '$components/markdown/gallery/types';
+
+	interface Props {
+		gallery: Gallery;
+		selected?: number;
+		isOpen?: boolean;
+	}
 
 	let { gallery, selected, isOpen = $bindable() } = $props();
 

@@ -3,7 +3,14 @@
 	import Button from '$components/ui/Button.svelte';
 	import { cn } from '$lib/utils';
 
-	let { children, label = null, icon, direction = 'bottom' } = $props();
+	interface Props {
+		children?: () => any;
+		label?: string;
+		icon?: any;
+		direction?: 'top' | 'bottom';
+	}
+
+	let { children, label = undefined, icon, direction = 'bottom' }: Props = $props();
 	let isOpen = $state(false);
 
 	function handleClick() {

@@ -3,11 +3,13 @@
 	import { Circle } from 'lucide-svelte';
 	import { cn } from '$lib/utils';
 
-	let {
-		event,
-		selectedEvent = $bindable(),
-		isEventOpen = $bindable()
-	}: { event: EventItem; selectedEvent: EventItem | null; isEventOpen: boolean } = $props();
+	interface Props {
+		event: EventItem;
+		selectedEvent?: EventItem;
+		isEventOpen?: boolean;
+	}
+
+	let { event, selectedEvent = $bindable(), isEventOpen = $bindable() }: Props = $props();
 
 	let date: string = $derived.by(() => getFormattedDate({ event }));
 	let filtersArrayWithCounter: {

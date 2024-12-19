@@ -9,6 +9,10 @@
 		value: number;
 	};
 
+	interface Props {
+		data?: DataSeries[];
+	}
+
 	export type DataSeries = {
 		name: string;
 		id: string;
@@ -16,7 +20,7 @@
 		data: DataPoint[];
 	};
 
-	let { data = [] }: { data: DataSeries[] } = $props();
+	let { data = [] }: Props = $props();
 
 	let width = $state(800);
 	let height = $state(300);

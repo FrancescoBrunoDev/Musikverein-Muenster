@@ -2,8 +2,15 @@
 	import { Expand } from 'lucide-svelte';
 	import GalleryOverlay from '$components/markdown/gallery/GalleryOverlay.svelte';
 	import { cn } from '$lib/utils';
+	import type { Gallery } from '$components/markdown/gallery/types';
 
-	let { gallery, className = '', style = {} } = $props();
+	interface Props {
+		gallery: Gallery;
+		className?: string;
+		style?: Record<string, string>;
+	}
+
+	let { gallery, className = '', style = {} }: Props = $props();
 
 	let isOpen = $state(false);
 	let selected = $state(0);

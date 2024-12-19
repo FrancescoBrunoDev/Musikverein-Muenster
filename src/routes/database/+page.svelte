@@ -3,7 +3,13 @@
 	import { fetchedEvents } from '$stores/storeEvents';
 	import { filters } from '$stores/storeFilters';
 
-	const { data } = $props();
+	import type { PageData } from './$types';
+
+	interface Props {
+		data: PageData;
+	}
+
+	const { data }: Props = $props();
 	// clean filter from precedent
 	filters.set({
 		and: [],

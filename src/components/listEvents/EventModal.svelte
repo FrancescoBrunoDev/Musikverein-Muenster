@@ -1,17 +1,13 @@
-<script>
+<script lang="ts">
 	import Modal from '$components/ui/Modal.svelte';
-	import { getTitleString, getFormattedDate } from '$stores/storeEvents';
-	import { cn } from '$lib/utils';
-	import { Circle, FileInput } from 'lucide-svelte';
-	import { fly } from 'svelte/transition';
-	import LL from '$lib/i18n/i18n-svelte';
-	import { filters } from '$stores/storeFilters';
-	import EventPerformances from './EventPerformances.svelte';
 	import Event from './Event.svelte';
 
-	let { event, isEventOpen = $bindable() } = $props();
+	interface Props {
+		event: EventItem;
+		isEventOpen?: boolean;
+	}
 
-	let date = $derived.by(() => getFormattedDate({ event }));
+	let { event, isEventOpen = $bindable() }: Props = $props();
 </script>
 
 <Modal bind:isOpen={isEventOpen}>

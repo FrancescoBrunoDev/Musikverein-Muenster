@@ -1,5 +1,9 @@
 <script lang="ts">
-	let { title, value = $bindable() } = $props();
+	interface Props {
+		title: string;
+		value?: boolean;
+	}
+	let { title, value = $bindable() }: Props = $props();
 
 	function titleToId(title: string): string {
 		return title.replaceAll(' ', '-');

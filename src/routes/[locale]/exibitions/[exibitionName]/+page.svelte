@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { locale } from '$states/stateGeneral.svelte.js';
 	import { goto } from '$app/navigation';
+	import type { PageData } from './$types';
 
-	let { data } = $props();
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 	let Markdown = $derived(data.content);
 
 	$effect(() => {

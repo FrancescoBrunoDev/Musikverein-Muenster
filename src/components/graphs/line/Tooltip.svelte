@@ -6,7 +6,20 @@
 	import { type DataPoint, type DataSeries } from '$components/graphs/line/LineGraphD3.svelte';
 	import { LL } from '$lib/i18n/i18n-svelte';
 
-	let { xScale, yScale, margin, height, width, xDomain, series, mousePosition, data } = $props();
+	interface Props {
+		xScale: any;
+		yScale: any;
+		margin: { top: number; right: number; bottom: number; left: number };
+		height: number;
+		width: number;
+		xDomain: [number, number];
+		series: DataSeries;
+		mousePosition: number;
+		data: DataSeries[];
+	}
+
+	let { xScale, yScale, margin, height, width, xDomain, series, mousePosition, data }: Props =
+		$props();
 
 	const activeYearTween = new Tween($startYear, {
 		duration: 500,

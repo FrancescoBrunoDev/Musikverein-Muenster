@@ -2,7 +2,11 @@
 	import LL from '$lib/i18n/i18n-svelte';
 	import { getTitleString } from '$stores/storeEvents';
 
-	let { performance }: { performance: EventPerformance } = $props();
+	interface Props {
+		performance: EventPerformance;
+	}
+
+	let { performance }: Props = $props();
 
 	let isPersonOpen = $state(false);
 

@@ -1,7 +1,7 @@
 import { urlBaseAPIMusiconn } from '$states/stateGeneral.svelte';
 import { projectID } from '$stores/storeEvents';
 import { entitiesForSearchBox, filters } from '$stores/storeFilters';
-import { get, writable } from 'svelte/store';
+import { get } from 'svelte/store';
 
 let suggestions = $state<AutocompleteResult[]>([]);
 let inputValue = $state<string>('');
@@ -9,35 +9,35 @@ let isSearchSectionInEventsList = $state<boolean>(false);
 let isSearchSectionInEventsListOpen = $state<boolean>(false);
 
 function setInputValue({ value }: { value: string }) {
-	inputValue = value
+	inputValue = value;
 }
 
 function getSuggestions() {
-	return suggestions
+	return suggestions;
 }
 
 function deleteSuggestions() {
-	suggestions = []
+	suggestions = [];
 }
 
 function getInputValue() {
-	return inputValue
+	return inputValue;
 }
 
 function setIsSearchSectionInEventsList({ value }: { value: boolean }) {
-	isSearchSectionInEventsList = value
+	isSearchSectionInEventsList = value;
 }
 
 function getIsSearchSectionInEventsList() {
-	return isSearchSectionInEventsList
+	return isSearchSectionInEventsList;
 }
 
 function setIsSearchSectionInEventsListOpen({ value }: { value: boolean }) {
-	isSearchSectionInEventsListOpen = value
+	isSearchSectionInEventsListOpen = value;
 }
 
 function getIsSearchSectionInEventsListOpen() {
-	return isSearchSectionInEventsListOpen
+	return isSearchSectionInEventsListOpen;
 }
 
 const autocomplete = async () => {
@@ -101,12 +101,12 @@ const autocomplete = async () => {
 
 export {
 	autocomplete,
-	setInputValue,
 	deleteSuggestions,
-	getSuggestions,
 	getInputValue,
-	setIsSearchSectionInEventsList,
 	getIsSearchSectionInEventsList,
 	getIsSearchSectionInEventsListOpen,
+	getSuggestions,
+	setInputValue,
+	setIsSearchSectionInEventsList,
 	setIsSearchSectionInEventsListOpen
 };

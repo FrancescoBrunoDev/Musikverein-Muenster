@@ -3,7 +3,11 @@
 	import { geoMercator, geoPath } from 'd3-geo';
 	import { JSONMuenster } from '$stores/storeGraph';
 
-	let { data } = $props();
+	interface Props {
+		data: { name: string; geometries: { geo: number[] }[] }[];
+	}
+
+	let { data }: Props = $props();
 
 	let width = $state(800);
 	let height = $state(300);

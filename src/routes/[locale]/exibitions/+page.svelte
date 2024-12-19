@@ -3,7 +3,13 @@
 	import { locale } from '$states/stateGeneral.svelte';
 	import { goto } from '$app/navigation';
 
-	let { data } = $props();
+	import type { PageData } from './$types';
+
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	$effect(() => {
 		if (data.locale !== locale.current) {

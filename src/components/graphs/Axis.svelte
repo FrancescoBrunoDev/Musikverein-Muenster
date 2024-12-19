@@ -3,6 +3,24 @@
 	import { axisBottom, axisLeft, type AxisDomain } from 'd3-axis';
 	import { format } from 'd3-format';
 
+	interface Props {
+		width: number;
+		height: number;
+		margin: { top: number; right: number; bottom: number; left: number };
+		position: 'bottom' | 'left';
+		scale: any;
+		tickOuter?: number;
+		tickNumber?: number;
+		toFormat?: boolean;
+		noDomain?: boolean;
+		formatString?: string;
+		format_mobile?: boolean;
+		noTicksLine?: boolean;
+		textColor?: string;
+		removeFirstAndLastTicks?: boolean;
+		removeFirstTick?: boolean;
+	}
+
 	let {
 		width,
 		height,
@@ -19,7 +37,7 @@
 		textColor = 'hsl(var(--secondary))',
 		removeFirstAndLastTicks = false,
 		removeFirstTick = false
-	} = $props();
+	}: Props = $props();
 
 	const formatMobile = (tick: AxisDomain) => {
 		return "'" + tick.toString().slice(13, 15);

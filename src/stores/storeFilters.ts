@@ -56,20 +56,20 @@ const deUrlifyerFilters = async (filtersUrl: FiltersForUrl) => {
 	const filtersOr =
 		filtersUrl.fo && filtersUrl.fo !== '_'
 			? filtersUrl.fo
-				.split(',')
-				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+					.split(',')
+					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 	const filtersAnd =
 		filtersUrl.fa && filtersUrl.fa !== '_'
 			? filtersUrl.fa
-				.split(',')
-				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+					.split(',')
+					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 	const filtersNot =
 		filtersUrl.fn && filtersUrl.fn !== '_'
 			? filtersUrl.fn
-				.split(',')
-				.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
+					.split(',')
+					.map((filter) => ({ entity: filter.split(':')[0], id: filter.split(':')[1] }))
 			: [];
 
 	function whichEntityIs(entity: string) {

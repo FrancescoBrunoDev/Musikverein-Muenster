@@ -1,5 +1,11 @@
 <script lang="ts">
-	let { selected, gallery } = $props();
+	import type { Gallery } from '$components/markdown/gallery/types';
+	interface Props {
+		selected: { src: string; caption?: string };
+		gallery: Gallery;
+	}
+
+	let { selected, gallery }: Props = $props();
 
 	let caption = $derived(selected.caption || gallery.caption || gallery.title);
 </script>

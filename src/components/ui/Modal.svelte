@@ -6,7 +6,12 @@
 	import { cn } from '$lib/utils';
 	import Button from '$components/ui/Button.svelte';
 
-	let { children, isOpen = $bindable() } = $props();
+	interface Props {
+		children?: () => any;
+		isOpen?: boolean;
+	}
+
+	let { children, isOpen = $bindable() }: Props = $props();
 </script>
 
 <Portal>
