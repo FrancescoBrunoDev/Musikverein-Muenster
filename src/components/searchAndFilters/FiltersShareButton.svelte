@@ -2,9 +2,9 @@
 	import { filtersUrlified, urlifyerFilters, filters } from '$stores/storeFilters';
 	import { Link } from 'lucide-svelte';
 
-	let isMouseOver: boolean = false;
+	let isMouseOver: boolean = $state(false);
 
-	let text: string = 'share your filters';
+	let text: string = $state('share your filters');
 
 	function handleClick() {
 		urlifyerFilters();
@@ -27,11 +27,11 @@
 		{#if isMouseOver}<span class="pl-1 text-sm">{text}</span>
 		{/if}
 		<button
-			on:mouseover={handleMouseOver}
-			on:mouseout={handleMouseOut}
-			on:focus={handleMouseOver}
-			on:blur={handleMouseOut}
-			on:click={handleClick}
+			onmouseover={handleMouseOver}
+			onmouseout={handleMouseOut}
+			onfocus={handleMouseOver}
+			onblur={handleMouseOut}
+			onclick={handleClick}
 			aria-label="Toggle italic"
 			class="z-30 flex h-fit w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-primary p-2 text-background drop-shadow transition-all hover:scale-hover hover:drop-shadow-xl"
 		>

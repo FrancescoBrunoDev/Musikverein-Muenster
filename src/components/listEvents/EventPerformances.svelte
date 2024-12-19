@@ -5,9 +5,13 @@
 	import { getTitleString } from '$stores/storeEvents';
 	import EventPerformancesPersons from '$components/listEvents/EventPerformancesPersons.svelte';
 	import { fly } from 'svelte/transition';
-	export let event: EventItem;
+	interface Props {
+		event: EventItem;
+	}
 
-	let isPerformanceOpen = false;
+	let { event }: Props = $props();
+
+	let isPerformanceOpen = $state(false);
 	const methods: Array<keyof typeof $filters> = ['and', 'or', 'not'];
 
 	const hasMatchingFilter = (performance: any) =>
@@ -100,7 +104,7 @@
 	{/await}
 {/each}
 {#if $filters.or.length > 0 || $filters.and.length > 0 || $filters.not.length > 0}
-	<button on:click={() => handleClickAllPerformances()}>
+	<button onclick={() => handleClickAllPerformances()}>
 		{#if isPerformanceOpen}
 			<ChevronUp class="h-8 w-full items-center" />
 		{:else}
