@@ -19,6 +19,9 @@ The _Musikverein Database_ offers a powerful search feature to help you explore 
    - **AND**: Display events that match all selected criteria.<br/> For example, if two composers are added to the filter with "AND," only events involving both composers will appear.
    - **OR**: Display events that match at least one selected criterion.<br/> For example, if two composers are added to the filter with "OR," events involving either or both composers will appear.
    - **NOT**: Exclude events matching the selected criteria.
+    <br/>
+
+    ![filter example](/database/search_guide/filter-example.gif)
 
 ## Line Chart
 
