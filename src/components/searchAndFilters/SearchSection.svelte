@@ -12,7 +12,6 @@
 
 	let isSearchSectionInEventsList = $derived(getIsSearchSectionInEventsList());
 	let isSearchSectionInEventsListOpen = $derived(getIsSearchSectionInEventsListOpen());
-	$inspect({ isSearchSectionInEventsList, isSearchSectionInEventsListOpen }, 'SearchSection');
 </script>
 
 <div
