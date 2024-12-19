@@ -1,23 +1,30 @@
 <script lang="ts">
 	import LL from '$lib/i18n/i18n-svelte';
-	import { autocomplete } from '$stores/storeSearchSection';
+	import {
+		autocomplete,
+		setInputValue,
+		deleteSuggestions
+	} from '$states/stateSearchSection.svelte';
 	import MethodSearch from '$components/searchAndFilters/MethodSearch.svelte';
 	import SuggestionSearch from '$components/searchAndFilters/SuggestionSearch.svelte';
 	import { entitiesForSearchBox, updateEntitiesForSearchBox } from '$stores/storeFilters';
-	import { suggestions, inputValue } from '$stores/storeSearchSection';
 
 	const entities: Entity[] = ['person', 'work', 'corporation', 'location'];
 
 	let timeoutId: number | undefined = $state(undefined);
+	let _inputValue: string = $state('');
+
+	$effect(() => {
+		setInputValue({ value: _inputValue });
+	});
 
 	const handleInput = () => {
 		clearTimeout(timeoutId);
 		timeoutId = setTimeout(() => {
-			const value = $inputValue;
-			if (value.length > 0) {
-				autocomplete(value);
+			if (_inputValue.length > 0) {
+				autocomplete();
 			} else {
-				$suggestions = [];
+				deleteSuggestions;
 			}
 		}, 300);
 	};
@@ -32,7 +39,7 @@
 			class="focus-none h-10 w-full cursor-text bg-transparent px-3 placeholder-text/40 outline-none"
 			type="text"
 			id="searchInput"
-			bind:value={$inputValue}
+			bind:value={_inputValue}
 			oninput={handleInput}
 			placeholder={$LL.filters.search()}
 			autocomplete="off"
@@ -44,10 +51,10 @@
 		<button
 			onclick={() => {
 				updateEntitiesForSearchBox(entity);
-				if ($inputValue.length > 0) {
-					autocomplete($inputValue);
+				if (_inputValue.length > 0) {
+					autocomplete();
 				} else {
-					$suggestions = [];
+					deleteSuggestions;
 				}
 			}}
 			class={'rounded-full border-2 px-4 pb-[0.15rem] text-sm transition-shadow hover:scale-hover hover:drop-shadow-lg ' +

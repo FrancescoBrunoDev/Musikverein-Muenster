@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import { addFilterElement, entitiesForSearchBox } from '$stores/storeFilters';
-	import { suggestions, inputValue } from '$stores/storeSearchSection';
+	import {
+		getSuggestions,
+		setInputValue,
+		deleteSuggestions
+	} from '$states/stateSearchSection.svelte';
 	import { urlBaseAPIMusiconn } from '$states/stateGeneral.svelte';
 	import { projectID } from '$stores/storeEvents';
 	import { Loader2 } from 'lucide-svelte';
-	import { isSearchSectionInEventsList } from '$stores/storeSearchSection';
+	import { getIsSearchSectionInEventsList } from '$states/stateSearchSection.svelte';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
@@ -13,10 +17,12 @@
 	let isOpen: boolean = $state(false);
 	let searchSection: HTMLDivElement | null = $state(null);
 	let searchInput: HTMLInputElement | null = $state(null);
+	let suggestions: AutocompleteResult[] = $derived(getSuggestions());
+	let isSearchSectionInEventsList = $derived(getIsSearchSectionInEventsList());
 
 	onMount(() => {
 		if (browser) {
-			searchSection = $isSearchSectionInEventsList
+			searchSection = isSearchSectionInEventsList
 				? (document.getElementById('searchSectionBottom') as HTMLDivElement)
 				: (document.getElementById('mainSearchSection') as HTMLDivElement);
 
@@ -26,8 +32,8 @@
 
 	const handleFilterFromSuggestion = (suggestion: any) => {
 		addFilterElement(suggestion);
-		$inputValue = '';
-		$suggestions = [];
+		setInputValue({ value: '' });
+		deleteSuggestions();
 		isOpen = false;
 	};
 
@@ -71,8 +77,8 @@
 		transition:slide
 		class="z-10 mt-2 flex h-52 w-full flex-col gap-y-2 overflow-auto overscroll-auto rounded-xl border-2 bg-background p-2"
 	>
-		{#if $suggestions && $suggestions.length > 0}
-			{#each $suggestions as suggestion}
+		{#if suggestions && suggestions.length > 0}
+			{#each suggestions as suggestion}
 				<div class="flex h-fit items-center gap-1">
 					{#if $entitiesForSearchBox.length > 1}
 						<div class="flex h-5 items-center rounded-full border-2 border-text px-2 text-xs">

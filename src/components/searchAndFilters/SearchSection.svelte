@@ -2,36 +2,46 @@
 	import ActiveFilters from '$components/searchAndFilters/ActiveFilters.svelte';
 	import SearchBox from '$components/searchAndFilters/SearchBox.svelte';
 	import {
-		isSearchSectionInEventsList,
-		isSearchSectionInEventsListOpen
-	} from '$stores/storeSearchSection';
+		getIsSearchSectionInEventsListOpen,
+		getIsSearchSectionInEventsList
+	} from '$states/stateSearchSection.svelte';
 	import FiltersShareButton from '$components/searchAndFilters/FiltersShareButton.svelte';
 	import { slide, fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+	import { cn } from '$lib/utils';
+
+	let isSearchSectionInEventsList = $derived(getIsSearchSectionInEventsList());
+	let isSearchSectionInEventsListOpen = $derived(getIsSearchSectionInEventsListOpen());
+	$inspect({ isSearchSectionInEventsList, isSearchSectionInEventsListOpen }, 'SearchSection');
 </script>
 
 <div
-	class="flex w-full flex-col {$isSearchSectionInEventsListOpen || !$isSearchSectionInEventsList
+	class="flex w-full flex-col {isSearchSectionInEventsListOpen || !isSearchSectionInEventsList
 		? 'gap-y-4'
 		: ''} "
 >
-	{#if $isSearchSectionInEventsList}
-		<div class={!$isSearchSectionInEventsListOpen ? 'pb-2' : ''}>
-			<ActiveFilters />
-		</div>
-	{/if}
-	{#if $isSearchSectionInEventsListOpen}
-		<div transition:slide={{ duration: 200, easing: cubicOut }}>
-			<SearchBox />
-		</div>
-	{:else if !$isSearchSectionInEventsList}
-		<div in:fly={{ y: -10, opacity: 0, duration: 400, easing: cubicOut, delay: 600 }}>
-			<SearchBox />
-		</div>
-	{/if}
-	{#if !$isSearchSectionInEventsList}
+	<div
+		class={cn('', {
+			'pb-2': !isSearchSectionInEventsListOpen,
+			'order-2': !isSearchSectionInEventsList
+		})}
+	>
 		<ActiveFilters />
-		<div class="place-self-end">
+	</div>
+	{#if isSearchSectionInEventsListOpen}
+		<div class="order-1" transition:slide={{ duration: 200, easing: cubicOut }}>
+			<SearchBox />
+		</div>
+	{:else if !isSearchSectionInEventsList}
+		<div
+			class="order-1"
+			in:fly={{ y: -10, opacity: 0, duration: 400, easing: cubicOut, delay: 600 }}
+		>
+			<SearchBox />
+		</div>
+	{/if}
+	{#if !isSearchSectionInEventsList}
+		<div class="place-self-end order-3">
 			<FiltersShareButton />
 		</div>
 	{/if}

@@ -3,6 +3,7 @@
 	import { slide, fade } from 'svelte/transition';
 	import ActiveFilter from '$components/searchAndFilters/ActiveFilter.svelte';
 	import { filters, moveFilterElement, isAFilterDragged } from '$stores/storeFilters';
+	import { cn } from '$lib/utils';
 
 	type GroupedFilters = { [key: string]: Filter[] };
 	let { method, color = '' }: { method: Method; color: string } = $props();
@@ -63,7 +64,7 @@
 						: $LL.filters.entities[entity as Entity]()}
 				</h2>
 
-				<div class="flex flex-wrap gap-2">
+				<div class={cn('flex flex-wrap gap-2 transition-all')}>
 					{#each groupedFilters[entity] as filter}
 						<ActiveFilter {filter} {method} />
 					{/each}

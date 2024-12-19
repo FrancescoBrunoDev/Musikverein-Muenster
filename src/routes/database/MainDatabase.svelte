@@ -1,8 +1,8 @@
 <script lang="ts">
 	import LineGraphD3 from '$components/graphs/line/LineGraphD3.svelte';
 	import SearchSection from '$components/searchAndFilters/SearchSection.svelte';
-	import { isSearchSectionInEventsList } from '$stores/storeSearchSection';
-	import { slide } from 'svelte/transition';
+	import { getIsSearchSectionInEventsList } from '$states/stateSearchSection.svelte';
+	import { fly } from 'svelte/transition';
 	import { selectedGraphType, fetchOverpassData, dataForLineGraph } from '$stores/storeGraph';
 	import GraphSelector from '$components/graphs/GraphSelector.svelte';
 	import Map from '$components/graphs/map/Maps.svelte';
@@ -16,6 +16,7 @@
 	let scaleSearchSection = $derived(isOver ? 0.99 : 1);
 	let scaleGraphSection = $derived(isOver ? 1.05 : 1);
 	let bottomDistance = $derived(isOver ? 1 : 0);
+	let isSearchSectionInEventsList = $derived(getIsSearchSectionInEventsList());
 
 	let allLocations: { name: string; id: number; geometries: any; amount: number }[] = $state([]);
 
@@ -65,7 +66,6 @@
 
 <div class="flex h-[95dvh] flex-col overflow-hidden pb-12">
 	<div
-		transition:slide
 		class="flex flex-grow content-end items-center justify-center transition-all duration-500"
 		style={`opacity: ${opacitySearchSection};
                 filter: blur(${blurSearchSection}px);
@@ -73,7 +73,7 @@
 	>
 		<div
 			id="mainSearchSection"
-			class="md:w-[500px] lg:w-[600px] {$isSearchSectionInEventsList ? 'invisible' : 'visible'}"
+			class="md:w-[500px] lg:w-[600px] {isSearchSectionInEventsList ? 'invisible' : 'visible'}"
 		>
 			<SearchSection />
 		</div>

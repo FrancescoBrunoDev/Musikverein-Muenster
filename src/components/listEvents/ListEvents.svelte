@@ -4,21 +4,25 @@
 	import Event from '$components/listEvents/Event.svelte';
 	import SearchSection from '$components/searchAndFilters/SearchSection.svelte';
 	import {
-		isSearchSectionInEventsList,
-		isSearchSectionInEventsListOpen
-	} from '$stores/storeSearchSection';
-	import { slide } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
+		setIsSearchSectionInEventsList,
+		getIsSearchSectionInEventsList,
+		getIsSearchSectionInEventsListOpen,
+		setIsSearchSectionInEventsListOpen
+	} from '$states/stateSearchSection.svelte';
+	import { fly } from 'svelte/transition';
+	import { cubicInOut, cubicOut } from 'svelte/easing';
 	import { ChevronUp } from 'lucide-svelte';
 	import EventWithModal from '$components/listEvents/EventWithModal.svelte';
 	import EventModal from '$components/listEvents/EventModal.svelte';
 
-	function toggleSearchSection() {
-		$isSearchSectionInEventsListOpen = !$isSearchSectionInEventsListOpen;
-	}
-
 	let selectedEventModal: EventItem | null = $state(null);
 	let isModalOpen = $state(false);
+	let isSearchSectionInEventsList = $derived(getIsSearchSectionInEventsList());
+	let isSearchSectionInEventsListOpen = $derived(getIsSearchSectionInEventsListOpen());
+
+	function toggleSearchSection() {
+		setIsSearchSectionInEventsListOpen({ value: !isSearchSectionInEventsListOpen });
+	}
 
 	onMount(() => {
 		const searchSection = document.getElementById('mainSearchSection');
@@ -27,12 +31,12 @@
 			const observer = new IntersectionObserver(
 				([entry]) => {
 					if (entry.isIntersecting) {
-						isSearchSectionInEventsList.set(false);
+						setIsSearchSectionInEventsList({ value: false });
 					} else {
 						if (Object.keys($filteredEvents).length > 4) {
-							isSearchSectionInEventsList.set(true);
+							setIsSearchSectionInEventsList({ value: true });
 						} else {
-							isSearchSectionInEventsList.set(false);
+							setIsSearchSectionInEventsList({ value: false });
 						}
 					}
 				},
@@ -78,15 +82,15 @@
 	<EventModal event={selectedEventModal} bind:isEventOpen={isModalOpen} />
 {/if}
 
-{#if Object.keys($filteredEvents).length > 0 && $isSearchSectionInEventsList}
+{#if Object.keys($filteredEvents).length > 0 && isSearchSectionInEventsList}
 	<div class="fixed inset-x-0 bottom-0 flex h-fit justify-center sm:sticky md:bottom-3">
 		<div
-			transition:slide={{ duration: 500, easing: cubicOut }}
+			transition:fly={{ y: 30, duration: 200, easing: cubicInOut }}
 			class={'flex h-fit w-full flex-col justify-center rounded-b-none rounded-t-xl border-x-2 border-t-2 bg-background px-8 pb-4 pt-1 shadow-2xl md:w-fit md:rounded-xl md:border-2 md:pb-2'}
 		>
 			<button onclick={toggleSearchSection} class="flex h-fit w-full items-center justify-center">
 				<ChevronUp
-					class={$isSearchSectionInEventsListOpen ? 'rotate-180' : ''}
+					class={isSearchSectionInEventsListOpen ? 'rotate-180' : ''}
 					size={30}
 					stroke-width={40}
 				/>

@@ -12,8 +12,8 @@
 	import ButtonMoveFilterTo from './ButtonMoveFilterTo.svelte';
 	import LL from '$lib/i18n/i18n-svelte';
 
-	export let filter: Filter;
-	export let method: Method;
+	let { filter, method }: { filter: Filter; method: Method } = $props();
+
 	const possibleMethods: Method[] = ['or', 'and', 'not'];
 	const {
 		elements: { trigger, content },
@@ -28,7 +28,9 @@
 		forceVisible: true
 	});
 
-	let isDragging = false;
+	let isDragging = $state(false);
+	let isMouseOver = $state(false);
+
 	function handleDragStart(event: DragEvent) {
 		isAFilterDragged.set(true);
 		// change the style of the pointer to grab
@@ -40,15 +42,13 @@
 	function handleDragEnd(event: DragEvent) {
 		isDragging = false;
 	}
-
-	let isMouseOver = false;
 </script>
 
 <div
 	use:melt={$trigger}
 	draggable={true}
-	on:dragstart={handleDragStart}
-	on:dragend={handleDragEnd}
+	ondragstart={handleDragStart}
+	ondragend={handleDragEnd}
 	role="button"
 	tabindex="0"
 	class="flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs text-background hover:z-20 hover:drop-shadow-lg {isDragging
@@ -61,12 +61,12 @@
 	<button
 		type="button"
 		class="max-w-xs truncate transition-all hover:line-through"
-		on:click={() => removeFilterElement(filter, method)}
-		on:mouseover={() => (isMouseOver = true)}
-		on:mouseleave={() => (isMouseOver = false)}
-		on:blur={() => (isMouseOver = false)}
-		on:focus={() => (isMouseOver = true)}
-		on:dragover={() => (isMouseOver = true)}
+		onclick={() => removeFilterElement(filter, method)}
+		onmouseover={() => (isMouseOver = true)}
+		onmouseleave={() => (isMouseOver = false)}
+		onblur={() => (isMouseOver = false)}
+		onfocus={() => (isMouseOver = true)}
+		ondragover={() => (isMouseOver = true)}
 	>
 		<span>
 			{#if typeof filter.name === 'object'}
@@ -97,7 +97,7 @@
 				>
 					<li>
 						<button
-							on:click={() => changeFilterPersonOrComposer(filter, method)}
+							onclick={() => changeFilterPersonOrComposer(filter, method)}
 							class="w-full rounded-full bg-background px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-hover hover:shadow-lg"
 							>{$LL.filters.filter.asA()}
 							{#if filter.entity === 'person'}{$LL.filters.entities.composer()}{:else if filter.entity === 'composer'}{$LL.filters.entities.performer()}{/if}</button
@@ -105,7 +105,7 @@
 					</li>
 					<li>
 						<button
-							on:click={() => makeFilterPersonBothPersonAndComposer(filter, method)}
+							onclick={() => makeFilterPersonBothPersonAndComposer(filter, method)}
 							class="w-full rounded-full bg-background px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-hover hover:shadow-lg"
 							>{$LL.filters.filter.makeItBothComposerAndPerformer()}</button
 						>
