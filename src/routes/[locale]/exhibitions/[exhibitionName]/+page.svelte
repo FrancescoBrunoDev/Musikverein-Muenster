@@ -12,7 +12,7 @@
 
 	$effect(() => {
 		if (data.locale !== locale.current) {
-			goto(`/${locale.current}/exibitions/${data.exibitionName}`);
+			goto(`/${locale.current}/exhibitions/${data.exhibitionName}`);
 		}
 	});
 </script>
@@ -40,7 +40,7 @@
 				{/each}
 			</div>
 		</div>
-		<!-- exibition -->
+		<!-- exhibition -->
 	</div>
 	<div class="content container mx-auto mb-10 max-w-3xl">
 		<Markdown />

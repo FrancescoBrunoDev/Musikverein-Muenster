@@ -1,9 +1,9 @@
 import { error, json } from '@sveltejs/kit';
 
-async function getExibitions({ locale }: { locale: Locales }) {
-	let exibitions: ExibitionMarkdown[] = [];
+async function getExhibitions({ locale }: { locale: Locales }) {
+	let exhibitions: exhibitionMarkdown[] = [];
 
-	const paths = import.meta.glob('/src/routes/[locale]/exibitions/markdown/**/*.md', {
+	const paths = import.meta.glob('/src/routes/[locale]/exhibitions/markdown/**/*.md', {
 		eager: true
 	});
 
@@ -14,18 +14,18 @@ async function getExibitions({ locale }: { locale: Locales }) {
 			const slug = path.split('/').at(-1)?.replace('.md', '');
 
 			if (file && typeof file === 'object' && 'metadata' in file && slug) {
-				const metadata = file.metadata as Omit<ExibitionMarkdown, 'slug'>;
-				const exibition = { ...metadata, slug } satisfies ExibitionMarkdown;
-				exibition.published && exibitions.push(exibition);
+				const metadata = file.metadata as Omit<exhibitionMarkdown, 'slug'>;
+				const exhibition = { ...metadata, slug } satisfies exhibitionMarkdown;
+				exhibition.published && exhibitions.push(exhibition);
 			}
 		}
 	}
 
-	exibitions = exibitions.sort(
+	exhibitions = exhibitions.sort(
 		(first, second) => new Date(second.date).getTime() - new Date(first.date).getTime()
 	);
 
-	return exibitions;
+	return exhibitions;
 }
 
 interface RequestParams {
@@ -43,8 +43,8 @@ export async function GET(request: Request): Promise<Response> {
 			throw error(400, 'Locale parameter is required');
 		}
 
-		const exibitions = await getExibitions(params);
-		return json(exibitions);
+		const exhibitions = await getExhibitions(params);
+		return json(exhibitions);
 	} catch (err) {
 		throw error(500, 'Error fetching exhibitions');
 	}

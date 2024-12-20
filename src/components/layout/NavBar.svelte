@@ -10,10 +10,10 @@
 
 	let isHomePage = $derived($page.url.pathname === '/');
 
-	async function getExibitions() {
-		const response = await fetch(`/api/exibitions/getMarkdown/${locale.current}`);
-		const exibitions: ExibitionMarkdown[] = await response.json();
-		return exibitions;
+	async function getExhibitions() {
+		const response = await fetch(`/api/exhibitions/getMarkdown/${locale.current}`);
+		const exhibitions: exhibitionMarkdown[] = await response.json();
+		return exhibitions;
 	}
 
 	const { value, handleLocaleChange } = $props<{ value: Locales; handleLocaleChange: any }>();
@@ -71,16 +71,16 @@
 							<a
 								class="group transition-transform duration-75 hover:-translate-y-1"
 								onclick={() => toggleMenu()}
-								href="{locale.current}/exibitions/">{$LL.navbar.exibitions()}</a
+								href="{locale.current}/exhibitions/">{$LL.navbar.exhibitions()}</a
 							>
 							<ul class="pl-5">
-								{#await getExibitions()}
-									<div></div>{:then exibitions}
-									{#each exibitions as exibition}
+								{#await getExhibitions()}
+									<div></div>{:then exhibitions}
+									{#each exhibitions as exhibition}
 										<li class="text-2xl transition-transform duration-75 hover:-translate-y-1">
 											<a
 												onclick={() => toggleMenu()}
-												href="/{locale.current}/exibitions/{exibition.slug}">{exibition.title}</a
+												href="/{locale.current}/exhibitions/{exhibition.slug}">{exhibition.title}</a
 											>
 										</li>
 									{/each}
@@ -89,7 +89,11 @@
 						</div>
 					</div>
 					<div class="flex flex-col gap-y-2">
-						<Button label={value === 'en' ? 'de' : 'en'} action={handleLocaleChange} />
+						<Button
+							type="button"
+							label={value === 'en' ? 'de' : 'en'}
+							action={handleLocaleChange}
+						/>
 						<ThemeSwitch />
 					</div>
 				</div>

@@ -132,7 +132,7 @@ type Locales = 'de' | 'en';
 
 type ThemeKind = 'base' | 'dark';
 
-type ExibitionMarkdown = {
+type exhibitionMarkdown = {
 	title: string;
 	slug: string;
 	description: string;

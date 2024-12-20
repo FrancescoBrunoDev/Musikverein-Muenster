@@ -1,11 +1,11 @@
 ---
-title: First exibition
-description: First exibition.
+title: First exhibition
+description: First exhibition.
 categories:
   - sveltekit
   - svelte
 published: true
-img: /exibitions/first_exibition/secondgallery/File13749.jpg
+img: /exhibitions/first_exhibition/secondgallery/File13749.jpg
 ---
 
 <script>
@@ -14,33 +14,33 @@ img: /exibitions/first_exibition/secondgallery/File13749.jpg
 
   const gallery = {
     title: 'titolo',
-    cover: '/exibitions/first_exibition/firstgallery/00001.png',
+    cover: '/exhibitions/first_exhibition/firstgallery/00001.png',
     images: [{
-      src: '/exibitions/first_exibition/firstgallery/00002.png',
+      src: '/exhibitions/first_exhibition/firstgallery/00002.png',
       caption: "halloWorld"
     },
     {
-      src: '/exibitions/first_exibition/firstgallery/00003.png',
+      src: '/exhibitions/first_exhibition/firstgallery/00003.png',
       caption: "halloWorld"
     },
     {
-      src: '/exibitions/first_exibition/secondgallery/File13749.jpg',
+      src: '/exhibitions/first_exhibition/secondgallery/File13749.jpg',
       caption: "halloWorld"
     }]
   }
     const gallery2 = {
     title: 'titolo',
-    cover: '/exibitions/first_exibition/firstgallery/00005.png',
+    cover: '/exhibitions/first_exhibition/firstgallery/00005.png',
     images: [{
-      src: '/exibitions/first_exibition/firstgallery/00006.png',
+      src: '/exhibitions/first_exhibition/firstgallery/00006.png',
       caption: "halloWorld"
     },
     {
-      src: '/exibitions/first_exibition/firstgallery/00007.png',
+      src: '/exhibitions/first_exhibition/firstgallery/00007.png',
       caption: "halloWorld"
     },
     {
-      src: '/exibitions/first_exibition/secondgallery/File13749.jpg',
+      src: '/exhibitions/first_exhibition/secondgallery/File13749.jpg',
       caption: "halloWorld"
     }]
   }
@@ -81,10 +81,10 @@ Here's how to create a link: [Google](https://www.google.com)
 ## Images
 
 How to insert an image:
-![Example image](/exibitions/first_exibition/secondgallery/File13749.jpg)
+![Example image](/exhibitions/first_exhibition/secondgallery/File13749.jpg)
 
 Or even better:
-<Gallery gallery={{ title: 'Grimm', cover: '/exibitions/first_exibition/secondgallery/File13749.jpg' }} />
+<Gallery gallery={{ title: 'Grimm', cover: '/exhibitions/first_exhibition/secondgallery/File13749.jpg' }} />
 
 ### More galleries
 

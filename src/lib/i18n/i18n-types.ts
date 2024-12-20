@@ -130,15 +130,9 @@ type RootTranslation = {
 		 */
 		database: string
 		/**
-		 * E​x​i​b​i​t​i​o​n​s
+		 * E​x​h​i​b​i​t​i​o​n
 		 */
-		exibitions: string
-		exibitionsNames: {
-			/**
-			 * F​i​r​s​t​ ​E​x​i​b​i​t​i​o​n
-			 */
-			first: string
-		}
+		exhibitions: string
 	}
 	commons: {
 		/**
@@ -269,15 +263,9 @@ export type TranslationFunctions = {
 		 */
 		database: () => LocalizedString
 		/**
-		 * Exibitions
+		 * Exhibition
 		 */
-		exibitions: () => LocalizedString
-		exibitionsNames: {
-			/**
-			 * First Exibition
-			 */
-			first: () => LocalizedString
-		}
+		exhibitions: () => LocalizedString
 	}
 	commons: {
 		/**

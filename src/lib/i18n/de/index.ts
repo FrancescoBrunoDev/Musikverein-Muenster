@@ -42,10 +42,7 @@ const de = {
 		menu: 'Menü',
 		home: 'Home',
 		database: 'Datenbank',
-		exibitions: 'Ausstellungen',
-		exibitionsNames: {
-			first: 'Chronik'
-		}
+		exhibitions: 'Ausstellungen',
 	},
 	commons: {
 		year: 'Jahr',

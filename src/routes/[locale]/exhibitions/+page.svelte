@@ -13,7 +13,7 @@
 
 	$effect(() => {
 		if (data.locale !== locale.current) {
-			goto(`/${locale.current}/exibitions`);
+			goto(`/${locale.current}/exhibitions`);
 		}
 	});
 </script>
@@ -24,13 +24,13 @@
 
 <section class="container flex h-screen items-center">
 	<ul class="flex flex-col gap-4">
-		{#each data.exibitions as exibition}
+		{#each data.exhibitions as exhibition}
 			<li class="transition-transform duration-75 hover:-translate-y-1">
 				<a
-					href="/{locale.current}/exibitions/{exibition.slug}"
-					class="text-4xl font-bold sm:text-6xl">{exibition.title}</a
+					href="/{locale.current}/exhibitions/{exhibition.slug}"
+					class="text-4xl font-bold sm:text-6xl">{exhibition.title}</a
 				>
-				<p class="description">{exibition.description}</p>
+				<p class="description">{exhibition.description}</p>
 			</li>
 		{/each}
 	</ul>

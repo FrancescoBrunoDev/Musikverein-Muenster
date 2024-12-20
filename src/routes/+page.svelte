@@ -5,10 +5,10 @@
 	import { locale } from '$states/stateGeneral.svelte';
 	import { slide } from 'svelte/transition';
 
-	async function getExibitions() {
-		const response = await fetch(`/api/exibitions/getMarkdown/${locale.current}`);
-		const exibitions = await response.json();
-		return exibitions;
+	async function getExhibitions() {
+		const response = await fetch(`/api/exhibitions/getMarkdown/${locale.current}`);
+		const exhibitions = await response.json();
+		return exhibitions;
 	}
 </script>
 
@@ -77,13 +77,13 @@
 
 					<a
 						class="group transition-transform duration-75 hover:-translate-y-1"
-						href="/{locale.current}/exibitions/">{$LL.navbar.exibitions()}</a
+						href="/{locale.current}/exhibitions/">{$LL.navbar.exhibitions()}</a
 					>
 					<ul transition:slide class="">
-						{#await getExibitions() then exibitions}
-							{#each exibitions as exibition}
+						{#await getExhibitions() then exhibitions}
+							{#each exhibitions as exhibition}
 								<li class="text-2xl transition-transform duration-75 hover:-translate-y-1">
-									<a href="/{locale.current}/exibitions/{exibition.slug}">{exibition.title}</a>
+									<a href="/{locale.current}/exhibitions/{exhibition.slug}">{exhibition.title}</a>
 								</li>
 							{/each}
 						{/await}
