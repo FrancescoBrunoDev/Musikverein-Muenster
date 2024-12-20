@@ -10,6 +10,7 @@
 		size?: 'sm' | 'md' | 'lg';
 		type: 'button' | 'submit' | 'reset';
 		formaction?: string;
+		className?: string;
 	}
 
 	let {
@@ -20,7 +21,8 @@
 		light = false,
 		size = 'md',
 		type = 'button',
-		formaction = undefined
+		formaction = undefined,
+		className = undefined
 	}: Props = $props();
 
 	const Icon = $derived(icon);
@@ -37,7 +39,8 @@
 		{ 'h-8 w-8': size === 'sm' },
 		{ 'h-10 w-10': size === 'md' },
 		{ 'h-12 w-12': size === 'lg' },
-		{ 'w-fit px-3': label }
+		{ 'w-fit px-3': label },
+		{ [String(className)]: className }
 	)}
 	aria-label={formattedLabel}
 >

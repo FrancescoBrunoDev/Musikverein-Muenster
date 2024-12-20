@@ -3,7 +3,7 @@ import { error, json } from '@sveltejs/kit';
 async function getExhibitions({ locale }: { locale: Locales }) {
 	let exhibitions: exhibitionMarkdown[] = [];
 
-	const paths = import.meta.glob('/src/routes/[locale]/exhibitions/markdown/**/*.md', {
+	const paths = import.meta.glob('/src/routes/[locale]/[type]/markdown/**/*.md', {
 		eager: true
 	});
 

@@ -12,7 +12,7 @@
 
 	$effect(() => {
 		if (data.locale !== locale.current) {
-			goto(`/${locale.current}/exhibitions/${data.exhibitionName}`);
+			goto(`/${locale.current}/${data.type}/${data.exhibitionId}`);
 		}
 	});
 </script>
@@ -25,22 +25,22 @@
 </svelte:head>
 
 <section>
-	<!-- Title -->
+	{#if data.type === 'preview'}
+		<div class="fixed top-20 right-10 z-50">
+			<div
+				class=" bg-background text-4xl font-bold rounded-lg px-2 mx-auto dark:border-2 drop-shadow-xl"
+			>
+				Preview
+			</div>
+		</div>
+	{/if}
 	<div
 		class="flex h-screen w-screen items-center bg-cover bg-center"
 		style="background-image: url('{data.meta.img}')"
 	>
 		<div class="container">
 			<h1 class="font-serif text-4xl text-background lg:text-8xl">{data.meta.title}</h1>
-
-			<!-- Tags -->
-			<div class="flex gap-2">
-				{#each data.meta.categories as category}
-					<span class="surface-4">&num;{category}</span>
-				{/each}
-			</div>
 		</div>
-		<!-- exhibition -->
 	</div>
 	<div class="content container mx-auto mb-10 max-w-3xl">
 		<Markdown />

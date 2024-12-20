@@ -8,7 +8,7 @@ import sequence from 'svelte-sequential-preprocessor';
 const mdsvexOptions = {
 	extensions: ['.md'],
 	layout: {
-		_: 'src/routes/[locale]/exhibitions/mdsvex.svelte'
+		_: 'src/routes/[locale]/[type]/mdsvex.svelte'
 	}
 };
 
@@ -28,7 +28,8 @@ const config = {
 			$lib: 'src/lib',
 			$static: 'src/static',
 			$routes: 'src/routes',
-			$states: 'src/states'
+			$states: 'src/states',
+			$mdcache: 'src/.mdcache',
 		}
 	},
 	preprocess: sequence([vitePreprocess(), preprocessMeltUI(), mdsvex(mdsvexOptions)])

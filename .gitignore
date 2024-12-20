@@ -3,3 +3,4 @@ node_modules
 .vscode
 .env
 build
+src/routes/[locale]/[type]/markdown/.cache

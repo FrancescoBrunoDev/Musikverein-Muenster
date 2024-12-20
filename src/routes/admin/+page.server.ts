@@ -7,7 +7,9 @@ export const load = (async ({ locals }) => {
     }
     // return the infos about the user
     const user = await locals.pb.collection('users').getOne(locals.pb.authStore.model.id);
-    const exhibitions = await locals.pb.collection('exhibitions').getFullList();
+    const exhibitions = await locals.pb.collection('exhibitions').getFullList({
+        expand: 'files',
+    });
     return { user, exhibitions };
 }) satisfies PageServerLoad;
 
