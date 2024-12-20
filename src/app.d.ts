@@ -1,3 +1,5 @@
+import PocketBase from 'pocketbase';
+
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
@@ -5,10 +7,11 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			locale: string;
+			pb: PocketBase
 		}
 		// interface PageData {}
 		// interface Platform {}
 	}
 }
 
-export {};
+export { };

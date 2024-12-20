@@ -8,6 +8,8 @@
 		children?: () => any;
 		light?: boolean;
 		size?: 'sm' | 'md' | 'lg';
+		type: 'button' | 'submit' | 'reset';
+		formaction?: string;
 	}
 
 	let {
@@ -16,7 +18,9 @@
 		action = undefined,
 		children = undefined,
 		light = false,
-		size = 'md'
+		size = 'md',
+		type = 'button',
+		formaction = undefined
 	}: Props = $props();
 
 	const Icon = $derived(icon);
@@ -24,8 +28,9 @@
 </script>
 
 <button
+	{formaction}
+	{type}
 	onclick={action}
-	type="button"
 	class={cn(
 		'flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary p-2 text-background transition-all hover:scale-hover hover:drop-shadow-xl',
 		{ 'border-2 bg-background text-text': light },
@@ -43,7 +48,9 @@
 			})}>{label}</span
 		>
 	{/if}
-	<Icon class={cn('stroke-2')} />
+	{#if Icon}
+		<Icon class={cn('stroke-2')} />
+	{/if}
 	{@render children?.()}
 
 	<span class="sr-only">Open Popover</span>

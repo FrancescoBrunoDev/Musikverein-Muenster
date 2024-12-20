@@ -49,6 +49,7 @@ const en = {
 	},
 	commons: {
 		year: 'Year',
+		hallo: "Hi"
 	}
 } satisfies BaseTranslation;
 

@@ -6,8 +6,22 @@ import {
 	initAcceptLanguageHeaderDetector,
 	initRequestCookiesDetector
 } from 'typesafe-i18n/detectors';
+import { POKETBASE } from '$env/static/private';
+
+import PocketBase from 'pocketbase';
 
 export const handle: Handle = async ({ event, resolve }) => {
+	// PocketBase initialization
+	event.locals.pb = new PocketBase(POKETBASE);
+	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
+
+	try {
+		event.locals.pb.authStore.isValid && await event.locals.pb.collection('users').authRefresh();
+	} catch (_) {
+		event.locals.pb.authStore.clear();
+	}
+
+	// Locale handling
 	let deafultLocale = 'en';
 
 	const acceptLanguageHeaderDetector = initAcceptLanguageHeaderDetector(event.request);
@@ -35,5 +49,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	setLocale(locale);
 	// [OPTIONAL] set locale within locals property
 	event.locals.locale = deafultLocale;
-	return resolve(event);
+
+	// Handle response
+	const response = await resolve(event);
+	response.headers.append('set-cookie', event.locals.pb.authStore.exportToCookie());
+	return response;
 };

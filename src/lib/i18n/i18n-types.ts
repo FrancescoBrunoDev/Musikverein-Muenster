@@ -145,6 +145,10 @@ type RootTranslation = {
 		 * Y​e​a​r
 		 */
 		year: string
+		/**
+		 * H​i
+		 */
+		hallo: string
 	}
 }
 
@@ -280,6 +284,10 @@ export type TranslationFunctions = {
 		 * Year
 		 */
 		year: () => LocalizedString
+		/**
+		 * Hi
+		 */
+		hallo: () => LocalizedString
 	}
 }
 
