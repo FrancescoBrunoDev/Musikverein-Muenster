@@ -39,7 +39,8 @@ export const load: PageLoad = async ({ params, data }) => {
 				meta: md.metadata,
 				locale: params.locale,
 				exhibitionId: params.exhibitionId,
-				type: params.type
+				type: params.type,
+				exhibition: data.exhibition
 			};
 		}
 	} catch (e) {

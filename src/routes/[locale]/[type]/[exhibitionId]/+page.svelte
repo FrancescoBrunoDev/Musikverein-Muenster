@@ -2,6 +2,8 @@
 	import { locale } from '$states/stateGeneral.svelte.js';
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
+	import Button from '$components/ui/Button.svelte';
+	import { ChevronLeft } from 'lucide-svelte';
 
 	interface Props {
 		data: PageData;
@@ -26,10 +28,16 @@
 
 <section>
 	{#if data.type === 'preview'}
-		<div class="fixed top-20 right-10 z-50">
-			<div
-				class=" bg-background text-4xl font-bold rounded-lg px-2 mx-auto dark:border-2 drop-shadow-xl"
-			>
+		<div class="fixed top-16 w-full container z-50 flex justify-between gap-4">
+			<div class="flex gap-4">
+				<Button type={'button'} className="px-4 w-fit" icon={ChevronLeft}
+					><a href="/admin">back</a></Button
+				>
+				<Button type={'button'} className="px-4 w-fit"
+					><a href="/admin/edit/{data.exhibition?.id}">Edit</a></Button
+				>
+			</div>
+			<div class=" bg-background text-4xl font-bold rounded-lg px-2 dark:border-2 drop-shadow-xl">
 				Preview
 			</div>
 		</div>
