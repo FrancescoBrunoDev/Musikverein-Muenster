@@ -10,12 +10,12 @@
 	let { data, form }: Props = $props();
 </script>
 
-<div class="h-full flex flex-col justify-center sm:mx-auto sm:w-full sm:max-w-sm">
+<div class="h-full flex flex-col justify-center w-full container max-w-sm">
 	<form action="?/login" method="post" class="flex flex-col gap-4">
 		<div class="flex flex-col gap-2">
-			<span>E-Mail</span>
+			<span class="font-bold">E-Mail</span>
 			<input
-				class="border-2 rounded-xl p-2"
+				class="border-2 rounded-xl p-2 bg-background"
 				name="email"
 				title="E-Mail"
 				type="email"
@@ -23,9 +23,9 @@
 			/>
 		</div>
 		<div class="flex flex-col gap-2">
-			<span>Password</span>
+			<span class="font-bold">Password</span>
 			<input
-				class="border-2 rounded-xl p-2"
+				class="border-2 rounded-xl p-2 bg-background"
 				name="password"
 				title="Password"
 				type="password"
