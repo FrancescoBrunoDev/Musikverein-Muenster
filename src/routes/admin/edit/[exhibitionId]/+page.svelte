@@ -3,6 +3,9 @@
 	import DOMPurify from 'isomorphic-dompurify';
 	import { onMount } from 'svelte';
 	import { Save, CloudAlert } from 'lucide-svelte';
+	import Button from '$components/ui/Button.svelte';
+	import { ChevronLeft } from 'lucide-svelte';
+	import { locale } from '$states/stateGeneral.svelte';
 
 	import { Carta, MarkdownEditor } from 'carta-md';
 	// Component default theme
@@ -49,11 +52,12 @@
 			},
 			body: JSON.stringify({
 				id: data.file.id,
-				markdown: value
+				markdown: value,
+				field: 'preview'
 			})
 		});
 		const result = await res.json();
-		console.log(result);
+
 		if (result.success) {
 			saveStatus = {
 				state: true,
@@ -66,13 +70,27 @@
 			};
 		}
 	}
-	$inspect(saveStatus);
+
 	const carta = new Carta({
 		sanitizer: DOMPurify.sanitize
 	});
 </script>
 
-<div class="h-[93dvh]">
+<div class="h-[93dvh] flex flex-col gap-4">
+	<div class="flex justify-between">
+		<div class="flex gap-4">
+			<Button type={'button'} className="px-4 w-fit" icon={ChevronLeft}
+				><a href="/admin">back</a></Button
+			>
+			<Button type={'button'} className="px-4 w-fit"
+				><a href="/{locale.current}/preview/{data.exhibition?.id}">Preview</a></Button
+			>
+		</div>
+		<!-- TODO: fai una funzione che salva il file in preview e live -->
+		<Button type={'button'} className="px-4 w-fit"
+			><a href="/{locale.current}/preview/{data.exhibition?.id}">Pubblish</a></Button
+		>
+	</div>
 	<MarkdownEditor {carta} bind:value mode="tabs" />
 	{#if !saveStatus.state}
 		<div

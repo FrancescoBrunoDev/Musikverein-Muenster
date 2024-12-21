@@ -14,13 +14,23 @@ export const load = (async ({ locals, params, fetch }) => {
         });
 
         if (exhibition.expand && exhibition.expand.files) {
-            let fileObj;
+            let fileObj: any;
             exhibition.expand.files.forEach((file: { lang: any; }) => {
                 if (file.lang === locale.current) {
                     fileObj = file;
                 }
             });
             if (!fileObj) return fail(404, { message: 'File not Found' });
+
+            if (fileObj.editingBy === "") {
+                //TODO: dopo qualche minuto di inattività, il file deve essere sbloccato
+                fileObj = await locals.pb.collection('exhibitionsFiles').update(fileObj.id, {
+                    "editingBy": locals.pb.authStore.record.id
+                });
+            } else if (fileObj.editingBy !== locals.pb.authStore.record.id) {
+                return fail(403, { message: 'This file is editing by another user' });
+            }
+
             const url = locals.pb.files.getURL(fileObj, fileObj.preview);
             const response = await fetch(url);
             const content = await response.text();

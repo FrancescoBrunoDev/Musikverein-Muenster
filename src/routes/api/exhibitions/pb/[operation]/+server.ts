@@ -1,10 +1,19 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({ request, locals, params }) => {
+    if (params.operation === 'update') {
+        return update({ request, locals });
+    }
+    throw error(400, {
+        message: 'Invalid operation'
+    });
+};
+
+async function update({ request, locals }: { request: Request; locals: any }) {
     try {
         const body = await request.json();
-        const { markdown, id } = body;
+        const { markdown, id, field } = body;
 
         if (!markdown || !id) {
             throw error(400, {
@@ -13,7 +22,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         }
 
         const file = await locals.pb.collection('exhibitionsFiles').update(String(id), {
-            'preview': [
+            [field]: [
                 new File([markdown], 'preview.md', { type: 'text/markdown' })
             ]
         });
@@ -30,4 +39,4 @@ export const POST: RequestHandler = async ({ request, locals }) => {
             message: 'Errore durante il salvataggio'
         });
     }
-};
+}
