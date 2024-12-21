@@ -2,11 +2,11 @@ import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
 export const load = (async ({ locals }) => {
-    if (!locals.pb.authStore.model) {
+    if (!locals.pb.authStore.record) {
         return redirect(303, '/login')
     }
     // return the infos about the user
-    const user = await locals.pb.collection('users').getOne(locals.pb.authStore.model.id);
+    const user = await locals.pb.collection('users').getOne(locals.pb.authStore.record.id);
     const exhibitions = await locals.pb.collection('exhibitions').getFullList({
         expand: 'files',
     });

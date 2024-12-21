@@ -3,7 +3,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { ClientResponseError } from 'pocketbase';
 
 export const load = (async ({ locals }) => {
-    if (locals.pb.authStore.model) {
+    if (locals.pb.authStore.record) {
         return redirect(303, '/admin')
     }
 
@@ -17,7 +17,8 @@ export const actions: Actions = {
         const password = data.get('password');
 
         if (!email || !password) {
-            return fail(400, { emailRequired: email === null, passwordRequired: password === null });
+            const message = 'Email and password are required';
+            return fail(400, { message: message, emailRequired: email === null, passwordRequired: password === null });
         }
 
         try {

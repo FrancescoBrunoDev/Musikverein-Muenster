@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 	import Button from '$components/ui/Button.svelte';
+	import { enhance } from '$app/forms';
 
 	interface Props {
 		data: PageData;
@@ -11,7 +12,7 @@
 </script>
 
 <div class="h-full flex flex-col justify-center w-full container max-w-sm">
-	<form action="?/login" method="post" class="flex flex-col gap-4">
+	<form action="?/login" method="post" class="flex flex-col gap-4" use:enhance>
 		<div class="flex flex-col gap-2">
 			<span class="font-bold">E-Mail</span>
 			<input

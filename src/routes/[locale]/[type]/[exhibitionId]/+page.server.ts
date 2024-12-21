@@ -3,10 +3,10 @@ import { redirect } from '@sveltejs/kit';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 
-const CACHE_DIR = 'src/routes/[locale]/[type]/markdown/.cache';
+const CACHE_DIR = 'src/.mdcache';
 
 export const load = (async ({ locals, params, fetch }) => {
-    if (params.type === "preview" && !locals.pb.authStore.model) {
+    if (params.type === "preview" && !locals.pb.authStore.record) {
         return redirect(303, '/login')
     }
     // return the infos about the user
@@ -25,7 +25,7 @@ export const load = (async ({ locals, params, fetch }) => {
             for (let file of exhibition.expand.files) {
                 await mkdir(join(CACHE_DIR, file.lang), { recursive: true });
                 // Ottieni URL del file
-                const url = locals.pb.files.getURL(file, file.live);
+                const url = locals.pb.files.getURL(file, file.preview);
                 // Scarica contenuto
                 const response = await fetch(url);
                 const content = await response.text();

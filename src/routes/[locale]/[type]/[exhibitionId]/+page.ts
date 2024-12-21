@@ -31,8 +31,8 @@ export const load: PageLoad = async ({ params, data }) => {
 				//TODO: redirect to 404 missing language
 				goto('/404');
 			}
-			// console.log('cachedFile', `$routes/[locale]/[type]/markdown/.cache/${params.locale}/${cachedFile}.md`);
-			const md = await import(`$routes/[locale]/[type]/markdown/.cache/${params.locale}/${cachedFile}.md`);
+
+			const md = await import(`$mdcache/${params.locale}/${cachedFile}.md`);
 
 			return {
 				content: md.default,
