@@ -11,9 +11,9 @@
 
 	let { data }: Props = $props();
 	let Markdown = $derived(data.content);
-
+	console.log(data);
 	$effect(() => {
-		if (data.locale !== locale.current) {
+		if (data.locale !== locale.current && data.type !== 'preview') {
 			goto(`/${locale.current}/${data.type}/${data.exhibitionId}`);
 		}
 	});
@@ -33,12 +33,13 @@
 				<Button type={'button'} className="px-4 w-fit" icon={ChevronLeft}
 					><a href="/admin">back</a></Button
 				>
+				<!-- TODO: questo deve rimandare a /admin/edit/{data.exhibition?.id}/{file.id} -->
 				<Button type={'button'} className="px-4 w-fit"
-					><a href="/admin/edit/{data.exhibition?.id}">Edit</a></Button
+					><a href="/admin/edit/{data.exhibition?.id}/">Edit</a></Button
 				>
 			</div>
 			<div class=" bg-background text-4xl font-bold rounded-lg px-2 dark:border-2 drop-shadow-xl">
-				Preview
+				Preview {data.locale}
 			</div>
 		</div>
 	{/if}

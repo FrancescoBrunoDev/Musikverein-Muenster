@@ -6,7 +6,7 @@ import { endYear, fetchedEvents, startYear } from '$stores/storeEvents';
 import { filteredEvents, filters } from '$stores/storeFilters';
 import osmtogeojson from 'osmtogeojson';
 
-const selectedGraphType = persistStore<'Line' | 'Map'>('selectedGraphType', 'Line');
+const selectedGraphType = persistStore<'line' | 'map'>('selectedGraphType', 'line');
 const JSONMuenster = persistStore<any>('JSONMuenster', {});
 const dataForLineGraph = writable<DataSeries[]>([]);
 

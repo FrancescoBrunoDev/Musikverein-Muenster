@@ -95,7 +95,7 @@
 		role="presentation"
 		class="relative flex h-fit items-center justify-center transition-all duration-500"
 	>
-		{#if $selectedGraphType === 'Line'}
+		{#if $selectedGraphType === 'line'}
 			{#if $dataForLineGraph.length > 0}
 				<LineGraphD3 data={$dataForLineGraph} />
 			{:else}
@@ -103,7 +103,7 @@
 					class="flex h-[300px] w-11/12 max-w-3xl animate-pulse items-center justify-center rounded-xl bg-secondary"
 				></div>
 			{/if}
-		{:else if $selectedGraphType === 'Map'}
+		{:else if $selectedGraphType === 'map'}
 			{#if allLocations.length > 0}
 				<Map data={allLocations} />
 			{:else}

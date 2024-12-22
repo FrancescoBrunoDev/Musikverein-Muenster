@@ -1,6 +1,5 @@
 import type { PageServerLoad } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
-import { locale } from '$states/stateGeneral.svelte';
 
 export const load = (async ({ locals, params, fetch }) => {
     if (!locals.pb.authStore.record) {
@@ -10,16 +9,11 @@ export const load = (async ({ locals, params, fetch }) => {
     // make temorary directory
     try {
         let exhibition = await locals.pb.collection('exhibitions').getOne(params.exhibitionId, {
-            expand: 'files',
+            expand: 'files'
         });
 
-        if (exhibition.expand && exhibition.expand.files) {
-            let fileObj: any;
-            exhibition.expand.files.forEach((file: { lang: any; }) => {
-                if (file.lang === locale.current) {
-                    fileObj = file;
-                }
-            });
+        if (exhibition.files) {
+            let fileObj = await locals.pb.collection('exhibitionsFiles').getOne(params.fileId);
             if (!fileObj) return fail(404, { message: 'File not Found' });
 
             if (fileObj.editingBy === "") {
@@ -30,11 +24,12 @@ export const load = (async ({ locals, params, fetch }) => {
             } else if (fileObj.editingBy !== locals.pb.authStore.record.id) {
                 return fail(403, { message: 'This file is editing by another user' });
             }
+            console.log(fileObj, "fileObj");
+            let url = locals.pb.files.getURL(fileObj, fileObj.preview);
 
-            const url = locals.pb.files.getURL(fileObj, fileObj.preview);
-            const response = await fetch(url);
-            const content = await response.text();
-
+            let response = await fetch(url);
+            let content = await response.text();
+            console.log(content, "content");
             return {
                 exhibition,
                 markdown: content,

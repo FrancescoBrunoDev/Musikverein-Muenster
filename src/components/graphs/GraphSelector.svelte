@@ -1,24 +1,16 @@
 <script lang="ts">
 	import { selectedGraphType } from '$stores/storeGraph';
 	import { LL } from '$lib/i18n/i18n-svelte';
+	import Selector from '$components/ui/Selector.svelte';
+
+	// make the options with $LL.graphs it should be an array of objects with label and value
+	let options = ['line', 'map'].map((option) => ({
+		label: $LL.graphs[option as 'line' | 'map'](),
+		value: option
+	}));
 </script>
 
-<div class="flex gap-2 rounded-xl bg-secondary p-2">
-	<button
-		class="px-2 text-primary transition-colors"
-		class:selected={$selectedGraphType === 'Line'}
-		onclick={() => ($selectedGraphType = 'Line')}
-	>
-		{$LL.graphs.line()}
-	</button>
-	<button
-		class="px-2 text-primary transition-colors"
-		class:selected={$selectedGraphType === 'Map'}
-		onclick={() => ($selectedGraphType = 'Map')}
-	>
-		{$LL.graphs.map()}
-	</button>
-</div>
+<Selector {options} bind:active={$selectedGraphType} />
 
 <style>
 	.selected {

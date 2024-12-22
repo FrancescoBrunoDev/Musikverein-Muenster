@@ -6,6 +6,9 @@
 	import Button from '$components/ui/Button.svelte';
 	import { ChevronLeft } from 'lucide-svelte';
 	import { locale } from '$states/stateGeneral.svelte';
+	import Selector from '$components/ui/Selector.svelte';
+	import { goto } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 
 	import { Carta, MarkdownEditor } from 'carta-md';
 	// Component default theme
@@ -13,12 +16,12 @@
 
 	interface Props {
 		data: PageData;
-		form: ActionData;
 	}
 
-	let { data, form }: Props = $props();
+	let { data }: Props = $props();
 
 	let value: string | undefined = $state('');
+	let activeLang: string = $state('en');
 
 	let saveStatus: { state: boolean; updated: string } = $state({
 		state: false,
@@ -28,9 +31,23 @@
 		state: false,
 		updated: ''
 	});
+	let options = $derived.by(() => {
+		let items: { label: string; value: string; id: string }[] = [];
+		data.exhibition?.expand?.files.forEach((item: { lang: any; id: any }) => {
+			items.push({ label: item.lang, value: item.lang, id: item.id });
+		});
+		return items;
+	});
+
+	$effect(() => {
+		// when activeLang changes, change goto the correct file
+		let fileId = options.find((item) => item.value === activeLang)?.id;
+		goto(`/admin/edit/${data.exhibition?.id}/${fileId}`);
+	});
 
 	onMount(() => {
 		value = data.markdown;
+		activeLang = data.file.lang;
 	});
 
 	let debounceTimer: ReturnType<typeof setTimeout>;
@@ -113,8 +130,11 @@
 				><a href="/admin">back</a></Button
 			>
 			<Button type={'button'} className="px-4 w-fit"
-				><a href="/{locale.current}/preview/{data.exhibition?.id}">Preview</a></Button
+				><a href="/{activeLang}/preview/{data.exhibition?.id}">Preview</a></Button
 			>
+			<div>
+				<Selector {options} bind:active={activeLang} />
+			</div>
 		</div>
 		<!-- TODO: fai una funzione che salva il file in preview e live -->
 		<div>
