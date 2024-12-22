@@ -130,7 +130,7 @@ type RootTranslation = {
 		 */
 		database: string
 		/**
-		 * E​x​h​i​b​i​t​i​o​n
+		 * E​x​h​i​b​i​t​i​o​n​s
 		 */
 		exhibitions: string
 	}
@@ -263,7 +263,7 @@ export type TranslationFunctions = {
 		 */
 		database: () => LocalizedString
 		/**
-		 * Exhibition
+		 * Exhibitions
 		 */
 		exhibitions: () => LocalizedString
 	}

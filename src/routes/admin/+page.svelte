@@ -48,17 +48,17 @@
 					minute: '2-digit'
 				})}
 				<div
-					class="flex gap-4 sm:items-center border-2 p-4 rounded-xl justify-between flex-col sm:flex-row"
+					class="flex gap-4 sm:items-center border-2 p-2 rounded-xl justify-between flex-col sm:flex-row"
 				>
-					<div class="flex gap-1 sm:gap-4 flex-col sm:flex-row">
-						<div class="flex sm:gap-4 flex-col sm:flex-row">
-							<p class=" font-bold">{exhibition.title}</p>
-							<p>{formattedData}</p>
+					<div class="flex gap-1 sm:gap-8 flex-col sm:flex-row">
+						<div>
+							<p class="font-bold">{exhibition.title}</p>
+							<p class="text-sm">{formattedData}</p>
 						</div>
 						<div class="flex gap-2 items-center">
 							{#if exhibition.expand}
 								{#each exhibition.expand.files as file}
-									<p class="text-sm">
+									<p class="text-sm bg-secondary px-2 py-1 h-fit rounded-xl">
 										{file.lang}
 									</p>
 								{/each}

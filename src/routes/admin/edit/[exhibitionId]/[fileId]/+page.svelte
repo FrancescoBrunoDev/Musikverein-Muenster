@@ -1,14 +1,12 @@
 <script lang="ts">
-	import type { PageData, ActionData } from './$types';
+	import type { PageData } from './$types';
 	import DOMPurify from 'isomorphic-dompurify';
 	import { onMount } from 'svelte';
 	import { Save, CloudAlert } from 'lucide-svelte';
 	import Button from '$components/ui/Button.svelte';
 	import { ChevronLeft } from 'lucide-svelte';
-	import { locale } from '$states/stateGeneral.svelte';
 	import Selector from '$components/ui/Selector.svelte';
 	import { goto } from '$app/navigation';
-	import { invalidateAll } from '$app/navigation';
 
 	import { Carta, MarkdownEditor } from 'carta-md';
 	// Component default theme
@@ -40,9 +38,9 @@
 	});
 
 	$effect(() => {
-		// when activeLang changes, change goto the correct file
 		let fileId = options.find((item) => item.value === activeLang)?.id;
 		goto(`/admin/edit/${data.exhibition?.id}/${fileId}`);
+		value = data.markdown;
 	});
 
 	onMount(() => {

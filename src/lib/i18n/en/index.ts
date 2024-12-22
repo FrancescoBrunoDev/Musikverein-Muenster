@@ -42,7 +42,7 @@ const en = {
 		menu: 'Menu',
 		home: 'Home',
 		database: 'Database',
-		exhibitions: 'Exhibition',
+		exhibitions: 'Exhibitions',
 	},
 	commons: {
 		year: 'Year',
