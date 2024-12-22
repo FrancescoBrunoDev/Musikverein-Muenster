@@ -10,7 +10,7 @@ const pb = new PocketBase(process.env.POKETBASE);
 // Autenticazione come admin
 await pb.collection("_superusers").authWithPassword(String(process.env.ADMIN_EMAIL), String(process.env.ADMIN_PASSWORD));
 
-const job = new CronJob('*/10 * * * * *', async () => {
+const job = new CronJob('* * * * *', async () => {
     try {
         const exhibitionsFiles = await pb.collection('exhibitionsFiles').getFullList();
         exhibitionsFiles.forEach(async (file) => {
