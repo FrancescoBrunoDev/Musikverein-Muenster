@@ -22,7 +22,9 @@ export const load = (async ({ locals, params, fetch }) => {
                     "editingBy": locals.pb.authStore.record.id
                 });
             } else if (fileObj.editingBy !== locals.pb.authStore.record.id) {
+                // if the last updated is more than 5 minutes ago, unlock the file
                 return fail(403, { message: 'This file is editing by another user' });
+
             }
             console.log(fileObj, "fileObj");
             let url = locals.pb.files.getURL(fileObj, fileObj.preview);
