@@ -24,6 +24,10 @@
 		state: false,
 		updated: ''
 	});
+	let publishStatus: { state: boolean; updated: string } = $state({
+		state: false,
+		updated: ''
+	});
 
 	onMount(() => {
 		value = data.markdown;
@@ -45,7 +49,7 @@
 	});
 
 	async function save() {
-		const res = await fetch('/api/exhibitions/pb/update', {
+		const res = await fetch('/api/exhibitions/pb/updateFile', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -53,7 +57,8 @@
 			body: JSON.stringify({
 				id: data.file.id,
 				markdown: value,
-				field: 'preview'
+				field: 'preview',
+				collection: 'exhibitionsFiles'
 			})
 		});
 		const result = await res.json();
@@ -65,6 +70,31 @@
 			};
 		} else {
 			saveStatus = {
+				state: false,
+				updated: result.message
+			};
+		}
+	}
+
+	async function publish() {
+		const res = await fetch('/api/exhibitions/pb/publishExhibition', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				id: data.file.id
+			})
+		});
+		const result = await res.json();
+
+		if (result.success) {
+			publishStatus = {
+				state: true,
+				updated: result.updated
+			};
+		} else {
+			publishStatus = {
 				state: false,
 				updated: result.message
 			};
@@ -87,9 +117,9 @@
 			>
 		</div>
 		<!-- TODO: fai una funzione che salva il file in preview e live -->
-		<Button type={'button'} className="px-4 w-fit"
-			><a href="/{locale.current}/preview/{data.exhibition?.id}">Pubblish</a></Button
-		>
+		<div>
+			<Button action={publish} type={'button'} className="px-4 w-fit" label="Publish"></Button>
+		</div>
 	</div>
 	<MarkdownEditor {carta} bind:value mode="tabs" />
 	{#if !saveStatus.state}
