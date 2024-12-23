@@ -26,7 +26,7 @@
 	let Markdown: any = $derived(markdownData.content);
 </script>
 
-<Button action={() => (isOpen = !isOpen)} size="md" icon={Info} light={true} />
+<Button type="button" action={() => (isOpen = !isOpen)} size="md" icon={Info} light={true} />
 
 <Modal bind:isOpen>
 	<div class="max-h-[80dvh] overflow-y-auto rounded-xl bg-background dark:border-2">

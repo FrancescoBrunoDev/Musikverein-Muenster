@@ -1,13 +1,9 @@
 import { error, json } from '@sveltejs/kit';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, locals, params }) => {
 	if (params.operation === 'updateFile') {
 		return updateFile({ request, locals });
-	} else if (params.operation === 'addNewExhibition') {
-		return addNewExhibition({ locals });
 	} else if (params.operation === 'deleteExhibition') {
 		return deleteExhibition({ request, locals });
 	} else if (params.operation === 'publishFile') {
@@ -48,43 +44,6 @@ async function updateFile({ request, locals }: { request: Request; locals: any }
 	} catch (e) {
 		throw error(400, {
 			message: 'Errore durante il salvataggio'
-		});
-	}
-}
-
-async function addNewExhibition({ locals }: { locals: any }) {
-	try {
-		//  first create a new file for en and for de using the blank
-		const enPath = join(process.cwd(), 'src/routes/[locale]/[type]/markdown/en/new.md');
-		const enContent = readFileSync(enPath, 'utf-8');
-		const fileEn = await locals.pb.collection('exhibitionsFiles').create({
-			lang: 'en',
-			preview: [new File([enContent], 'preview.md', { type: 'text/markdown' })],
-			editingBy: ''
-		});
-		const dePath = join(process.cwd(), 'src/routes/[locale]/[type]/markdown/de/new.md');
-		const deContent = readFileSync(dePath, 'utf-8');
-		const fileDe = await locals.pb.collection('exhibitionsFiles').create({
-			lang: 'de',
-			preview: [new File([deContent], 'preview.md', { type: 'text/markdown' })],
-			editingBy: ''
-		});
-		const exhibition = await locals.pb.collection('exhibitions').create({
-			title: 'New Exhibition',
-			visible: false,
-			files: [fileEn.id, fileDe.id]
-		});
-
-		if (!exhibition) {
-			throw error(500, {
-				message: 'Failed to create exhibition'
-			});
-		}
-
-		return json({ success: true, exhibition }, { status: 200 });
-	} catch (e) {
-		throw error(400, {
-			message: 'Errore durante la creazione'
 		});
 	}
 }

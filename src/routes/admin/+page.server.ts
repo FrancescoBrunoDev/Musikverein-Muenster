@@ -1,5 +1,7 @@
-import { redirect } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import { redirect, error, fail } from '@sveltejs/kit';
+import type { PageServerLoad, Actions } from './$types';
+import { join } from 'path';
+import { readFileSync } from 'fs';
 
 export const load = (async ({ locals }) => {
 	if (!locals.pb.authStore.record) {
@@ -17,5 +19,51 @@ export const actions = {
 	logout: async ({ locals }) => {
 		locals.pb.authStore.clear();
 		return redirect(303, '/login');
+	},
+	addNewExhibition: async ({ locals, request }) => {
+		const data = await request.formData();
+		const title = data.get('title');
+		console.log('title', title);
+		//  first create a new file for en and for de using the blank
+		const enPath = join(process.cwd(), 'src/routes/[locale]/[type]/markdown/en/new.md');
+		const enContent = readFileSync(enPath, 'utf-8');
+		const fileEn = await locals.pb.collection('exhibitionsFiles').create({
+			lang: 'en',
+			preview: [new File([enContent], 'preview.md', { type: 'text/markdown' })],
+			editingBy: ''
+		});
+		const dePath = join(process.cwd(), 'src/routes/[locale]/[type]/markdown/de/new.md');
+		const deContent = readFileSync(dePath, 'utf-8');
+		const fileDe = await locals.pb.collection('exhibitionsFiles').create({
+			lang: 'de',
+			preview: [new File([deContent], 'preview.md', { type: 'text/markdown' })],
+			editingBy: ''
+		});
+		const exhibition = await locals.pb.collection('exhibitions').create({
+			title: title,
+			visible: false,
+			files: [fileEn.id, fileDe.id]
+		});
+
+		if (!exhibition) {
+			return fail(400, { message: 'Failed to create exhibition' });
+		}
+
+		return { success: true };
+	},
+	modifyExhibition: async ({ locals, request }) => {
+		const data = await request.formData();
+		const id = data.get('id');
+		const title = data.get('title');
+		console.log('id', id, title);
+		const exhibition = await locals.pb.collection('exhibitions').update(id, {
+			"title": title
+		});
+
+		if (!exhibition) {
+			return fail(400, { message: 'Failed to update exhibition' });
+		}
+
+		return { success: true };
 	}
-};
+} satisfies Actions;

@@ -1,30 +1,32 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+	import type { PageData, ActionData } from './$types';
 	import Button from '$components/ui/Button.svelte';
 	import { LL } from '$lib/i18n/i18n-svelte';
 	import { locale } from '$states/stateGeneral.svelte';
 	import DeleteExhibition from '$components/markdown/admin/DeleteExhibition.svelte';
-	import { goto, invalidateAll } from '$app/navigation';
+	import Modal from '$components/ui/Modal.svelte';
+	import { Settings2 } from 'lucide-svelte';
 
 	interface Props {
 		data: PageData;
+		form: ActionData;
 	}
 
-	let { data }: Props = $props();
-
-	async function handleNewExhibition() {
-		const res = await fetch('/api/exhibitions/pb/addNewExhibition', {
-			method: 'POST'
-		});
-		const result = await res.json();
-
-		if (result.success) {
-			// update the data.exhibitions array with the new exhibition
-			await invalidateAll();
-		} else {
-			//TODO: ui missing
-			console.error('Error adding new exhibition');
+	let { data, form }: Props = $props();
+	let isModalNewExhibitionOpen = $state(false);
+	let isModalModifyExhibitionOpen = $state({
+		state: false,
+		exhibition: {
+			id: '',
+			title: ''
 		}
+	});
+
+	function openModalModifyExhibition(exhibition: any) {
+		isModalModifyExhibitionOpen = {
+			state: !isModalModifyExhibitionOpen.state,
+			exhibition: exhibition
+		};
 	}
 </script>
 
@@ -74,26 +76,74 @@
 					<div class="flex flex-wrap gap-2 sm:flex-nowrap">
 						<div class="flex gap-1">
 							<Button
-								action={() => goto(`/${locale.current}/preview/${exhibition.id}`)}
+								href="/{locale.current}/preview/{exhibition.id}"
 								label="Preview"
 								className="px-4 w-fit"
 								type="button"
 								size="sm"
 							/>
 							<Button
-								action={() =>
-									goto(`/admin/edit/${exhibition.id}/${exhibition.expand?.files[0].id}`)}
+								href="/admin/edit/{exhibition.id}/{exhibition.expand?.files[0].id}"
 								label="Edit"
 								className="px-4 w-fit"
 								type="button"
 								size="sm"
+							/>
+							<Button
+								type="button"
+								action={() => openModalModifyExhibition(exhibition)}
+								size="sm"
+								icon={Settings2}
 							/>
 						</div>
 						<DeleteExhibition exhibitionId={exhibition.id}></DeleteExhibition>
 					</div>
 				</div>
 			{/each}
-			<Button type="button" action={handleNewExhibition} label={'Add new exhibition'}></Button>
+			<Button
+				type="button"
+				action={() => (isModalNewExhibitionOpen = !isModalNewExhibitionOpen)}
+				size="md"
+				label="Add new exhibition"
+			/>
 		</div>
 	</div>
 </div>
+
+<Modal isOpen={isModalNewExhibitionOpen}>
+	<div class="max-h-[80dvh] overflow-y-auto rounded-xl bg-background dark:border-2">
+		<h3 class="sticky top-0 mb-10 bg-background px-4 pb-0 pt-4 text-3xl font-bold">
+			Create new exhibition
+		</h3>
+		<div>
+			<form class="px-4 pb-4 flex flex-col gap-4" action="?/addNewExhibition" method="post">
+				<input
+					class="w-full p-2 rounded-xl border-2 bg-background"
+					name="title"
+					placeholder="Title"
+				/>
+				<Button type="submit" className="w-full" label="Add new exhibition" />
+			</form>
+		</div>
+	</div>
+</Modal>
+
+<Modal isOpen={isModalModifyExhibitionOpen.state}>
+	<div class="max-h-[80dvh] overflow-y-auto rounded-xl bg-background dark:border-2">
+		<h3 class="sticky top-0 mb-10 bg-background px-4 pb-0 pt-4 text-3xl font-bold">
+			Modify exhibition
+		</h3>
+		<div>
+			<form class="px-4 pb-4 flex flex-col gap-4" action="?/modifyExhibition" method="post">
+				<input
+					class="w-full p-2 rounded-xl border-2 bg-background"
+					name="title"
+					placeholder="Title"
+					value={isModalModifyExhibitionOpen.exhibition.title}
+				/>
+				<input type="hidden" name="id" value={isModalModifyExhibitionOpen.exhibition.id} />
+				<Button type="submit" className="w-full" label="Modify exhibition" />
+			</form>
+		</div>
+	</div>
+</Modal>
