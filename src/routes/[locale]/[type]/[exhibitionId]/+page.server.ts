@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import { mkdir, writeFile, readFile } from 'fs/promises';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import type { PageServerLoad } from './$types';
 
@@ -12,7 +12,7 @@ export const load = (async ({ locals, params, fetch }) => {
 	// return the infos about the user
 
 	let exhibition = await locals.pb.collection('exhibitions').getOne(params.exhibitionId, {
-		expand: 'files',
+		expand: 'files'
 	});
 	let existingMetadata: { [key: string]: { [key: string]: string } } = {};
 	let metadataJSON: { [key: string]: { [key: string]: number } } = {};
@@ -64,6 +64,6 @@ export const load = (async ({ locals, params, fetch }) => {
 	await writeFile(metadataPath, JSON.stringify(metadataJSON));
 
 	return {
-		exhibition,
+		exhibition
 	};
 }) satisfies PageServerLoad;

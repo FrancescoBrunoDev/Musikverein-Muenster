@@ -45,7 +45,7 @@
 		{#if data.type === 'preview'}
 			<div class="container fixed top-16 z-50 w-full">
 				<div
-					class="flex items-center flex-wrap justify-between gap-4 p-2 backdrop-blur-xl rounded-2xl"
+					class="flex flex-wrap items-center justify-between gap-4 rounded-2xl p-2 backdrop-blur-xl"
 				>
 					<div class="flex gap-4">
 						<Button

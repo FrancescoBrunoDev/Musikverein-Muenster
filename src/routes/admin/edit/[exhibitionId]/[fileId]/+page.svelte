@@ -236,7 +236,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class="text-xs h-6 flex justify-end gap-1">
+	<div class="flex h-6 justify-end gap-1 text-xs">
 		{#if publishStatus.state}
 			<CircleCheckBig class="h-4 w-4" />last publish {publishStatus.updated}
 		{:else}
@@ -247,9 +247,9 @@
 		{#if data.isLocked}
 			<Markdown bind:value {carta} />
 			<div
-				class="variant-soft-success text-xs justify-end rounded-token flex items-center gap-1 px-4 py-2"
+				class="variant-soft-success rounded-token flex items-center justify-end gap-1 px-4 py-2 text-xs"
 			>
-				<div class="text-destructive inline-flex gap-1">
+				<div class="inline-flex gap-1 text-destructive">
 					Editing by {data.file.editingBy}
 					<CloudAlert class="h-4 w-4" />
 				</div>
@@ -257,10 +257,10 @@
 		{:else}
 			<MarkdownEditor {carta} bind:value mode="tabs" />
 			<div
-				class="variant-soft-success text-xs justify-end rounded-token flex items-center gap-1 px-4 py-2"
+				class="variant-soft-success rounded-token flex items-center justify-end gap-1 px-4 py-2 text-xs"
 			>
 				{#if !saveStatus.state}
-					<div class="text-destructive inline-flex gap-1">
+					<div class="inline-flex gap-1 text-destructive">
 						{saveStatus.updated}
 						<CloudAlert class="h-4 w-4" />
 					</div>

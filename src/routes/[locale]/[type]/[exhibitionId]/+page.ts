@@ -15,9 +15,11 @@ export const load: PageLoad = async ({ params, data }) => {
 				type: params.type
 			};
 		} else if (params.type === 'preview') {
-			let fileObj: { lang: string; id: any } | undefined = data.exhibition?.expand?.files?.find((file: { lang: string; id: any }) => {
-				return file.lang === params.locale;
-			});
+			let fileObj: { lang: string; id: any } | undefined = data.exhibition?.expand?.files?.find(
+				(file: { lang: string; id: any }) => {
+					return file.lang === params.locale;
+				}
+			);
 
 			if (!fileObj) {
 				throw error(404, `Could not find ${params.exhibitionId}`);

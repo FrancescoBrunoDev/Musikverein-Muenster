@@ -57,7 +57,7 @@
 							<p class="font-bold">{exhibition.title}</p>
 							<p class="text-xs">{formattedData}</p>
 						</div>
-						<div class="flex items-center gap-2 flex-wrap">
+						<div class="flex flex-wrap items-center gap-2">
 							{#if exhibition.expand}
 								{#each exhibition.expand.files as file}
 									{@const isPublished = file.live ? ' - published' : ''}

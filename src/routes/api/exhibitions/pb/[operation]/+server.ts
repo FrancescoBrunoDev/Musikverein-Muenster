@@ -35,7 +35,7 @@ async function updateFile({ request, locals }: { request: Request; locals: any }
 
 		const file = await locals.pb.collection(collection).update(String(id), {
 			[field]: [new File([markdown], 'preview.md', { type: 'text/markdown' })],
-			"previewUpdated": new Date().toISOString()
+			previewUpdated: new Date().toISOString()
 		});
 
 		if (!file) {
@@ -159,7 +159,7 @@ async function publishFile({ locals, request }: { locals: any; request: Request 
 		const url = locals.pb.files.getURL(file, file.preview);
 		const fileLive = await locals.pb.collection('exhibitionsFiles').update(id, {
 			live: [new File([url], 'preview.md', { type: 'text/markdown' })],
-			"liveUpdated": new Date().toISOString()
+			liveUpdated: new Date().toISOString()
 		});
 		if (!file) {
 			throw error(500, {
@@ -182,7 +182,7 @@ async function unpublishFile({ locals, request }: { locals: any; request: Reques
 		const file = await locals.pb.collection('exhibitionsFiles').getOne(id);
 		const fileLive = await locals.pb.collection('exhibitionsFiles').update(id, {
 			live: [],
-			"liveUpdated": ""
+			liveUpdated: ''
 		});
 		if (!file) {
 			throw error(500, {
