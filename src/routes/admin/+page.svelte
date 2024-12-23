@@ -34,7 +34,7 @@
 	<div class="flex flex-wrap items-center gap-4">
 		<h1 class="text-4xl font-bold sm:text-6xl">{$LL.commons.hallo()}, {data.user.name}</h1>
 		<form action="?/logout" method="post" class="flex flex-col gap-4">
-			<Button type="submit" label={'Logout'}></Button>
+			<Button type="submit" size="sm" label={'Logout'}></Button>
 		</form>
 	</div>
 	<div class="flex flex-col gap-4">
