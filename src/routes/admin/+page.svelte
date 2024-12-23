@@ -17,7 +17,6 @@
 			method: 'POST'
 		});
 		const result = await res.json();
-		console.log(result);
 
 		if (result.success) {
 			// update the data.exhibitions array with the new exhibition

@@ -10,9 +10,9 @@
 	}
 
 	let { data }: Props = $props();
-	console.log(data);
+
 	let Markdown = $derived(data.content);
-	console.log(data);
+
 	$effect(() => {
 		if (data.locale !== locale.current && data.type !== 'preview') {
 			goto(`/${locale.current}/${data.type}/${data.exhibitionId}`);

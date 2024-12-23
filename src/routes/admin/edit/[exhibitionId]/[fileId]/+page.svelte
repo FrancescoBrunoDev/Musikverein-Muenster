@@ -17,7 +17,7 @@
 	}
 
 	let { data }: Props = $props();
-	$inspect(data);
+
 	let value: string = $state('');
 	let activeLang: string = $state('en');
 
@@ -41,7 +41,6 @@
 		let fileId = options.find((item) => item.value === activeLang)?.id;
 		goto(`/admin/edit/${data.exhibition?.id}/${fileId}`);
 		value = data.markdown ?? '';
-		console.log(data.file?.id);
 	});
 
 	onMount(() => {
@@ -70,7 +69,6 @@
 	});
 
 	async function changeEditingBy() {
-		console.log(data.file?.id);
 		const res = await fetch('/api/exhibitions/pb/changeEditingBy', {
 			method: 'POST',
 			headers: {

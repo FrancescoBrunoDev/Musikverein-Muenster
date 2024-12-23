@@ -17,7 +17,6 @@ const job = new CronJob('* * * * *', async () => {
 		const exhibitionsFiles = await pb.collection('exhibitionsFiles').getFullList({
 			filter: 'editingBy > 0'
 		});
-		console.log('editingBy in corso:', exhibitionsFiles);
 		exhibitionsFiles.forEach(async (file) => {
 			// Confronta i timestamp in UTC
 			const fileUpdateTime = new Date(file.updated).getTime();
