@@ -8,7 +8,7 @@
 	import Selector from '$components/ui/Selector.svelte';
 	import { goto } from '$app/navigation';
 
-	import { Carta, MarkdownEditor } from 'carta-md';
+	import { Carta, MarkdownEditor, Markdown } from 'carta-md';
 	// Component default theme
 	import 'carta-md/default.css';
 
@@ -17,8 +17,8 @@
 	}
 
 	let { data }: Props = $props();
-
-	let value: string | undefined = $state('');
+	$inspect(data);
+	let value: string = $state('');
 	let activeLang: string = $state('en');
 
 	let saveStatus: { state: boolean; updated: string } = $state({
@@ -40,28 +40,48 @@
 	$effect(() => {
 		let fileId = options.find((item) => item.value === activeLang)?.id;
 		goto(`/admin/edit/${data.exhibition?.id}/${fileId}`);
-		value = data.markdown;
+		value = data.markdown ?? '';
+		console.log(data.file?.id);
 	});
 
 	onMount(() => {
-		value = data.markdown;
-		activeLang = data.file.lang;
+		value = data.markdown ?? '';
+		activeLang = data.file?.lang;
 	});
 
 	let debounceTimer: ReturnType<typeof setTimeout>;
 	// submit the form whebn value changes
+	async function saveAndUpdateEditing() {
+		try {
+			await Promise.all([save(), changeEditingBy()]);
+		} catch (error) {
+			console.error('Errore durante il salvataggio:', error);
+		}
+	}
+
 	$effect(() => {
-		if (value) {
-			// Cancella il timer precedente
+		if (value && !data.isLocked) {
 			clearTimeout(debounceTimer);
 
-			// Imposta un nuovo timer
 			debounceTimer = setTimeout(() => {
-				// Esegue il submit solo dopo 1000ms di inattività
-				save();
+				saveAndUpdateEditing();
 			}, 1000);
 		}
 	});
+
+	async function changeEditingBy() {
+		console.log(data.file?.id);
+		const res = await fetch('/api/exhibitions/pb/changeEditingBy', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				id: data.file?.id
+			})
+		});
+		const result = await res.json();
+	}
 
 	async function save() {
 		const res = await fetch('/api/exhibitions/pb/updateFile', {
@@ -70,7 +90,7 @@
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				id: data.file.id,
+				id: data.file?.id,
 				markdown: value,
 				field: 'preview',
 				collection: 'exhibitionsFiles'
@@ -98,7 +118,7 @@
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				id: data.file.id
+				id: data.file?.id
 			})
 		});
 		const result = await res.json();
@@ -121,13 +141,13 @@
 	});
 </script>
 
-<div class="h-[93dvh] flex flex-col gap-4">
+<div class="flex h-[93dvh] flex-col gap-4">
 	<div class="flex justify-between">
-		<div class="flex gap-4">
-			<Button type={'button'} className="px-4 w-fit" icon={ChevronLeft}
+		<div class="flex items-center gap-4">
+			<Button type={'button'} size="sm" className="pr-4 w-fit" icon={ChevronLeft}
 				><a href="/admin">back</a></Button
 			>
-			<Button type={'button'} className="px-4 w-fit"
+			<Button type={'button'} size="sm" className="px-4 w-fit"
 				><a href="/{activeLang}/preview/{data.exhibition?.id}">Preview</a></Button
 			>
 			<div>
@@ -135,22 +155,37 @@
 			</div>
 		</div>
 		<!-- TODO: fai una funzione che salva il file in preview e live -->
-		<div>
-			<Button action={publish} type={'button'} className="px-4 w-fit" label="Publish"></Button>
-		</div>
+
+		<Button action={publish} size="sm" type={'button'} label="Publish"></Button>
 	</div>
-	<MarkdownEditor {carta} bind:value mode="tabs" />
-	{#if !saveStatus.state}
-		<div
-			class="variant-soft-success px-4 py-2 mb-2 rounded-token flex items-center gap-1 text-destructive"
-		>
-			<CloudAlert class="h-5 w-5" />
-			{saveStatus.updated}
-		</div>
-	{/if}
-	{#if saveStatus.state}
-		<div class="variant-soft-success px-4 py-2 mb-2 rounded-token flex items-center gap-1">
-			<Save class="h-5 w-5" />last save {saveStatus.updated}
+	{#if value !== ''}
+		{#if data.isLocked}
+			<Markdown bind:value {carta} />
+			<div
+				class="variant-soft-danger rounded-token mb-2 flex items-center gap-1 px-4 py-2 text-destructive"
+			>
+				<CloudAlert class="h-5 w-5" />
+				Editing by {data.file.editingBy}
+			</div>
+		{:else}
+			<MarkdownEditor {carta} bind:value mode="tabs" />
+			{#if !saveStatus.state}
+				<div
+					class="variant-soft-success rounded-token mb-2 flex items-center gap-1 px-4 py-2 text-destructive"
+				>
+					<CloudAlert class="h-5 w-5" />
+					{saveStatus.updated}
+				</div>
+			{/if}
+			{#if saveStatus.state}
+				<div class="variant-soft-success rounded-token mb-2 flex items-center gap-1 px-4 py-2">
+					<Save class="h-5 w-5" />last save {saveStatus.updated}
+				</div>
+			{/if}
+		{/if}
+	{:else}
+		<div class="flex h-[93dvh] items-center justify-center">
+			<p class="text-center">Loading...</p>
 		</div>
 	{/if}
 </div>

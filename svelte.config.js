@@ -29,7 +29,7 @@ const config = {
 			$static: 'src/static',
 			$routes: 'src/routes',
 			$states: 'src/states',
-			$mdcache: 'src/.mdcache',
+			$mdcache: 'src/.mdcache'
 		}
 	},
 	preprocess: sequence([vitePreprocess(), preprocessMeltUI(), mdsvex(mdsvexOptions)])

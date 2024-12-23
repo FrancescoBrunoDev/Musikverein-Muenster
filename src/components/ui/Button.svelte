@@ -36,7 +36,7 @@
 	class={cn(
 		'flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary p-2 text-background transition-all hover:scale-hover hover:drop-shadow-xl',
 		{ 'border-2 bg-background text-text': light },
-		{ 'h-8 w-8': size === 'sm' },
+		{ 'h-8 w-8 text-xs': size === 'sm' },
 		{ 'h-10 w-10': size === 'md' },
 		{ 'h-12 w-12': size === 'lg' },
 		{ 'w-fit px-3': label },
@@ -47,7 +47,8 @@
 	{#if label}
 		<span
 			class={cn('text-xs', {
-				'text-base': !icon
+				'text-base': !icon,
+				'text-xs': size === 'sm'
 			})}>{label}</span
 		>
 	{/if}

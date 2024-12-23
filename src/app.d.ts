@@ -7,11 +7,11 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			locale: string;
-			pb: PocketBase
+			pb: PocketBase;
 		}
 		// interface PageData {}
 		// interface Platform {}
 	}
 }
 
-export { };
+export {};

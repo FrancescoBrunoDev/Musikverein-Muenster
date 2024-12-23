@@ -10,6 +10,7 @@
 	}
 
 	let { data }: Props = $props();
+	console.log(data);
 	let Markdown = $derived(data.content);
 	console.log(data);
 	$effect(() => {
@@ -28,17 +29,16 @@
 
 <section>
 	{#if data.type === 'preview'}
-		<div class="fixed top-16 w-full container z-50 flex justify-between gap-4">
+		<div class="container fixed top-16 z-50 flex w-full justify-between gap-4">
 			<div class="flex gap-4">
 				<Button type={'button'} className="px-4 w-fit" icon={ChevronLeft}
 					><a href="/admin">back</a></Button
 				>
-				<!-- TODO: questo deve rimandare a /admin/edit/{data.exhibition?.id}/{file.id} -->
 				<Button type={'button'} className="px-4 w-fit"
-					><a href="/admin/edit/{data.exhibition?.id}/">Edit</a></Button
+					><a href="/admin/edit/{data.exhibition?.id}/{data.fileObj?.id}">Edit</a></Button
 				>
 			</div>
-			<div class=" bg-background text-4xl font-bold rounded-lg px-2 dark:border-2 drop-shadow-xl">
+			<div class=" rounded-lg bg-background px-2 text-4xl font-bold drop-shadow-xl dark:border-2">
 				Preview {data.locale}
 			</div>
 		</div>

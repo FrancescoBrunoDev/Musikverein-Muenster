@@ -63,6 +63,7 @@
 		"prettier-plugin-tailwindcss": "^0.6.9",
 		"tailwind-merge": "^2.5.5",
 		"tailwindcss-animate": "^1.0.7",
-		"typesafe-i18n": "^5.26.2"
+		"typesafe-i18n": "^5.26.2",
+		"typescript": "^5.7.2"
 	}
 }

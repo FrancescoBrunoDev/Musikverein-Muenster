@@ -21,7 +21,7 @@
 	onclick={() => (isOpen = true)}
 	aria-label="Open Gallery"
 	class={cn(
-		'group relative w-full overflow-hidden rounded-lg text-background transition-all dark:text-text isolate',
+		'group relative isolate w-full overflow-hidden rounded-lg text-background transition-all dark:text-text',
 		className
 	)}
 	style={`

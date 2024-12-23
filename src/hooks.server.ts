@@ -1,3 +1,4 @@
+import { POKETBASE } from '$env/static/private';
 import { setLocale } from '$lib/i18n/i18n-svelte';
 import { detectLocale } from '$lib/i18n/i18n-util';
 import { loadLocaleAsync } from '$lib/i18n/i18n-util.async';
@@ -6,7 +7,6 @@ import {
 	initAcceptLanguageHeaderDetector,
 	initRequestCookiesDetector
 } from 'typesafe-i18n/detectors';
-import { POKETBASE } from '$env/static/private';
 
 import PocketBase from 'pocketbase';
 
@@ -16,7 +16,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 
 	try {
-		event.locals.pb.authStore.isValid && await event.locals.pb.collection('users').authRefresh();
+		event.locals.pb.authStore.isValid && (await event.locals.pb.collection('users').authRefresh());
 	} catch (_) {
 		event.locals.pb.authStore.clear();
 	}
