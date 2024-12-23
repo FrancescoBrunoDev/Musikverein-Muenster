@@ -192,4 +192,13 @@
 	:global(.carta-font-code) {
 		font-family: 'Outfit';
 	}
+	:global(.carta-theme__default.carta-editor) {
+		@apply rounded-xl border-2 border-border;
+	}
+	:global(.carta-theme__default .carta-toolbar) {
+		@apply border-b-2 border-border pb-1 pt-2;
+	}
+	:gloabl(.carta-font-code) {
+		@apply text-text;
+	}
 </style>

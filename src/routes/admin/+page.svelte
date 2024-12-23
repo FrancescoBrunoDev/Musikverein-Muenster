@@ -72,7 +72,7 @@
 								><a href="/{locale.current}/preview/{exhibition.id}">Preview</a></Button
 							>
 							<Button className="px-4 w-fit" type="button" size="sm"
-								><a href="/admin/edit/{exhibition.id}/{exhibition.expand.files[0].id}">Edit</a
+								><a href="/admin/edit/{exhibition.id}/{exhibition.expand?.files[0].id}">Edit</a
 								></Button
 							>
 						</div>
