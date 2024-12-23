@@ -9,8 +9,12 @@
 		light?: boolean;
 		size?: 'sm' | 'md' | 'lg';
 		type: 'button' | 'submit' | 'reset';
-		formaction?: string;
+		formAction?: string;
 		className?: string;
+		disabled?: boolean;
+		iconFirst?: boolean;
+		href?: string;
+		target?: string;
 	}
 
 	let {
@@ -21,41 +25,74 @@
 		light = false,
 		size = 'md',
 		type = 'button',
-		formaction = undefined,
-		className = undefined
+		formAction = undefined,
+		className = undefined,
+		disabled = false,
+		iconFirst = true,
+		href = undefined,
+		target = undefined
 	}: Props = $props();
 
 	const Icon = $derived(icon);
 	let formattedLabel = $derived(label?.replace(/\s/g, '-').toLowerCase());
-</script>
 
-<button
-	{formaction}
-	{type}
-	onclick={action}
-	class={cn(
+	const buttonClass = cn(
 		'flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary p-2 text-background transition-all hover:scale-hover hover:drop-shadow-xl',
 		{ 'border-2 bg-background text-text': light },
 		{ 'h-8 w-8 text-xs': size === 'sm' },
 		{ 'h-10 w-10': size === 'md' },
 		{ 'h-12 w-12': size === 'lg' },
 		{ 'w-fit px-3': label },
+		{ 'opacity-20 cursor-not-allowed hover:scale-100': disabled },
 		{ [String(className)]: className }
-	)}
-	aria-label={formattedLabel}
->
-	{#if label}
-		<span
-			class={cn('text-xs', {
-				'text-base': !icon,
-				'text-xs': size === 'sm'
-			})}>{label}</span
-		>
-	{/if}
-	{#if Icon}
-		<Icon class={cn('stroke-2')} />
-	{/if}
-	{@render children?.()}
+	);
+</script>
 
-	<span class="sr-only">Open Popover</span>
-</button>
+{#if href}
+	<a {href} {target} class={buttonClass} aria-label={formattedLabel} onclick={action} role="button">
+		{#if label}
+			<span
+				class={cn('text-xs', {
+					'text-base': !icon,
+					'text-xs': size === 'sm'
+				})}>{label}</span
+			>
+		{/if}
+		{#if Icon}
+			<Icon
+				class={cn('stroke-2', {
+					'order-first': iconFirst
+				})}
+			/>
+		{/if}
+		{@render children?.()}
+		<span class="sr-only">Open Popover</span>
+	</a>
+{:else}
+	<button
+		formaction={formAction}
+		{type}
+		{disabled}
+		onclick={action}
+		class={buttonClass}
+		aria-label={formattedLabel}
+	>
+		{#if label}
+			<span
+				class={cn('text-xs', {
+					'text-base': !icon,
+					'text-xs': size === 'sm'
+				})}>{label}</span
+			>
+		{/if}
+		{#if Icon}
+			<Icon
+				class={cn('stroke-2', {
+					'order-first': iconFirst
+				})}
+			/>
+		{/if}
+		{@render children?.()}
+		<span class="sr-only">Open Popover</span>
+	</button>
+{/if}
