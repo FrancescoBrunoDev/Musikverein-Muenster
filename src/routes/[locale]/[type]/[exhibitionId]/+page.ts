@@ -22,7 +22,7 @@ export const load: PageLoad = async ({ params, data }) => {
 			let fileObj: { lang: string; id: any } | undefined;
 			// find in data.exhibition?.expand. the file with the same lang as params.locale
 			// then set cachedFile to the id of that file
-			data.exhibition?.expand?.files.forEach((file: { lang: string; id: any }) => {
+			data.exhibition?.expand?.files?.forEach((file: { lang: string; id: any }) => {
 
 				if (file.lang === params.locale) {
 					cachedFile = file.id;

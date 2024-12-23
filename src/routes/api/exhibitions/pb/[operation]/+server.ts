@@ -10,10 +10,12 @@ export const POST: RequestHandler = async ({ request, locals, params }) => {
 		return addNewExhibition({ locals });
 	} else if (params.operation === 'deleteExhibition') {
 		return deleteExhibition({ request, locals });
-	} else if (params.operation === 'publishExhibition') {
-		return publishExhibition({ request, locals });
+	} else if (params.operation === 'publishFile') {
+		return publishFile({ request, locals });
 	} else if (params.operation === 'changeEditingBy') {
 		return changeEditingBy({ locals, request });
+	} else if (params.operation === 'unpublishFile') {
+		return unpublishFile({ locals, request });
 	}
 	throw error(400, {
 		message: 'Invalid operation'
@@ -32,7 +34,8 @@ async function updateFile({ request, locals }: { request: Request; locals: any }
 		}
 
 		const file = await locals.pb.collection(collection).update(String(id), {
-			[field]: [new File([markdown], 'preview.md', { type: 'text/markdown' })]
+			[field]: [new File([markdown], 'preview.md', { type: 'text/markdown' })],
+			"previewUpdated": new Date().toISOString()
 		});
 
 		if (!file) {
@@ -41,7 +44,7 @@ async function updateFile({ request, locals }: { request: Request; locals: any }
 			});
 		}
 
-		return json({ success: true, updated: file.updated }, { status: 200 });
+		return json({ success: true, updated: file }, { status: 200 });
 	} catch (e) {
 		throw error(400, {
 			message: 'Errore durante il salvataggio'
@@ -148,22 +151,46 @@ async function deleteExhibition({ locals, request }: { locals: any; request: Req
 	}
 }
 
-async function publishExhibition({ locals, request }: { locals: any; request: Request }) {
+async function publishFile({ locals, request }: { locals: any; request: Request }) {
 	try {
 		const body = await request.json();
 		const { id } = body;
 		const file = await locals.pb.collection('exhibitionsFiles').getOne(id);
 		const url = locals.pb.files.getURL(file, file.preview);
 		const fileLive = await locals.pb.collection('exhibitionsFiles').update(id, {
-			live: [new File([url], 'preview.md', { type: 'text/markdown' })]
+			live: [new File([url], 'preview.md', { type: 'text/markdown' })],
+			"liveUpdated": new Date().toISOString()
 		});
 		if (!file) {
 			throw error(500, {
-				message: 'Failed to delete exhibition'
+				message: 'Failed to delete file'
 			});
 		}
 
-		return json({ success: true, fileLive }, { status: 200 });
+		return json({ success: true, updated: fileLive }, { status: 200 });
+	} catch (e) {
+		throw error(400, {
+			message: 'Errore durante la cancellazione'
+		});
+	}
+}
+
+async function unpublishFile({ locals, request }: { locals: any; request: Request }) {
+	try {
+		const body = await request.json();
+		const { id } = body;
+		const file = await locals.pb.collection('exhibitionsFiles').getOne(id);
+		const fileLive = await locals.pb.collection('exhibitionsFiles').update(id, {
+			live: [],
+			"liveUpdated": ""
+		});
+		if (!file) {
+			throw error(500, {
+				message: 'Failed to delete file'
+			});
+		}
+
+		return json({ success: true, updated: fileLive }, { status: 200 });
 	} catch (e) {
 		throw error(400, {
 			message: 'Errore durante la cancellazione'

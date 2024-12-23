@@ -39,26 +39,31 @@
 		<h2 class="text-4xl font-bold">{$LL.navbar.exhibitions()}</h2>
 		<div class="flex flex-col gap-4">
 			{#each data.exhibitions as exhibition}
-				{@const formattedData = new Date(exhibition.updated).toLocaleString('en-US', {
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric',
-					hour: '2-digit',
-					minute: '2-digit'
-				})}
+				{@const formattedData = new Date(exhibition.updated).toLocaleString(
+					$LL.commons.codeLang(),
+					{
+						year: 'numeric',
+						month: 'short',
+						day: 'numeric',
+						hour: '2-digit',
+						minute: '2-digit'
+					}
+				)}
 				<div
-					class="flex flex-col justify-between gap-4 rounded-xl border-2 p-2 sm:flex-row sm:items-center"
+					class="flex flex-col justify-between gap-4 rounded-xl border-2 px-2 py-1 sm:flex-row sm:items-center"
 				>
 					<div class="flex flex-col gap-1 sm:flex-row sm:gap-8">
 						<div>
 							<p class="font-bold">{exhibition.title}</p>
-							<p class="text-sm">{formattedData}</p>
+							<p class="text-xs">{formattedData}</p>
 						</div>
-						<div class="flex items-center gap-2">
+						<div class="flex items-center gap-2 flex-wrap">
 							{#if exhibition.expand}
 								{#each exhibition.expand.files as file}
+									{@const isPublished = file.live ? ' - published' : ''}
 									<p class="h-fit rounded-xl bg-secondary px-2 py-1 text-sm">
 										{file.lang}
+										{isPublished}
 									</p>
 								{/each}
 							{:else}
@@ -66,7 +71,7 @@
 							{/if}
 						</div>
 					</div>
-					<div class="flex flex-wrap gap-4">
+					<div class="flex flex-wrap gap-2 sm:flex-nowrap">
 						<div class="flex gap-1">
 							<Button className="px-4 w-fit" type="button" size="sm"
 								><a href="/{locale.current}/preview/{exhibition.id}">Preview</a></Button

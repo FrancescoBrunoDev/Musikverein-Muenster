@@ -46,7 +46,8 @@ const de = {
 	},
 	commons: {
 		year: 'Jahr',
-		hallo: 'Hallo'
+		hallo: 'Hallo',
+		codeLang: 'de-DE',
 	}
 } satisfies Translation;
 

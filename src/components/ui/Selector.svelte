@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { LL } from '$lib/i18n/i18n-svelte';
 	import type { LocalizedString } from 'typesafe-i18n';
 
 	interface Props {
@@ -10,10 +9,10 @@
 	let { options, active = $bindable() }: Props = $props();
 </script>
 
-<div class="flex gap-2 rounded-xl bg-secondary p-2">
+<div class="flex gap-2 rounded-2xl bg-secondary p-1">
 	{#each options as option}
 		<button
-			class="px-2 text-primary transition-colors"
+			class="px-2 text-primary transition-all"
 			class:selected={active === option.value}
 			onclick={() => (active = option.value)}
 		>
@@ -24,6 +23,6 @@
 
 <style>
 	.selected {
-		@apply rounded bg-background;
+		@apply rounded-xl bg-background;
 	}
 </style>

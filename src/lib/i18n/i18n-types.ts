@@ -143,6 +143,10 @@ type RootTranslation = {
 		 * H​i
 		 */
 		hallo: string
+		/**
+		 * e​n​-​G​B
+		 */
+		codeLang: string
 	}
 }
 
@@ -276,6 +280,10 @@ export type TranslationFunctions = {
 		 * Hi
 		 */
 		hallo: () => LocalizedString
+		/**
+		 * en-GB
+		 */
+		codeLang: () => LocalizedString
 	}
 }
 

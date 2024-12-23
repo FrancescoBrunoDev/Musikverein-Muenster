@@ -2,15 +2,17 @@
 	import type { PageData } from './$types';
 	import DOMPurify from 'isomorphic-dompurify';
 	import { onMount } from 'svelte';
-	import { Save, CloudAlert } from 'lucide-svelte';
+	import { Save, CloudAlert, CircleCheckBig } from 'lucide-svelte';
 	import Button from '$components/ui/Button.svelte';
 	import { ChevronLeft } from 'lucide-svelte';
 	import Selector from '$components/ui/Selector.svelte';
 	import { goto } from '$app/navigation';
+	import { LL } from '$lib/i18n/i18n-svelte';
 
 	import { Carta, MarkdownEditor, Markdown } from 'carta-md';
 	// Component default theme
 	import 'carta-md/default.css';
+	import { cn } from '$lib/utils';
 
 	interface Props {
 		data: PageData;
@@ -41,11 +43,31 @@
 		let fileId = options.find((item) => item.value === activeLang)?.id;
 		goto(`/admin/edit/${data.exhibition?.id}/${fileId}`);
 		value = data.markdown ?? '';
+		publishStatus = {
+			state: data.file?.live,
+			updated: new Date(data.file?.liveUpdated).toLocaleString($LL.commons.codeLang(), {
+				year: 'numeric',
+				month: 'short',
+				day: 'numeric',
+				hour: '2-digit',
+				minute: '2-digit'
+			})
+		};
 	});
 
 	onMount(() => {
 		value = data.markdown ?? '';
 		activeLang = data.file?.lang;
+		publishStatus = {
+			state: data.file?.live,
+			updated: new Date(data.file?.liveUpdated).toLocaleString($LL.commons.codeLang(), {
+				year: 'numeric',
+				month: 'short',
+				day: 'numeric',
+				hour: '2-digit',
+				minute: '2-digit'
+			})
+		};
 	});
 
 	let debounceTimer: ReturnType<typeof setTimeout>;
@@ -69,7 +91,7 @@
 	});
 
 	async function changeEditingBy() {
-		const res = await fetch('/api/exhibitions/pb/changeEditingBy', {
+		await fetch('/api/exhibitions/pb/changeEditingBy', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -78,7 +100,6 @@
 				id: data.file?.id
 			})
 		});
-		const result = await res.json();
 	}
 
 	async function save() {
@@ -95,11 +116,16 @@
 			})
 		});
 		const result = await res.json();
-
 		if (result.success) {
 			saveStatus = {
 				state: true,
-				updated: result.updated
+				updated: new Date(result.updated.previewUpdated).toLocaleString($LL.commons.codeLang(), {
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric',
+					hour: '2-digit',
+					minute: '2-digit'
+				})
 			};
 		} else {
 			saveStatus = {
@@ -110,7 +136,7 @@
 	}
 
 	async function publish() {
-		const res = await fetch('/api/exhibitions/pb/publishExhibition', {
+		const res = await fetch('/api/exhibitions/pb/publishFile', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -124,7 +150,38 @@
 		if (result.success) {
 			publishStatus = {
 				state: true,
-				updated: result.updated
+				updated: new Date(result.updated.liveUpdated).toLocaleString($LL.commons.codeLang(), {
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric',
+					hour: '2-digit',
+					minute: '2-digit'
+				})
+			};
+		} else {
+			publishStatus = {
+				state: false,
+				updated: result.message
+			};
+		}
+	}
+
+	async function unpublish() {
+		const res = await fetch('/api/exhibitions/pb/unpublishFile', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				id: data.file?.id
+			})
+		});
+		const result = await res.json();
+
+		if (result.success) {
+			publishStatus = {
+				state: false,
+				updated: ''
 			};
 		} else {
 			publishStatus = {
@@ -139,7 +196,7 @@
 	});
 </script>
 
-<div class="flex h-[93dvh] flex-col gap-4">
+<div class="h-[93dvh] mb-1">
 	<div class="flex justify-between">
 		<div class="flex items-center gap-4">
 			<Button type={'button'} size="sm" className="pr-4 w-fit" icon={ChevronLeft}
@@ -153,8 +210,19 @@
 			</div>
 		</div>
 		<!-- TODO: fai una funzione che salva il file in preview e live -->
-
-		<Button action={publish} size="sm" type={'button'} label="Publish"></Button>
+		<div class="flex gap-2">
+			<Button action={publish} size="sm" type={'button'} label="Publish" />
+			{#if publishStatus.state}
+				<Button action={unpublish} size="sm" type={'button'} label="Unpublish" />
+			{/if}
+		</div>
+	</div>
+	<div class="text-xs h-6 flex justify-end gap-1">
+		{#if publishStatus.state}
+			<CircleCheckBig class="h-4 w-4" />last publish {publishStatus.updated}
+		{:else}
+			<span>not published jet</span>
+		{/if}
 	</div>
 	{#if value !== ''}
 		{#if data.isLocked}
