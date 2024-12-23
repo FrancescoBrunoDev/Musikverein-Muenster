@@ -4,7 +4,7 @@
 	import { LL } from '$lib/i18n/i18n-svelte';
 	import { locale } from '$states/stateGeneral.svelte';
 	import DeleteExhibition from '$components/markdown/admin/DeleteExhibition.svelte';
-	import { invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 
 	interface Props {
 		data: PageData;
@@ -73,13 +73,21 @@
 					</div>
 					<div class="flex flex-wrap gap-2 sm:flex-nowrap">
 						<div class="flex gap-1">
-							<Button className="px-4 w-fit" type="button" size="sm"
-								><a href="/{locale.current}/preview/{exhibition.id}">Preview</a></Button
-							>
-							<Button className="px-4 w-fit" type="button" size="sm"
-								><a href="/admin/edit/{exhibition.id}/{exhibition.expand?.files[0].id}">Edit</a
-								></Button
-							>
+							<Button
+								action={() => goto(`/${locale.current}/preview/${exhibition.id}`)}
+								label="Preview"
+								className="px-4 w-fit"
+								type="button"
+								size="sm"
+							/>
+							<Button
+								action={() =>
+									goto(`/admin/edit/${exhibition.id}/${exhibition.expand?.files[0].id}`)}
+								label="Edit"
+								className="px-4 w-fit"
+								type="button"
+								size="sm"
+							/>
 						</div>
 						<DeleteExhibition exhibitionId={exhibition.id}></DeleteExhibition>
 					</div>

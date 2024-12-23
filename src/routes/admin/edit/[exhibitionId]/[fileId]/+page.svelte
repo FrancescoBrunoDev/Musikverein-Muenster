@@ -12,7 +12,6 @@
 	import { Carta, MarkdownEditor, Markdown } from 'carta-md';
 	// Component default theme
 	import 'carta-md/default.css';
-	import { cn } from '$lib/utils';
 
 	interface Props {
 		data: PageData;
@@ -25,7 +24,7 @@
 
 	let saveStatus: { state: boolean; updated: string } = $state({
 		state: false,
-		updated: ''
+		updated: 'loading'
 	});
 	let publishStatus: { state: boolean; updated: string } = $state({
 		state: false,
@@ -152,7 +151,7 @@
 				state: true,
 				updated: new Date(result.updated.liveUpdated).toLocaleString($LL.commons.codeLang(), {
 					year: 'numeric',
-					month: 'long',
+					month: 'short',
 					day: 'numeric',
 					hour: '2-digit',
 					minute: '2-digit'
@@ -196,24 +195,44 @@
 	});
 </script>
 
-<div class="h-[93dvh] mb-1">
+<svelte:head>
+	<title>Editor</title>
+	<meta property="og:title" content="edit" />
+</svelte:head>
+
+<div class="h-[93dvh]">
 	<div class="flex justify-between">
 		<div class="flex items-center gap-4">
-			<Button type={'button'} size="sm" className="pr-4 w-fit" icon={ChevronLeft}
-				><a href="/admin">back</a></Button
-			>
-			<Button type={'button'} size="sm" className="px-4 w-fit"
-				><a href="/{activeLang}/preview/{data.exhibition?.id}">Preview</a></Button
-			>
+			<Button
+				href="/admin"
+				label="Back"
+				type={'button'}
+				size="sm"
+				className="pr-4 w-fit"
+				icon={ChevronLeft}
+			/>
+			<Button
+				href="/{activeLang}/preview/{data.exhibition?.id}"
+				target="_blank"
+				label="Preview"
+				type={'button'}
+				size="sm"
+				className="px-4 w-fit"
+			/>
 			<div>
 				<Selector {options} bind:active={activeLang} />
 			</div>
 		</div>
-		<!-- TODO: fai una funzione che salva il file in preview e live -->
 		<div class="flex gap-2">
-			<Button action={publish} size="sm" type={'button'} label="Publish" />
+			<Button disabled={data.isLocked} action={publish} size="sm" type={'button'} label="Publish" />
 			{#if publishStatus.state}
-				<Button action={unpublish} size="sm" type={'button'} label="Unpublish" />
+				<Button
+					action={unpublish}
+					size="sm"
+					className=" bg-destructive"
+					type={'button'}
+					label="Unpublish"
+				/>
 			{/if}
 		</div>
 	</div>
@@ -228,26 +247,30 @@
 		{#if data.isLocked}
 			<Markdown bind:value {carta} />
 			<div
-				class="variant-soft-danger rounded-token mb-2 flex items-center gap-1 px-4 py-2 text-destructive"
+				class="variant-soft-success text-xs justify-end rounded-token flex items-center gap-1 px-4 py-2"
 			>
-				<CloudAlert class="h-5 w-5" />
-				Editing by {data.file.editingBy}
+				<div class="text-destructive inline-flex gap-1">
+					Editing by {data.file.editingBy}
+					<CloudAlert class="h-4 w-4" />
+				</div>
 			</div>
 		{:else}
 			<MarkdownEditor {carta} bind:value mode="tabs" />
-			{#if !saveStatus.state}
-				<div
-					class="variant-soft-success rounded-token mb-2 flex items-center gap-1 px-4 py-2 text-destructive"
-				>
-					<CloudAlert class="h-5 w-5" />
-					{saveStatus.updated}
-				</div>
-			{/if}
-			{#if saveStatus.state}
-				<div class="variant-soft-success rounded-token mb-2 flex items-center gap-1 px-4 py-2">
-					<Save class="h-5 w-5" />last save {saveStatus.updated}
-				</div>
-			{/if}
+			<div
+				class="variant-soft-success text-xs justify-end rounded-token flex items-center gap-1 px-4 py-2"
+			>
+				{#if !saveStatus.state}
+					<div class="text-destructive inline-flex gap-1">
+						{saveStatus.updated}
+						<CloudAlert class="h-4 w-4" />
+					</div>
+				{/if}
+				{#if saveStatus.state}
+					<div class="inline-flex gap-1">
+						last save {saveStatus.updated}<Save class="h-4 w-4" />
+					</div>
+				{/if}
+			</div>
 		{/if}
 	{:else}
 		<div class="flex h-[93dvh] items-center justify-center">

@@ -3,8 +3,9 @@
 	import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
 	import Button from '$components/ui/Button.svelte';
-	import { ChevronLeft } from 'lucide-svelte';
+	import { ChevronLeft, RefreshCw } from 'lucide-svelte';
 	import Selector from '$components/ui/Selector.svelte';
+	import { invalidateAll } from '$app/navigation';
 
 	interface Props {
 		data: PageData;
@@ -40,31 +41,51 @@
 </svelte:head>
 
 <section>
-	{#if data.type === 'preview'}
-		<div class="container fixed top-16 z-50 flex w-full items-center justify-between gap-4">
-			<div class="flex gap-4">
-				<Button type={'button'} size="sm" className="pr-4 w-fit" icon={ChevronLeft}
-					><a href="/admin">back</a></Button
+	{#if data}
+		{#if data.type === 'preview'}
+			<div class="container fixed top-16 z-50 w-full">
+				<div
+					class="flex items-center flex-wrap justify-between gap-4 p-2 backdrop-blur-xl rounded-2xl"
 				>
-				<Button type={'button'} size="sm" className="px-4 w-fit"
-					><a href="/admin/edit/{data.exhibition?.id}/{data.fileObj?.id}">Edit</a></Button
-				>
-				<Selector bind:active={activeLang} {options} />
+					<div class="flex gap-4">
+						<Button
+							href="/admin"
+							type={'button'}
+							size="sm"
+							className="pr-4 w-fit"
+							icon={ChevronLeft}
+							label="back"
+						/>
+						<Button
+							href="/admin/edit/{data.exhibition?.id}/{data.fileObj?.id}"
+							type={'button'}
+							label="Edit"
+							size="sm"
+							className="px-4 w-fit"
+						/>
+						<Button
+							icon={RefreshCw}
+							action={async () => await invalidateAll()}
+							type={'button'}
+							size="sm"
+						/>
+					</div>
+					<Selector bind:active={activeLang} {options} />
+				</div>
 			</div>
-			<div class="rounded-lg bg-background px-2 text-4xl font-bold drop-shadow-xl dark:border-2">
-				Preview {data.locale}
+		{/if}
+		<div
+			class="flex h-screen w-screen items-center bg-cover bg-center"
+			style="background-image: url('{data.meta.img}')"
+		>
+			<div class="container">
+				<h1 class="font-serif text-4xl text-background lg:text-8xl">{data.meta.title}</h1>
 			</div>
 		</div>
+		<div class="content container mx-auto mb-10 max-w-3xl">
+			<Markdown />
+		</div>
+	{:else}
+		<div>Loading</div>
 	{/if}
-	<div
-		class="flex h-screen w-screen items-center bg-cover bg-center"
-		style="background-image: url('{data.meta.img}')"
-	>
-		<div class="container">
-			<h1 class="font-serif text-4xl text-background lg:text-8xl">{data.meta.title}</h1>
-		</div>
-	</div>
-	<div class="content container mx-auto mb-10 max-w-3xl">
-		<Markdown />
-	</div>
 </section>

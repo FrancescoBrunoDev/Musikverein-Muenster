@@ -1,4 +1,3 @@
-import { goto } from '$app/navigation';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
@@ -16,25 +15,15 @@ export const load: PageLoad = async ({ params, data }) => {
 				type: params.type
 			};
 		} else if (params.type === 'preview') {
-			// Importa il primo file dalla cache
-			// return just the file
-			let cachedFile;
-			let fileObj: { lang: string; id: any } | undefined;
-			// find in data.exhibition?.expand. the file with the same lang as params.locale
-			// then set cachedFile to the id of that file
-			data.exhibition?.expand?.files?.forEach((file: { lang: string; id: any }) => {
-
-				if (file.lang === params.locale) {
-					cachedFile = file.id;
-					fileObj = file;
-				}
+			let fileObj: { lang: string; id: any } | undefined = data.exhibition?.expand?.files?.find((file: { lang: string; id: any }) => {
+				return file.lang === params.locale;
 			});
-			if (cachedFile === undefined || fileObj === undefined) {
-				//TODO: redirect to 404 missing language
-				goto('/404');
+
+			if (!fileObj) {
+				throw error(404, `Could not find ${params.exhibitionId}`);
 			}
 
-			const md = await import(`$mdcache/${params.locale}/${cachedFile}.md`);
+			const md = await import(`$mdcache/${params.locale}/${fileObj.id}.md`);
 
 			return {
 				content: md.default,

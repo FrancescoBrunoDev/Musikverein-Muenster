@@ -36,7 +36,6 @@ export const load = (async ({ locals, params, fetch }) => {
 			const fileDate = new Date(file.previewUpdated).getTime();
 			const cachedDateTime = cachedDate || 0;
 			const needsUpdate = !cachedDate || fileDate > Number(cachedDateTime);
-			console.log('needsUpdate', needsUpdate, file.id, fileDate, cachedDate);
 
 			if (needsUpdate) {
 				const url = locals.pb.files.getURL(file, file.preview);
