@@ -8,6 +8,7 @@
 	import Selector from '$components/ui/Selector.svelte';
 	import { goto } from '$app/navigation';
 	import { LL } from '$lib/i18n/i18n-svelte';
+	import { formatData } from '$lib/utils';
 
 	import { Carta, MarkdownEditor, Markdown } from 'carta-md';
 	// Component default theme
@@ -44,12 +45,9 @@
 		value = data.markdown ?? '';
 		publishStatus = {
 			state: data.file?.live,
-			updated: new Date(data.file?.liveUpdated).toLocaleString($LL.commons.codeLang(), {
-				year: 'numeric',
-				month: 'short',
-				day: 'numeric',
-				hour: '2-digit',
-				minute: '2-digit'
+			updated: formatData({
+				date: data.file?.liveUpdated,
+				lang: $LL.commons.codeLang()
 			})
 		};
 	});
@@ -59,12 +57,9 @@
 		activeLang = data.file?.lang;
 		publishStatus = {
 			state: data.file?.live,
-			updated: new Date(data.file?.liveUpdated).toLocaleString($LL.commons.codeLang(), {
-				year: 'numeric',
-				month: 'short',
-				day: 'numeric',
-				hour: '2-digit',
-				minute: '2-digit'
+			updated: formatData({
+				date: data.file?.liveUpdated,
+				lang: $LL.commons.codeLang()
 			})
 		};
 	});
@@ -118,12 +113,9 @@
 		if (result.success) {
 			saveStatus = {
 				state: true,
-				updated: new Date(result.updated.previewUpdated).toLocaleString($LL.commons.codeLang(), {
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric',
-					hour: '2-digit',
-					minute: '2-digit'
+				updated: formatData({
+					date: data.file?.previewUpdated,
+					lang: $LL.commons.codeLang()
 				})
 			};
 		} else {
@@ -149,12 +141,9 @@
 		if (result.success) {
 			publishStatus = {
 				state: true,
-				updated: new Date(result.updated.liveUpdated).toLocaleString($LL.commons.codeLang(), {
-					year: 'numeric',
-					month: 'short',
-					day: 'numeric',
-					hour: '2-digit',
-					minute: '2-digit'
+				updated: formatData({
+					date: data.file?.liveUpdated,
+					lang: $LL.commons.codeLang()
 				})
 			};
 		} else {

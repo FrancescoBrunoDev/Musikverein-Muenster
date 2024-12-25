@@ -11,14 +11,10 @@ dotenv();
 global.EventSource = EventSource;
 
 const pb = new PocketBase(process.env.POKETBASE);
-pb.autoCancellation(false);
 const CACHE_DIR = 'src/.mdcache';
 
 const syncMd = async () => {
     try {
-        // Crea directory cache se non esiste
-        await mkdir(CACHE_DIR, { recursive: true });
-
         // Autentica
         await pb
             .collection('_superusers')
@@ -26,14 +22,14 @@ const syncMd = async () => {
 
         // Sottoscrivi ai cambiamenti
         const unsubscribe = pb.collection('exhibitionsFiles').subscribe("*", async function (e) {
-            console.log('Azione:', e.action);
-            console.log("Record:", e.record);
-
+            console.log("[syncMd]", e.record.id, "changed");
+            console.log("action:", e.action);
             const url = pb.files.getURL(e.record, e.record.preview);
             const response = await fetch(url);
             const content = await response.text();
             const cachePath = join(CACHE_DIR, e.record.lang, `${e.record.id}.md`);
             await writeFile(cachePath, content);
+            console.log("[syncMd]", e.record.id, "synced");
         });
 
         // Gestione pulizia
@@ -49,6 +45,7 @@ const syncMd = async () => {
 }
 
 const firstStart = async () => {
+    console.log("[syncMd] Start sync");
     try {
         let exhibitionsFiles = await pb.collection('exhibitionsFiles').getFullList();
 

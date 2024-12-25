@@ -6,6 +6,7 @@
 	import DeleteExhibition from '$components/markdown/admin/DeleteExhibition.svelte';
 	import Modal from '$components/ui/Modal.svelte';
 	import { Settings2 } from 'lucide-svelte';
+	import { formatData } from '$lib/utils';
 
 	interface Props {
 		data: PageData;
@@ -41,16 +42,10 @@
 		<h2 class="text-4xl font-bold">{$LL.navbar.exhibitions()}</h2>
 		<div class="flex flex-col gap-4">
 			{#each data.exhibitions as exhibition}
-				{@const formattedData = new Date(exhibition.updated).toLocaleString(
-					$LL.commons.codeLang(),
-					{
-						year: 'numeric',
-						month: 'short',
-						day: 'numeric',
-						hour: '2-digit',
-						minute: '2-digit'
-					}
-				)}
+				{@const formattedData = formatData({
+					date: exhibition.updated,
+					lang: $LL.commons.codeLang()
+				})}
 				<div
 					class="flex flex-col justify-between gap-4 rounded-xl border-2 px-2 py-1 sm:flex-row sm:items-center"
 				>
