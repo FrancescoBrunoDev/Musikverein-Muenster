@@ -6,6 +6,7 @@ import PocketBase from 'pocketbase';
 dotenv.config();
 
 const pb = new PocketBase(process.env.POKETBASE);
+pb.autoCancellation(false);
 
 // Autenticazione come admin
 await pb
@@ -15,7 +16,8 @@ await pb
 const job = new CronJob('* * * * *', async () => {
 	try {
 		const exhibitionsFiles = await pb.collection('exhibitionsFiles').getFullList({
-			filter: 'editingBy > 0'
+			filter: 'editingBy > 0',
+			autoCancellation: false
 		});
 		exhibitionsFiles.forEach(async (file) => {
 			// Confronta i timestamp in UTC
