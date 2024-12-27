@@ -90,7 +90,7 @@
 										<li class="text-2xl transition-transform duration-75 hover:-translate-y-1">
 											<a
 												onclick={() => toggleMenu()}
-												href="/{locale.current}/exhibitions/{exhibition.slug}"
+												href="/{locale.current}/exhibitions/{exhibition.id}"
 												>{exhibition.metadata.title}</a
 											>
 										</li>
