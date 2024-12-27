@@ -9,7 +9,6 @@
 
 	let { src }: Props = $props();
 	let id = $derived(src);
-	console.log(src, 'src');
 
 	let gallery: Gallery | undefined = $state(undefined);
 

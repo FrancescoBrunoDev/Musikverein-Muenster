@@ -23,7 +23,6 @@ export const actions = {
 	addNewExhibition: async ({ locals, request }) => {
 		const data = await request.formData();
 		const title = data.get('title');
-		console.log('title', title);
 		//  first create a new file for en and for de using the blank
 		const enPath = join(process.cwd(), 'src/routes/[locale]/[type]/markdown/en/new.md');
 		const enContent = readFileSync(enPath, 'utf-8');
@@ -55,7 +54,6 @@ export const actions = {
 		const data = await request.formData();
 		const id = data.get('id');
 		const title = data.get('title');
-		console.log('id', id, title);
 		const exhibition = await locals.pb.collection('exhibitions').update(id, {
 			title: title
 		});

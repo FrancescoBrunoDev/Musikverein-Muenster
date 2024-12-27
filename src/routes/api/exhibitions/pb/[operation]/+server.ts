@@ -44,7 +44,6 @@ async function getExhibitionsList({ locals, fetch }: {
 				exhibition.expand.files
 					.filter((file: any) => file.live && file.lang === locals.locale)
 					.map(async (file: any) => {
-						console.log(locals.locale);
 						const url = locals.pb.files.getURL(file, file.live);
 						const markdown = await fetch(url).then((res) => res.text());
 						const formattedMd = formatMD({ markdown });
@@ -58,7 +57,7 @@ async function getExhibitionsList({ locals, fetch }: {
 			)
 		)
 	).then(arrays => arrays.flat());
-	console.log(filesArray);
+
 	return json({ success: true, exhibitions: filesArray }, { status: 200 });
 }
 
