@@ -131,12 +131,3 @@ type FiltersForUrl = {
 type Locales = 'de' | 'en';
 
 type ThemeKind = 'base' | 'dark';
-
-type exhibitionMarkdown = {
-	title: string;
-	slug: string;
-	description: string;
-	date: string;
-	categories: Categories[];
-	published: boolean;
-};

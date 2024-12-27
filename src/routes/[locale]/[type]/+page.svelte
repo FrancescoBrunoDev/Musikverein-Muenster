@@ -28,7 +28,7 @@
 			<li class="transition-transform duration-75 hover:-translate-y-1">
 				<a
 					href="/{locale.current}/exhibitions/{exhibition.slug}"
-					class="text-4xl font-bold sm:text-6xl">{exhibition.title}</a
+					class="text-4xl font-bold sm:text-6xl">{exhibition.metadata.title}</a
 				>
 				<p class="description">{exhibition.description}</p>
 			</li>
