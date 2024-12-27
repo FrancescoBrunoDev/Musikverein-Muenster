@@ -5,14 +5,6 @@
 	import { locale } from '$states/stateGeneral.svelte';
 	import { slide } from 'svelte/transition';
 	import { formatMD } from '$lib/utils';
-	import { onMount } from 'svelte';
-
-	let exhibitions = $state();
-	$inspect(exhibitions);
-
-	onMount(async () => {
-		exhibitions = await getExhibitions();
-	});
 
 	async function getExhibitions() {
 		const response = await fetch(`/api/exhibitions/pb/getExhibitionsList`, {
