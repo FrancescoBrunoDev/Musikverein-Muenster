@@ -23,7 +23,7 @@
 			await invalidateAll();
 		} else {
 			//TODO: ui missing
-			console.error('Error adding new exhibition');
+			console.error('Error deleting new exhibition');
 		}
 	}
 </script>
