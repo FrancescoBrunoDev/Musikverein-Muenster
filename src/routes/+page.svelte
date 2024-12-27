@@ -4,7 +4,14 @@
 	import BackgroundParallax from '$components/BackgroundParallax.svelte';
 	import { locale } from '$states/stateGeneral.svelte';
 	import { slide } from 'svelte/transition';
-	import { formatMD } from '$lib/utils';
+	import { onMount } from 'svelte';
+
+	let expo = $state();
+
+	onMount(async () => {
+		const exhibitions = await getExhibitions();
+		expo = exhibitions;
+	});
 
 	async function getExhibitions() {
 		const response = await fetch(`/api/exhibitions/pb/getExhibitionsList`, {
@@ -19,24 +26,7 @@
 		if (!data.success || !data.exhibitions) {
 			return [];
 		}
-
-		//TODO: Questo ancora non ritorna il md ma solo l'url di nuovo.
-		const markdowns = await Promise.all(
-			data.exhibitions.map(
-				async (exhibition: { url: string | URL | Request; title: any; id: any }) => {
-					const response = await fetch(exhibition.url);
-					const markdown = await response.text();
-					console.log(markdown);
-					return {
-						...formatMD({ markdown }),
-						title: exhibition.title,
-						id: exhibition.id
-					};
-				}
-			)
-		);
-
-		return markdowns;
+		return data.exhibitions;
 	}
 </script>
 
@@ -111,7 +101,9 @@
 						{#await getExhibitions() then exhibitions}
 							{#each exhibitions as exhibition}
 								<li class="text-2xl transition-transform duration-75 hover:-translate-y-1">
-									<a href="/{locale.current}/exhibitions/{exhibition.id}">{exhibition.title}</a>
+									<a href="/{locale.current}/exhibitions/{exhibition.id}"
+										>{exhibition.metadata?.title}</a
+									>
 								</li>
 							{/each}
 						{/await}

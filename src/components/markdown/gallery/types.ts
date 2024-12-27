@@ -1,5 +1,5 @@
 export type Gallery = {
-	id?: number;
+	id?: string;
 	title: string;
 	cover: string;
 	caption?: string;

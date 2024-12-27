@@ -11,9 +11,19 @@
 	let isHomePage = $derived($page.url.pathname === '/');
 
 	async function getExhibitions() {
-		const response = await fetch(`/api/exhibitions/getMarkdown/${locale.current}`);
-		const exhibitions: exhibitionMarkdown[] = await response.json();
-		return exhibitions;
+		const response = await fetch(`/api/exhibitions/pb/getExhibitionsList`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		const data = await response.json();
+
+		// if data.success is true
+		if (!data.success || !data.exhibitions) {
+			return [];
+		}
+		return data.exhibitions;
 	}
 
 	const { value, handleLocaleChange } = $props<{ value: Locales; handleLocaleChange: any }>();
@@ -80,7 +90,8 @@
 										<li class="text-2xl transition-transform duration-75 hover:-translate-y-1">
 											<a
 												onclick={() => toggleMenu()}
-												href="/{locale.current}/exhibitions/{exhibition.slug}">{exhibition.title}</a
+												href="/{locale.current}/exhibitions/{exhibition.slug}"
+												>{exhibition.metadata.title}</a
 											>
 										</li>
 									{/each}
