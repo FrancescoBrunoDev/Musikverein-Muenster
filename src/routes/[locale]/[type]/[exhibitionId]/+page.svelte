@@ -6,6 +6,11 @@
 	import { ChevronLeft, RefreshCw } from 'lucide-svelte';
 	import Selector from '$components/ui/Selector.svelte';
 	import { invalidateAll } from '$app/navigation';
+	import { Carta, Markdown } from 'carta-md';
+	import Image from '$components/markdown/gallery/Img.svelte';
+	import DOMPurify from 'isomorphic-dompurify';
+	import { onMount } from 'svelte';
+	import { mount } from 'svelte';
 
 	interface Props {
 		data: PageData;
@@ -13,7 +18,12 @@
 
 	let { data }: Props = $props();
 
-	let Markdown = $derived(data.content);
+	let value = $derived(data.markdown.content);
+
+	const carta = new Carta({
+		sanitizer: DOMPurify.sanitize
+	});
+
 	let options = $derived.by(() => {
 		let items: { label: string; value: string; id: string }[] = [];
 		data.exhibition?.expand?.files.forEach((item: { lang: any; id: any }) => {
@@ -25,19 +35,32 @@
 
 	$effect(() => {
 		if (data.locale !== locale.current && data.type !== 'preview') {
-			goto(`/${locale.current}/${data.type}/${data.exhibitionId}`);
+			goto(`/${locale.current}/${data.type}/${data.exhibition.id}`);
+		} else if (data.type === 'preview') {
+			goto(`/${activeLang}/preview/${data.exhibition.id}`);
 		}
 	});
-	$effect(() => {
-		goto(`/${activeLang}/preview/${data.exhibitionId}`);
+
+	onMount(() => {
+		const markdown = document.querySelector('.carta-viewer');
+		if (markdown) {
+			const imgs = markdown.querySelectorAll('img');
+			imgs.forEach((img) => {
+				const src = img.getAttribute('src');
+				const props = { src: String(src) };
+				const div = document.createElement('div');
+				mount(Image, { target: div, props });
+				img.replaceWith(div);
+			});
+		}
 	});
 </script>
 
 <!-- SEO -->
 <svelte:head>
-	<title>{data.meta.title}</title>
+	<title>{data.markdown.metadata.title}</title>
 	<meta property="og:type" content="article" />
-	<meta property="og:title" content={data.meta.title} />
+	<meta property="og:title" content={data.markdown.metadata.title} />
 </svelte:head>
 
 <section>
@@ -76,14 +99,18 @@
 		{/if}
 		<div
 			class="flex h-screen w-screen items-center bg-cover bg-center"
-			style="background-image: url('{data.meta.img}')"
+			style="background-image: url('{data.markdown.metadata.img}')"
 		>
 			<div class="container">
-				<h1 class="font-serif text-4xl text-background lg:text-8xl">{data.meta.title}</h1>
+				<h1 class="font-serif text-4xl text-background lg:text-8xl">
+					{data.markdown.metadata.title}
+				</h1>
 			</div>
 		</div>
 		<div class="content container mx-auto mb-10 max-w-3xl">
-			<Markdown />
+			{#key value}
+				<Markdown {value} {carta} />
+			{/key}
 		</div>
 	{:else}
 		<div>Loading</div>

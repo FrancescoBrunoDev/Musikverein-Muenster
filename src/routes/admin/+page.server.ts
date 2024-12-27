@@ -1,7 +1,7 @@
-import { redirect, error, fail } from '@sveltejs/kit';
-import type { PageServerLoad, Actions } from './$types';
-import { join } from 'path';
+import { fail, redirect } from '@sveltejs/kit';
 import { readFileSync } from 'fs';
+import { join } from 'path';
+import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ locals }) => {
 	if (!locals.pb.authStore.record) {
@@ -57,7 +57,7 @@ export const actions = {
 		const title = data.get('title');
 		console.log('id', id, title);
 		const exhibition = await locals.pb.collection('exhibitions').update(id, {
-			"title": title
+			title: title
 		});
 
 		if (!exhibition) {

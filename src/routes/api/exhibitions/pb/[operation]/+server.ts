@@ -1,3 +1,4 @@
+import type { Gallery } from '$components/markdown/gallery/types';
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
@@ -12,11 +13,89 @@ export const POST: RequestHandler = async ({ request, locals, params }) => {
 		return changeEditingBy({ locals, request });
 	} else if (params.operation === 'unpublishFile') {
 		return unpublishFile({ locals, request });
+	} else if (params.operation === 'getGallery') {
+		return getGallery({ locals, request });
+	} else if (params.operation === 'getExhibitionsList') {
+		return getExhibitionsList({ locals });
 	}
 	throw error(400, {
 		message: 'Invalid operation'
 	});
 };
+
+async function getExhibitionsList({ locals }: { locals: any }) {
+	const exhibitions = await locals.pb.collection('exhibitions').getFullList({
+		expand: 'files'
+	});
+	if (!exhibitions) {
+		throw error(500, {
+			message: 'Failed to get exhibitions'
+		});
+	}
+
+	const exhibitionsArray = exhibitions.map((exhibition: any) => {
+		// keep only the one in the current language and with a file in live
+		const file = exhibition.expand.files.find(
+			(file: any) => file.lang == locals.locale && file.live !== ''
+		);
+		if (!file) {
+			return null;
+		}
+		const url = locals.pb.files.getURL(file, file.live);
+		return { url: url, title: exhibition.title, id: exhibition.id };
+	});
+
+	// Filter out null values
+	const filteredExhibitionsArray = exhibitionsArray.filter(
+		(exhibition: any) => exhibition !== null
+	);
+	console.log(filteredExhibitionsArray);
+	return json({ success: true, exhibitions: filteredExhibitionsArray }, { status: 200 });
+}
+
+async function getGallery({ locals, request }: { locals: any; request: Request }) {
+	try {
+		const body = await request.json();
+		const { id } = body;
+		const gallery = await locals.pb.collection('galleries').getOne(id, {
+			expand: 'images'
+		});
+		if (!gallery) {
+			throw error(500, {
+				message: 'Failed to get gallery'
+			});
+		}
+		const images = gallery?.expand?.images;
+		if (!images) {
+			const GalleryArray: Gallery = {
+				id: gallery.id,
+				title: gallery.title,
+				cover: locals.pb.files.getURL(gallery, gallery.cover),
+				caption: gallery.caption,
+				images: []
+			};
+			return json({ success: true, gallery: GalleryArray }, { status: 200 });
+		}
+		const imagesArray = images.map((image: any) => {
+			return {
+				caption: image.caption,
+				src: locals.pb.files.getURL(image, image.src)
+			};
+		});
+		const GalleryArray: Gallery = {
+			id: gallery.id,
+			title: gallery.title,
+			cover: locals.pb.files.getURL(gallery, gallery.cover),
+			caption: gallery.caption,
+			images: imagesArray
+		};
+		return json({ success: true, gallery: GalleryArray }, { status: 200 });
+	} catch (e) {
+		throw error(400, {
+			message: 'Error retrieving gallery'
+		});
+	}
+}
 
 async function updateFile({ request, locals }: { request: Request; locals: any }) {
 	try {

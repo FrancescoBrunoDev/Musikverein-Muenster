@@ -111,9 +111,9 @@
 			Create new exhibition
 		</h3>
 		<div>
-			<form class="px-4 pb-4 flex flex-col gap-4" action="?/addNewExhibition" method="post">
+			<form class="flex flex-col gap-4 px-4 pb-4" action="?/addNewExhibition" method="post">
 				<input
-					class="w-full p-2 rounded-xl border-2 bg-background"
+					class="w-full rounded-xl border-2 bg-background p-2"
 					name="title"
 					placeholder="Title"
 				/>
@@ -129,9 +129,9 @@
 			Modify exhibition
 		</h3>
 		<div>
-			<form class="px-4 pb-4 flex flex-col gap-4" action="?/modifyExhibition" method="post">
+			<form class="flex flex-col gap-4 px-4 pb-4" action="?/modifyExhibition" method="post">
 				<input
-					class="w-full p-2 rounded-xl border-2 bg-background"
+					class="w-full rounded-xl border-2 bg-background p-2"
 					name="title"
 					placeholder="Title"
 					value={isModalModifyExhibitionOpen.exhibition.title}

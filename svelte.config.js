@@ -1,16 +1,7 @@
 import { preprocessMeltUI } from '@melt-ui/pp';
 import adapter from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-import { mdsvex } from 'mdsvex';
 import sequence from 'svelte-sequential-preprocessor';
-
-/** @type {import('mdsvex').MdsvexOptions} */
-const mdsvexOptions = {
-	extensions: ['.md'],
-	layout: {
-		_: 'src/routes/[locale]/[type]/mdsvex.svelte'
-	}
-};
 
 /** @type {import('@sveltejs/kit').Config}*/
 const config = {
@@ -32,6 +23,6 @@ const config = {
 			$mdcache: 'src/.mdcache'
 		}
 	},
-	preprocess: sequence([vitePreprocess(), preprocessMeltUI(), mdsvex(mdsvexOptions)])
+	preprocess: sequence([vitePreprocess(), preprocessMeltUI()])
 };
 export default config;
