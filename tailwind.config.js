@@ -60,5 +60,5 @@ export default {
 		}
 	},
 	safelist: ['text-destructive', 'bg-destructive'],
-	plugins: [tailwindcssAnimate]
+	plugins: [tailwindcssAnimate, require('@tailwindcss/typography')],
 };

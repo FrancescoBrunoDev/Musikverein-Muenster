@@ -107,7 +107,7 @@
 				</h1>
 			</div>
 		</div>
-		<div class="content container mx-auto mb-10 max-w-3xl">
+		<div class="container mx-auto my-10 prose max-w-3xl dark:text-text">
 			{#key value}
 				<Markdown {value} {carta} />
 			{/key}
