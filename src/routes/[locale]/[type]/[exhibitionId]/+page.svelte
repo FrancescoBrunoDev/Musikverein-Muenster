@@ -107,11 +107,11 @@
 				</h1>
 			</div>
 		</div>
-		<div class="container mx-auto my-10 prose max-w-3xl dark:prose-invert">
+		<article class="container mx-auto my-10 prose max-w-3xl dark:prose-invert">
 			{#key value}
 				<Markdown {value} {carta} />
 			{/key}
-		</div>
+		</article>
 	{:else}
 		<div>Loading</div>
 	{/if}
