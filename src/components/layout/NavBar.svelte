@@ -10,22 +10,6 @@
 
 	let isHomePage = $derived($page.url.pathname === '/');
 
-	async function getExhibitions() {
-		const response = await fetch(`/api/exhibitions/pb/getExhibitionsList`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
-		const data = await response.json();
-
-		// if data.success is true
-		if (!data.success || !data.exhibitions) {
-			return [];
-		}
-		return data.exhibitions;
-	}
-
 	const { value, handleLocaleChange } = $props<{ value: Locales; handleLocaleChange: any }>();
 
 	let isMenuActive = $state(false);
@@ -81,22 +65,8 @@
 							<a
 								class="group transition-transform duration-75 hover:-translate-y-1"
 								onclick={() => toggleMenu()}
-								href="{locale.current}/exhibitions/">{$LL.navbar.exhibitions()}</a
+								href="/{locale.current}/exhibitions/">{$LL.navbar.exhibitions()}</a
 							>
-							<ul class="pl-5">
-								{#await getExhibitions()}
-									<div></div>{:then exhibitions}
-									{#each exhibitions as exhibition}
-										<li class="text-2xl transition-transform duration-75 hover:-translate-y-1">
-											<a
-												onclick={() => toggleMenu()}
-												href="/{locale.current}/exhibitions/{exhibition.id}"
-												>{exhibition.metadata.title}</a
-											>
-										</li>
-									{/each}
-								{/await}
-							</ul>
 						</div>
 					</div>
 					<div class="flex flex-col gap-y-2">

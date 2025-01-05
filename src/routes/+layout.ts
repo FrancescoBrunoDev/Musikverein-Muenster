@@ -14,7 +14,7 @@ export const load: LayoutLoad = async (event) => {
 			detectLocale(navigatorDetector) ||
 			locale.current ||
 			deafultLocale;
-
+		console.log('locale:', _locale);
 		await loadLocaleAsync(_locale);
 		setLocale(_locale);
 	}

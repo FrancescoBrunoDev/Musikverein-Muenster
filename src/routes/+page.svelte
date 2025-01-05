@@ -3,31 +3,6 @@
 	import LL from '$lib/i18n/i18n-svelte';
 	import BackgroundParallax from '$components/BackgroundParallax.svelte';
 	import { locale } from '$states/stateGeneral.svelte';
-	import { slide } from 'svelte/transition';
-	import { onMount } from 'svelte';
-
-	let expo = $state();
-
-	onMount(async () => {
-		const exhibitions = await getExhibitions();
-		expo = exhibitions;
-	});
-
-	async function getExhibitions() {
-		const response = await fetch(`/api/exhibitions/pb/getExhibitionsList`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
-		const data = await response.json();
-
-		// if data.success is true
-		if (!data.success || !data.exhibitions) {
-			return [];
-		}
-		return data.exhibitions;
-	}
 </script>
 
 <svelte:head>
@@ -97,17 +72,6 @@
 						class="group transition-transform duration-75 hover:-translate-y-1"
 						href="/{locale.current}/exhibitions/">{$LL.navbar.exhibitions()}</a
 					>
-					<ul transition:slide class="">
-						{#await getExhibitions() then exhibitions}
-							{#each exhibitions as exhibition}
-								<li class="text-2xl transition-transform duration-75 hover:-translate-y-1">
-									<a href="/{locale.current}/exhibitions/{exhibition.id}"
-										>{exhibition.metadata?.title}</a
-									>
-								</li>
-							{/each}
-						{/await}
-					</ul>
 				</div>
 			</div>
 		</div>
