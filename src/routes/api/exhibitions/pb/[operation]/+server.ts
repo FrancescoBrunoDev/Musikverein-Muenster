@@ -1,7 +1,7 @@
 import type { Gallery } from '$components/markdown/gallery/types';
+import { formatMD } from '$lib/utils';
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { formatMD } from '$lib/utils';
 
 export const POST: RequestHandler = async ({ request, locals, params, fetch }) => {
 	if (params.operation === 'updateFile') {
@@ -24,14 +24,18 @@ export const POST: RequestHandler = async ({ request, locals, params, fetch }) =
 	});
 };
 
-async function getExhibitionsList({ locals, fetch }: {
-	locals: App.Locals, fetch: {
+async function getExhibitionsList({
+	locals,
+	fetch
+}: {
+	locals: App.Locals;
+	fetch: {
 		(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
 		(input: string | URL | globalThis.Request, init?: RequestInit): Promise<Response>;
-	}
+	};
 }) {
 	const exhibitions = await locals.pb.collection('exhibitions').getFullList({
-		expand: 'files',
+		expand: 'files'
 	});
 	if (!exhibitions) {
 		throw error(500, {
@@ -39,24 +43,25 @@ async function getExhibitionsList({ locals, fetch }: {
 		});
 	}
 	const filesArray = await Promise.all(
-		exhibitions.flatMap(async (exhibition: any) =>
-			await Promise.all(
-				exhibition.expand.files
-					.filter((file: any) => file.live && file.lang === locals.locale)
-					.map(async (file: any) => {
-						const url = locals.pb.files.getURL(file, file.live);
-						const markdown = await fetch(url).then((res) => res.text());
-						const formattedMd = formatMD({ markdown });
+		exhibitions.flatMap(
+			async (exhibition: any) =>
+				await Promise.all(
+					exhibition.expand.files
+						.filter((file: any) => file.live && file.lang === locals.locale)
+						.map(async (file: any) => {
+							const url = locals.pb.files.getURL(file, file.live);
+							const markdown = await fetch(url).then((res) => res.text());
+							const formattedMd = formatMD({ markdown });
 
-						return {
-							metadata: formattedMd.metadata,
-							title: exhibition.title,
-							id: exhibition.id
-						};
-					})
-			)
+							return {
+								metadata: formattedMd.metadata,
+								title: exhibition.title,
+								id: exhibition.id
+							};
+						})
+				)
 		)
-	).then(arrays => arrays.flat());
+	).then((arrays) => arrays.flat());
 
 	return json({ success: true, exhibitions: filesArray }, { status: 200 });
 }

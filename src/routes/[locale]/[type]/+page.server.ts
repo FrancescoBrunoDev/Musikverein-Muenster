@@ -5,11 +5,13 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	return { exhibitions, locale: params.locale };
 };
 
-async function getExhibitions({ fetch }: {
+async function getExhibitions({
+	fetch
+}: {
 	fetch: {
 		(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
 		(input: string | URL | globalThis.Request, init?: RequestInit): Promise<Response>;
-	}
+	};
 }) {
 	const response = await fetch(`/api/exhibitions/pb/getExhibitionsList`, {
 		method: 'POST',

@@ -107,7 +107,7 @@
 				</h1>
 			</div>
 		</div>
-		<article class="container mx-auto my-10 prose max-w-3xl dark:prose-invert">
+		<article class="container prose mx-auto my-10 max-w-3xl dark:prose-invert">
 			{#key value}
 				<Markdown {value} {carta} />
 			{/key}
