@@ -10,11 +10,11 @@
 
 	interface Props {
 		gallery: Gallery;
-		selected?: number;
+		selected: number;
 		isOpen?: boolean;
 	}
 
-	let { gallery, selected, isOpen = $bindable() } = $props();
+	let { gallery, selected, isOpen = $bindable() }: Props = $props();
 
 	let images = $derived(
 		gallery.images && gallery.images.length > 0
