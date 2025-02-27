@@ -21,8 +21,9 @@
 	{/each}
 </div>
 
-<style>
+<style lang="postcss">
+	@reference '../../app.css';
 	.selected {
-		@apply rounded-xl bg-background;
+		@apply bg-background rounded-xl;
 	}
 </style>

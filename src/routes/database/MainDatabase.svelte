@@ -66,7 +66,7 @@
 
 <div class="flex h-[95dvh] flex-col overflow-hidden pb-12">
 	<div
-		class="flex flex-grow content-end items-center justify-center transition-all duration-500"
+		class="flex grow content-end items-center justify-center transition-all duration-500"
 		style={`opacity: ${opacitySearchSection};
                 filter: blur(${blurSearchSection}px);
                 transform: scale(${scaleSearchSection});`}

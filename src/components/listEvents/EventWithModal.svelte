@@ -38,7 +38,7 @@
 			handleClickEvent();
 		}}
 		class={cn(
-			'h-24 w-24 flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out'
+			'h-24 w-24 shrink-0 grow-0 font-bold transition-all duration-100 ease-in-out'
 		)}
 		>{date}
 
@@ -48,7 +48,7 @@
 					<span class="flex items-center gap-1 text-sm font-light">
 						{filtersArrayWithCounter[key].counter}
 						<Circle
-							class="flex-shrink-0"
+							class="shrink-0"
 							fill={filtersArrayWithCounter[key].color}
 							size={10}
 							stroke-opacity={0}

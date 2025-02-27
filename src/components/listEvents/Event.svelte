@@ -42,7 +42,7 @@
 	class={cn(
 		`relative overflow-hidden rounded-xl border-2 bg-background text-primary transition-all duration-100`,
 		{
-			'flex flex-shrink-0 flex-col': isOpen,
+			'flex shrink-0 flex-col': isOpen,
 			'flex w-24 flex-col justify-center gap-2 hover:scale-hover': !isOpen,
 			'w-80': isEventOpen,
 			'h-full w-full border-0 dark:border-2': isModalOpen
@@ -51,7 +51,7 @@
 >
 	<button
 		onclick={() => handleClickEvent()}
-		class={cn(`flex-shrink-0 flex-grow-0 font-bold transition-all duration-100 ease-in-out`, {
+		class={cn(`shrink-0 grow-0 font-bold transition-all duration-100 ease-in-out`, {
 			'relative left-0 right-0 top-0 h-fit py-2': isOpen,
 			'h-24': !isOpen
 		})}
@@ -64,7 +64,7 @@
 						<span class="flex items-center gap-1 text-sm font-light">
 							{filtersArrayWithCounter[key].counter}
 							<Circle
-								class="flex-shrink-0"
+								class="shrink-0"
 								fill={filtersArrayWithCounter[key].color}
 								size={10}
 								stroke-opacity={0}
@@ -115,7 +115,7 @@
 										{#each Object.values($filters).flat() as filter}
 											{#if filter.entity === 'corporation' && filter.id == corporation.corporation}
 												<Circle
-													class="flex-shrink-0"
+													class="shrink-0"
 													fill={filter.color}
 													size={10}
 													stroke-opacity={0}

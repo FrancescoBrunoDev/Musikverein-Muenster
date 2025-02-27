@@ -33,7 +33,7 @@
 			onblur={handleMouseOut}
 			onclick={handleClick}
 			aria-label="Toggle italic"
-			class="z-30 flex h-fit w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-primary p-2 text-background drop-shadow transition-all hover:scale-hover hover:drop-shadow-xl"
+			class="z-30 flex h-fit w-fit min-w-[2.5rem] flex-row items-center justify-center gap-1 rounded-xl bg-primary p-2 text-background drop-shadow-sm transition-all hover:scale-hover hover:drop-shadow-xl"
 		>
 			<Link size={20} />
 		</button>
