@@ -5,14 +5,6 @@
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
 
-@layer base {
-	@font-face {
-		font-family: 'Regatto';
-		src: url(/fonts/Regatto/RegattoBold.ttf);
-		font-weight: bold;
-	}
-}
-
 @theme {
 	/* Colori base */
 	--color-border: hsl(var(--border));
