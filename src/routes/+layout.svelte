@@ -88,6 +88,12 @@
 		:global(*, ::after, ::before, ::backdrop, ::file-selector-button) {
 			@apply border-border border-solid;
 		}
+
+		@font-face {
+			font-family: 'Regatto';
+			src: url(/fonts/Regatto/RegattoBold.ttf);
+			font-weight: bold;
+		}
 	}
 
 	:global(.scale-hover) {
