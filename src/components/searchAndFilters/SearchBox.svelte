@@ -32,11 +32,11 @@
 
 <div class="flex items-center gap-2">
 	<div
-		class="flex w-full items-center rounded-full bg-primary px-4 text-background drop-shadow-lg focus:outline-none focus:ring focus:ring-secondary"
+		class="flex w-full items-center rounded-full bg-primary px-4 text-background drop-shadow-lg focus:outline-hidden focus:ring-3 focus:ring-secondary"
 	>
 		<MethodSearch />
 		<input
-			class="focus-none h-10 w-full cursor-text bg-transparent px-3 placeholder-text/40 outline-none"
+			class="focus-none h-10 w-full cursor-text bg-transparent px-3 placeholder-text/40 outline-hidden"
 			type="text"
 			id="searchInput"
 			bind:value={_inputValue}

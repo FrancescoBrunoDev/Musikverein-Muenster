@@ -59,7 +59,7 @@
 	<div class="absolute h-full w-1 rounded-full bg-{color}"></div>
 	<div
 		class="ml-3 pb-2 transition-all duration-200 {$isAFilterDragged
-			? 'min-h-10 rounded outline-dotted outline-secondary'
+			? 'min-h-10 rounded-sm outline-dotted outline-secondary'
 			: 'min-h-1 border-background'}"
 	>
 		{#each Object.keys(groupedFilters) as entity}

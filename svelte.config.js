@@ -15,7 +15,7 @@ const config = {
 			$stores: 'src/stores',
 			$utils: 'src/utils',
 			$components: 'src/components',
-			$tailwind: 'src/globals.css',
+			$tailwind: 'src/app.css',
 			$lib: 'src/lib',
 			$static: 'src/static',
 			$routes: 'src/routes',

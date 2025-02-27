@@ -72,15 +72,15 @@
 				<div class="flex flex-col gap-1">
 					{#each Object.values($filters).flat() as filter}
 						{#if filter.entity === 'composer' && performance.composers && filter.id == performance.composers[0].person}
-							<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
+							<Circle class="shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
 						{/if}
 						{#if filter.entity === 'work' && filter.id == performance.work}
-							<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
+							<Circle class="shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
 						{/if}
 						{#if filter.entity === 'person'}
 							{#each performance.persons as person}
 								{#if filter.id == person.person}
-									<Circle class="flex-shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
+									<Circle class="shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
 								{/if}
 							{/each}
 						{/if}
