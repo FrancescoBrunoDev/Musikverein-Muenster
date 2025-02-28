@@ -268,7 +268,9 @@
 	{/if}
 </div>
 
-<style>
+<style lang="postcss">
+	@reference '$tailwind';
+
 	:global(.carta-font-code) {
 		font-family: 'Outfit';
 	}

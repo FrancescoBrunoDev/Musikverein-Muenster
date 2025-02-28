@@ -37,7 +37,9 @@
 	</div>
 </form>
 
-<style>
+<style lang="postcss">
+	@reference '$tailwind';
+
 	.button-checkbox {
 		--w: 2.3rem;
 		--padding: 2px;

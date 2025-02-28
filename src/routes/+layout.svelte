@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.css';
+	import '$tailwind';
 	import NavBar from '$components/layout/NavBar.svelte';
 	import { setFirstThemeData } from '$states/stateGeneral.svelte';
 	import { browser } from '$app/environment';
@@ -44,7 +44,7 @@
 </div>
 
 <style lang="postcss">
-	@reference '../app.css';
+	@reference '$tailwind';
 
 	:global {
 		body {

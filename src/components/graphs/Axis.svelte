@@ -119,7 +119,8 @@
 
 <g class="axis" bind:this={g} {transform} />
 
-<style>
+<style lang="postcss">
+	@reference '$tailwind';
 	.axis {
 		shape-rendering: crispEdges;
 	}

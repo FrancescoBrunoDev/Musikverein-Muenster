@@ -22,7 +22,7 @@
 </div>
 
 <style lang="postcss">
-	@reference '../../app.css';
+	@reference '$tailwind';
 	.selected {
 		@apply bg-background dark:bg-dark-background rounded-xl;
 	}

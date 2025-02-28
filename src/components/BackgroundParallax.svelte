@@ -83,7 +83,9 @@
 	{@render children?.()}
 </div>
 
-<style>
+<style lang="postcss">
+	@reference '$tailwind';
+
 	:global([data-speed]) {
 		transition: filter 0.3s ease-out;
 		will-change: transform, filter;
