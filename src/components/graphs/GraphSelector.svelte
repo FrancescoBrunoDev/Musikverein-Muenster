@@ -11,10 +11,3 @@
 </script>
 
 <Selector {options} bind:active={$selectedGraphType} />
-
-<style lang="postcss">
-	@reference '../../app.css';
-	.selected {
-		@apply bg-background dark:bg-dark-background rounded-sm;
-	}
-</style>
