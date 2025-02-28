@@ -34,13 +34,13 @@
 			in:fly={{ duration: 300, opacity: 0, easing: quadInOut }}
 			out:fly={{ y: -20, duration: 300, opacity: 0, easing: quadInOut }}
 			class={cn(
-				'fixed inset-0 z-50 flex items-center justify-center bg-black/70 text-primary backdrop-blur-xl'
+				'text-text dark:text-dark-text fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xl'
 			)}
 		>
 			<div
-				class="relative mx-auto flex h-full w-screen flex-col items-center px-4 py-12 text-background dark:text-text md:px-12 md:py-12"
+				class="text-background dark:text-dark-background dark:text-text relative mx-auto flex h-full w-screen flex-col items-center px-4 py-12 md:px-12 md:py-12"
 			>
-				<button class="absolute right-4 top-4" onclick={() => (isOpen = false)}>
+				<button class="absolute top-4 right-4" onclick={() => (isOpen = false)}>
 					<X />
 				</button>
 				<div class="grid size-full grid-cols-1 grid-rows-6 justify-center gap-4">

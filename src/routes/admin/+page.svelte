@@ -58,7 +58,7 @@
 							{#if exhibition.expand}
 								{#each exhibition.expand.files as file}
 									{@const isPublished = file.live ? ' - published' : ''}
-									<p class="h-fit rounded-xl bg-secondary px-2 py-1 text-sm">
+									<p class="bg-secondary dark:bg-dark-secondary h-fit rounded-xl px-2 py-1 text-sm">
 										{file.lang}
 										{isPublished}
 									</p>
@@ -106,14 +106,18 @@
 </div>
 
 <Modal isOpen={isModalNewExhibitionOpen}>
-	<div class="max-h-[80dvh] overflow-y-auto rounded-xl bg-background dark:border-2">
-		<h3 class="sticky top-0 mb-10 bg-background px-4 pb-0 pt-4 text-3xl font-bold">
+	<div
+		class="bg-background dark:bg-dark-background max-h-[80dvh] overflow-y-auto rounded-xl dark:border-2"
+	>
+		<h3
+			class="bg-background dark:bg-dark-background sticky top-0 mb-10 px-4 pt-4 pb-0 text-3xl font-bold"
+		>
 			Create new exhibition
 		</h3>
 		<div>
 			<form class="flex flex-col gap-4 px-4 pb-4" action="?/addNewExhibition" method="post">
 				<input
-					class="w-full rounded-xl border-2 bg-background p-2"
+					class="bg-background dark:bg-dark-background w-full rounded-xl border-2 p-2"
 					name="title"
 					placeholder="Title"
 				/>
@@ -124,14 +128,18 @@
 </Modal>
 
 <Modal isOpen={isModalModifyExhibitionOpen.state}>
-	<div class="max-h-[80dvh] overflow-y-auto rounded-xl bg-background dark:border-2">
-		<h3 class="sticky top-0 mb-10 bg-background px-4 pb-0 pt-4 text-3xl font-bold">
+	<div
+		class="bg-background dark:bg-dark-background max-h-[80dvh] overflow-y-auto rounded-xl dark:border-2"
+	>
+		<h3
+			class="bg-background dark:bg-dark-background sticky top-0 mb-10 px-4 pt-4 pb-0 text-3xl font-bold"
+		>
 			Modify exhibition
 		</h3>
 		<div>
 			<form class="flex flex-col gap-4 px-4 pb-4" action="?/modifyExhibition" method="post">
 				<input
-					class="w-full rounded-xl border-2 bg-background p-2"
+					class="bg-background dark:bg-dark-background w-full rounded-xl border-2 p-2"
 					name="title"
 					placeholder="Title"
 					value={isModalModifyExhibitionOpen.exhibition.title}

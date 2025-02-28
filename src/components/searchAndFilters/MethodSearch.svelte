@@ -11,7 +11,7 @@
 <div class="flex items-center">
 	{#if !isOpen}
 		<button
-			class="hover:scale-hover"
+			class="hover:scale-103"
 			in:fly={{ x: -10, duration: 200, easing: quintInOut }}
 			onclick={() => (isOpen = !isOpen)}><Filter size={20} strokeWidth={3} /></button
 		>
@@ -39,7 +39,7 @@
 					? 'underline'
 					: 'no-underline'} decoration-2">{$LL.filters.methods.not()}</button
 			>
-			<button class="hover:scale-hover" onclick={() => (isOpen = !isOpen)}
+			<button class="hover:scale-103" onclick={() => (isOpen = !isOpen)}
 				><ChevronLeft size={20} strokeWidth={3} /></button
 			>
 		</div>

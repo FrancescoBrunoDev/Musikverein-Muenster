@@ -30,7 +30,7 @@
 
 <Button
 	action={handleDeleteExhibition}
-	className="px-4 w-fit bg-destructive dark:text-primary"
+	className="px-4 w-fit bg-destructive dark:text-text dark:text-dark-text"
 	type="button"
 	size="sm"
 	label="Delete"

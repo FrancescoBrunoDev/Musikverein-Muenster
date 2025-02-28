@@ -66,7 +66,7 @@
 <section>
 	{#if data}
 		{#if data.type === 'preview'}
-			<div class="container fixed top-16 z-50 w-full">
+			<div class="fixed top-16 z-50 container w-full">
 				<div
 					class="flex flex-wrap items-center justify-between gap-4 rounded-2xl p-2 backdrop-blur-xl"
 				>
@@ -102,12 +102,12 @@
 			style="background-image: url('{data.markdown.metadata.img}')"
 		>
 			<div class="container">
-				<h1 class="font-serif text-4xl text-background lg:text-8xl">
+				<h1 class="text-background dark:text-dark-background font-serif text-4xl lg:text-8xl">
 					{data.markdown.metadata.title}
 				</h1>
 			</div>
 		</div>
-		<article class="container prose mx-auto my-10 max-w-3xl dark:prose-invert">
+		<article class="prose dark:prose-invert container mx-auto my-10 max-w-3xl">
 			{#key value}
 				<Markdown {value} {carta} />
 			{/key}

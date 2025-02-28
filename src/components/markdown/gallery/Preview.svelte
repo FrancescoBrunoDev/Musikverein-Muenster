@@ -24,7 +24,9 @@
 				alt={image.caption || fallbackCaption}
 			/>
 			<div class="absolute inset-0 flex items-center justify-center">
-				<div class="h-8 w-8 rounded-full bg-primary p-1 text-center text-background">
+				<div
+					class="bg-primary dark:bg-dark-primary text-background dark:text-dark-background h-8 w-8 rounded-full p-1 text-center"
+				>
 					{index + 1}
 				</div>
 			</div>

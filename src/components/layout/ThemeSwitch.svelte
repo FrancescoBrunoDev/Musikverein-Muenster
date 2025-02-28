@@ -5,7 +5,7 @@
 	import { expoInOut } from 'svelte/easing';
 </script>
 
-<Button action={toggleTheme}>
+<Button action={toggleTheme} type="button">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width="24"

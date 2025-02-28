@@ -9,11 +9,11 @@ let themeKind = new LocalStorage<ThemeKind>('theme', 'base');
 function setFirstThemeData() {
 	if (browser) {
 		if (themeKind.current === 'dark') {
-			document.body.classList.remove('base');
-			document.body.classList.add('dark');
+			document.documentElement.classList.remove('base');
+			document.documentElement.classList.add('dark');
 		} else if (themeKind.current === 'base') {
-			document.body.classList.remove('dark');
-			document.body.classList.add('base');
+			document.documentElement.classList.remove('dark');
+			document.documentElement.classList.add('base');
 		}
 	}
 }
@@ -22,12 +22,12 @@ function toggleTheme() {
 	if (browser) {
 		if (themeKind.current === 'dark') {
 			themeKind.current = 'base';
-			document.body.classList.remove('dark');
-			document.body.classList.add('base');
+			document.documentElement.classList.remove('dark');
+			document.documentElement.classList.add('base');
 		} else if (themeKind.current === 'base') {
 			themeKind.current = 'dark';
-			document.body.classList.remove('base');
-			document.body.classList.add('dark');
+			document.documentElement.classList.remove('base');
+			document.documentElement.classList.add('dark');
 		}
 	}
 }
