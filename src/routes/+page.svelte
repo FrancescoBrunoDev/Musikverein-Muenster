@@ -43,7 +43,7 @@
 		/>
 
 		<div
-			class="container z-10 flex w-full flex-col gap-12 px-10 pb-10 text-right font-bold text-white"
+			class="z-10 container flex w-full flex-col gap-12 px-10 pb-10 text-right font-bold text-white"
 		>
 			<h1
 				class="z-10 w-full text-5xl md:text-8xl lg:text-8xl"

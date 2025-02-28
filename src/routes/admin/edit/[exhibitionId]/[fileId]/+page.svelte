@@ -238,7 +238,7 @@
 			<div
 				class="variant-soft-success rounded-token flex items-center justify-end gap-1 px-4 py-2 text-xs"
 			>
-				<div class="inline-flex gap-1 text-destructive">
+				<div class="text-destructive inline-flex gap-1">
 					Editing by {data.file.editingBy}
 					<CloudAlert class="h-4 w-4" />
 				</div>
@@ -249,7 +249,7 @@
 				class="variant-soft-success rounded-token flex items-center justify-end gap-1 px-4 py-2 text-xs"
 			>
 				{#if !saveStatus.state}
-					<div class="inline-flex gap-1 text-destructive">
+					<div class="text-destructive inline-flex gap-1">
 						{saveStatus.updated}
 						<CloudAlert class="h-4 w-4" />
 					</div>
@@ -273,10 +273,10 @@
 		font-family: 'Outfit';
 	}
 	:global(.carta-theme__default.carta-editor) {
-		@apply rounded-xl border-2 border-border;
+		@apply border-border rounded-xl border-2;
 	}
 	:global(.carta-theme__default .carta-toolbar) {
-		@apply border-b-2 border-border pb-1 pt-2;
+		@apply border-border border-b-2 pt-2 pb-1;
 	}
 	:gloabl(.carta-font-code) {
 		@apply text-text;

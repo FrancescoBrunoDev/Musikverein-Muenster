@@ -16,7 +16,7 @@
 		<div class="flex flex-col gap-2">
 			<span class="font-bold">E-Mail</span>
 			<input
-				class="rounded-xl border-2 bg-background p-2"
+				class="bg-background dark:bg-dark-background rounded-xl border-2 p-2"
 				name="email"
 				title="E-Mail"
 				type="email"
@@ -26,7 +26,7 @@
 		<div class="flex flex-col gap-2">
 			<span class="font-bold">Password</span>
 			<input
-				class="rounded-xl border-2 bg-background p-2"
+				class="bg-background dark:bg-dark-background rounded-xl border-2 p-2"
 				name="password"
 				title="Password"
 				type="password"

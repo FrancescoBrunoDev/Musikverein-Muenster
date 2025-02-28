@@ -9,10 +9,10 @@
 	let { options, active = $bindable() }: Props = $props();
 </script>
 
-<div class="flex gap-2 rounded-2xl bg-secondary p-1">
+<div class="bg-secondary dark:bg-dark-secondary flex gap-2 rounded-2xl p-1">
 	{#each options as option}
 		<button
-			class="px-2 text-primary transition-all"
+			class="text-text dark:text-dark-text px-2 transition-all"
 			class:selected={active === option.value}
 			onclick={() => (active = option.value)}
 		>
@@ -24,6 +24,6 @@
 <style lang="postcss">
 	@reference '../../app.css';
 	.selected {
-		@apply bg-background rounded-xl;
+		@apply bg-background dark:bg-dark-background rounded-xl;
 	}
 </style>

@@ -21,7 +21,7 @@
 
 <button
 	onclick={() => (isPersonOpen = !isPersonOpen)}
-	class="pl-1 font-bold hover:scale-hover dark:font-semibold">{$LL.events.performedBy()}</button
+	class="pl-1 font-bold hover:scale-103 dark:font-semibold">{$LL.events.performedBy()}</button
 >
 {#if isPersonOpen}
 	{#await joinPersons(performance.persons)}

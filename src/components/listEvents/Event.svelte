@@ -40,10 +40,10 @@
 
 <div
 	class={cn(
-		`relative overflow-hidden rounded-xl border-2 bg-background text-primary transition-all duration-100`,
+		`bg-background dark:bg-dark-background text-text dark:text-dark-text relative overflow-hidden  rounded-xl border-2 transition-all duration-100`,
 		{
 			'flex shrink-0 flex-col': isOpen,
-			'flex w-24 flex-col justify-center gap-2 hover:scale-hover': !isOpen,
+			'flex w-24 flex-col justify-center gap-2 hover:scale-103': !isOpen,
 			'w-80': isEventOpen,
 			'h-full w-full border-0 dark:border-2': isModalOpen
 		}
@@ -52,7 +52,7 @@
 	<button
 		onclick={() => handleClickEvent()}
 		class={cn(`shrink-0 grow-0 font-bold transition-all duration-100 ease-in-out`, {
-			'relative left-0 right-0 top-0 h-fit py-2': isOpen,
+			'relative top-0 right-0 left-0 h-fit py-2': isOpen,
 			'h-24': !isOpen
 		})}
 		>{date}
@@ -114,12 +114,7 @@
 									<div class="flex items-center gap-1">
 										{#each Object.values($filters).flat() as filter}
 											{#if filter.entity === 'corporation' && filter.id == corporation.corporation}
-												<Circle
-													class="shrink-0"
-													fill={filter.color}
-													size={10}
-													stroke-opacity={0}
-												/>
+												<Circle class="shrink-0" fill={filter.color} size={10} stroke-opacity={0} />
 											{/if}
 										{/each}
 										<span class="text-sm">{title}</span>
@@ -137,7 +132,7 @@
 						{#each event.sources as source}
 							{#if source.url}
 								<a
-									class="hover:scale-hover"
+									class="hover:scale-103"
 									href={source.url}
 									target="_blank"
 									rel="noopener noreferrer"
@@ -154,7 +149,9 @@
 					'overflow-y-scroll': isModalOpen
 				})}
 			>
-				<div class="sticky top-0 w-full bg-background text-base font-bold dark:font-semibold">
+				<div
+					class="bg-background dark:bg-dark-background sticky top-0 w-full text-base font-bold dark:font-semibold"
+				>
 					{$LL.filters.entities.performances()}
 				</div>
 				<div

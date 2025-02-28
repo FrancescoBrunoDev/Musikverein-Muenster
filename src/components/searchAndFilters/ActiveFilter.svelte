@@ -56,7 +56,7 @@
 	ondragend={handleDragEnd}
 	role="button"
 	tabindex="0"
-	class="flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-xs text-background hover:z-20 hover:drop-shadow-lg {isDragging
+	class="bg-primary dark:bg-dark-primary text-background dark:text-dark-background flex items-center gap-1 rounded-full px-3 py-1 text-xs hover:z-20 hover:drop-shadow-lg {isDragging
 		? 'cursor-grabbing'
 		: 'cursor-grab'}"
 >
@@ -98,12 +98,12 @@
 		<div use:melt={$content} transition:fade={{ duration: 100 }} class="flex flex-col gap-y-1">
 			{#if filter.entity === 'person' || filter.entity === 'composer'}
 				<ul
-					class="flex flex-initial flex-col gap-y-1 rounded-xl bg-primary p-1 text-xs hover:scale-hover"
+					class="bg-primary dark:bg-dark-primary flex flex-initial flex-col gap-y-1 rounded-xl p-1 text-xs hover:scale-103"
 				>
 					<li>
 						<button
 							onclick={() => changeFilterPersonOrComposer(filter, method)}
-							class="w-full rounded-full bg-background px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-hover hover:shadow-lg"
+							class="bg-background dark:bg-dark-background w-full rounded-full px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-103 hover:shadow-lg"
 							>{$LL.filters.filter.asA()}
 							{#if filter.entity === 'person'}{$LL.filters.entities.composer()}{:else if filter.entity === 'composer'}{$LL.filters.entities.performer()}{/if}</button
 						>
@@ -111,7 +111,7 @@
 					<li>
 						<button
 							onclick={() => makeFilterPersonBothPersonAndComposer(filter, method)}
-							class="w-full rounded-full bg-background px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-hover hover:shadow-lg"
+							class="bg-background dark:bg-dark-background w-full rounded-full px-2 pb-[0.13rem] transition-transform duration-100 hover:scale-103 hover:shadow-lg"
 							>{$LL.filters.filter.makeItBothComposerAndPerformer()}</button
 						>
 					</li>
@@ -119,7 +119,7 @@
 			{/if}
 			{#if $isMoveToActive}
 				<ul
-					class="flex flex-initial flex-col gap-y-1 rounded-xl bg-primary p-1 text-xs hover:scale-hover"
+					class="bg-primary dark:bg-dark-primary flex flex-initial flex-col gap-y-1 rounded-xl p-1 text-xs hover:scale-103"
 				>
 					{#each possibleMethods as possibleMethod}
 						{#if possibleMethod !== method}

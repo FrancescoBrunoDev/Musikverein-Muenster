@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '../app.css';
 	import NavBar from '$components/layout/NavBar.svelte';
 	import { setFirstThemeData } from '$states/stateGeneral.svelte';
 	import { browser } from '$app/environment';
@@ -36,46 +37,18 @@
 </script>
 
 <div class="subpixel-antialiased">
-	<div class="grid h-screen justify-items-center">
+	<main class="grid h-screen justify-items-center">
 		<NavBar {value} {handleLocaleChange} />
 		{@render children?.()}
-	</div>
+	</main>
 </div>
 
 <style lang="postcss">
 	@reference '../app.css';
 
-	@custom-variant dark (&:is(.dark *));
-
-	@layer base {
-		:global(:root) {
-			--text: 0 60% 1%;
-			--background: 0 60% 99%; /* white */
-			--primary: 0 60% 1%; /* black */
-			--secondary: 240 5.9% 90%;
-			--white: 0 60% 99%;
-			--accent: 0 51% 46%;
-			--destructive: 0 84.2% 60.2%;
-			--border: 240 5.9% 90%;
-			--ring: 240 5.9% 10%;
-			--radius: 0.25rem;
-		}
-
-		:global(.dark) {
-			--text: 0 60% 99%;
-			--background: 0 60% 1%; /* black */
-			--primary: 0 60% 99%; /* white */
-			--secondary: 240 3.7% 25.9%;
-			--white: 0 60% 99%;
-			--accent: 0 51% 54%;
-			--destructive: 0 62.8% 30.6%;
-			--border: 240 3.7% 15.9%;
-			--ring: 240 4.9% 83.9%;
-			--radius: 0.25rem;
-		}
-
-		:global(body) {
-			@apply bg-background text-text text-base;
+	:global {
+		body {
+			@apply bg-background dark:bg-dark-background dark:text-dark-text text-text text-base;
 			transition:
 				background-color 0.2s ease-in-out,
 				color 0.2s ease-in-out;
@@ -85,18 +58,37 @@
 		}
 
 		/* all the border must be color border */
-		:global(*, ::after, ::before, ::backdrop, ::file-selector-button) {
-			@apply border-border border-solid;
+		*,
+		::after,
+		::before,
+		::backdrop,
+		::file-selector-button {
+			@apply border-border dark:border-dark-border border-solid;
 		}
 
-		@font-face {
-			font-family: 'Regatto';
-			src: url(/fonts/Regatto/RegattoBold.ttf);
-			font-weight: bold;
+		/* allow border-primary to override the default */
+		.border-primary,
+		.border-primary::after,
+		.border-primary::before {
+			@apply border-primary dark:border-primary;
 		}
-	}
 
-	:global(.scale-hover) {
-		@apply scale-103;
+		/* allow border-secondary to override the default */
+		.border-secondary,
+		.border-secondary::after,
+		.border-secondary::before {
+			@apply border-secondary dark:border-secondary;
+		}
+
+		/* allow border-background to override the default */
+		.border-background,
+		.border-background::after,
+		.border-background::before {
+			@apply border-background dark:border-dark-background;
+		}
+
+		button {
+			@apply cursor-pointer;
+		}
 	}
 </style>

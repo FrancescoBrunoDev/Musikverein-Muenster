@@ -30,16 +30,14 @@
 
 <div
 	class={cn(
-		'relative flex w-fit flex-col justify-center gap-2 overflow-hidden rounded-xl border-2 text-primary transition-all duration-100 hover:scale-hover'
+		'text-text dark:text-dark-text relative flex w-fit flex-col justify-center gap-2 overflow-hidden rounded-xl border-2 transition-all duration-100 hover:scale-103'
 	)}
 >
 	<button
 		onclick={() => {
 			handleClickEvent();
 		}}
-		class={cn(
-			'h-24 w-24 shrink-0 grow-0 font-bold transition-all duration-100 ease-in-out'
-		)}
+		class={cn('h-24 w-24 shrink-0 grow-0 font-bold transition-all duration-100 ease-in-out')}
 		>{date}
 
 		<div class="flex flex-wrap justify-center gap-2">

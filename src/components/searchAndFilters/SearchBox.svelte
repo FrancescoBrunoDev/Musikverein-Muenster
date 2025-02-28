@@ -11,7 +11,7 @@
 
 	const entities: Entity[] = ['person', 'work', 'corporation', 'location'];
 
-	let timeoutId: number | undefined = $state(undefined);
+	let timeoutId: ReturnType<typeof setTimeout> | undefined = $state(undefined);
 	let _inputValue: string = $state('');
 
 	$effect(() => {
@@ -32,11 +32,11 @@
 
 <div class="flex items-center gap-2">
 	<div
-		class="flex w-full items-center rounded-full bg-primary px-4 text-background drop-shadow-lg focus:outline-hidden focus:ring-3 focus:ring-secondary"
+		class="bg-primary dark:bg-dark-primary text-background dark:text-dark-background focus:ring-secondary flex w-full items-center rounded-full px-4 drop-shadow-lg focus:ring-3 focus:outline-hidden"
 	>
 		<MethodSearch />
 		<input
-			class="focus-none h-10 w-full cursor-text bg-transparent px-3 placeholder-text/40 outline-hidden"
+			class="focus-none placeholder:text-dark-text dark:placeholder:text-background h-10 w-full cursor-text bg-transparent px-3 outline-hidden"
 			type="text"
 			id="searchInput"
 			bind:value={_inputValue}
@@ -57,9 +57,9 @@
 					deleteSuggestions;
 				}
 			}}
-			class={'rounded-full border-2 px-4 pb-[0.15rem] text-sm transition-shadow hover:scale-hover hover:drop-shadow-lg ' +
+			class={'rounded-full border-2 px-4 pb-[0.15rem] text-sm transition-shadow hover:scale-103 hover:drop-shadow-lg ' +
 				($entitiesForSearchBox.includes(entity)
-					? 'border-primary bg-primary text-background'
+					? 'border-primary bg-primary dark:bg-dark-primary text-background dark:text-dark-background'
 					: 'bg-transparent')}
 		>
 			{$LL.filters.entities[entity]()}

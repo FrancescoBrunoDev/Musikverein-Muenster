@@ -8,7 +8,7 @@
 		children?: () => any;
 		light?: boolean;
 		size?: 'sm' | 'md' | 'lg';
-		type: 'button' | 'submit' | 'reset';
+		type?: 'button' | 'submit' | 'reset';
 		formAction?: string;
 		className?: string;
 		disabled?: boolean;
@@ -37,8 +37,8 @@
 	let formattedLabel = $derived(label?.replace(/\s/g, '-').toLowerCase());
 
 	const buttonClass = cn(
-		'flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary p-2 text-background transition-all hover:scale-hover hover:drop-shadow-xl',
-		{ 'border-2 bg-background text-text': light },
+		'flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary dark:bg-dark-primary p-2 text-background dark:text-dark-background transition-all hover:scale-103 hover:drop-shadow-xl',
+		{ 'border-2 bg-background dark:bg-dark-background text-text dark:text-dark-text': light },
 		{ 'h-8 w-8 text-xs': size === 'sm' },
 		{ 'h-10 w-10': size === 'md' },
 		{ 'h-12 w-12': size === 'lg' },

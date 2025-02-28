@@ -75,13 +75,13 @@
 	<div
 		bind:this={div}
 		transition:slide
-		class="z-10 mt-2 flex h-52 w-full flex-col gap-y-2 overflow-auto overscroll-auto rounded-xl border-2 bg-background p-2"
+		class="bg-background dark:bg-dark-background z-10 mt-2 flex h-52 w-full flex-col gap-y-2 overflow-auto overscroll-auto rounded-xl border-2 p-2"
 	>
 		{#if suggestions && suggestions.length > 0}
 			{#each suggestions as suggestion}
 				<div class="flex h-fit items-center gap-1">
 					{#if $entitiesForSearchBox.length > 1}
-						<div class="flex h-5 items-center rounded-full border-2 border-text px-2 text-xs">
+						<div class="border-text flex h-5 items-center rounded-full border-2 px-2 text-xs">
 							{suggestion[1]}
 						</div>
 					{/if}
@@ -92,13 +92,15 @@
 						id={suggestion[2]}>{suggestion[0]}</button
 					>
 					{#await getNumbers(Number(suggestion[2]), suggestion[1])}
-						<span class="flex h-5 items-center rounded-full bg-primary px-2 text-xs text-secondary">
+						<span
+							class="bg-primary dark:bg-dark-primary text-secondary flex h-5 items-center rounded-full px-2 text-xs"
+						>
 							<Loader2 class="h-full animate-spin py-1" />
 						</span>
 					{:then numberEvents}
 						{#if Number(numberEvents) > 0}
 							<span
-								class="flex h-5 items-center rounded-full bg-primary px-2 text-xs text-secondary"
+								class="bg-primary dark:bg-dark-primary text-secondary flex h-5 items-center rounded-full px-2 text-xs"
 							>
 								{numberEvents}
 							</span>
@@ -109,7 +111,7 @@
 				</div>
 			{/each}
 		{:else}
-			<div class="flex h-full items-center justify-center text-secondary">
+			<div class="text-secondary flex h-full items-center justify-center">
 				<p>No suggestions</p>
 			</div>
 		{/if}

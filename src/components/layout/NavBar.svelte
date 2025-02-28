@@ -21,8 +21,8 @@
 
 <div
 	class="fixed top-0 z-40 flex h-10 w-full items-center justify-center {isHomePage
-		? 'text-background text-white'
-		: 'bg-background text-primary'}"
+		? 'text-white'
+		: 'bg-background dark:bg-dark-background'}"
 >
 	<div class="container flex justify-between text-lg">
 		<ul class="flex items-center">
@@ -32,7 +32,7 @@
 				</li>
 			{/if}
 		</ul>
-		<button onclick={() => toggleMenu()} class="flex gap-3 font-bold hover:scale-hover"
+		<button onclick={() => toggleMenu()} class="flex gap-3 font-bold hover:scale-103"
 			>{$LL.navbar.menu()}</button
 		>
 		{#if isMenuActive}
@@ -43,13 +43,13 @@
 					x: 1500,
 					easing: quintInOut
 				}}
-				class="container absolute left-0 bottom-0 right-0 top-0 z-50 flex h-dvh flex-col bg-background py-8 text-primary lg:left-[unset] lg:w-[850px] lg:drop-shadow-2xl"
+				class="bg-background dark:bg-dark-background text-text dark:text-dark-text absolute top-0 right-0 bottom-0 left-0 z-50 container flex h-dvh flex-col py-8 lg:left-[unset] lg:w-[850px] lg:drop-shadow-2xl"
 			>
 				<button
 					onclick={() => toggleMenu()}
-					class="self-end hover:scale-hover hover:drop-shadow-2xl"
+					class="stroke-text dark:stroke-dark-text self-end hover:scale-103 hover:drop-shadow-2xl"
 				>
-					<X strokeWidth={2.5} size={50} color="hsl(var(--text)" /></button
+					<X strokeWidth={2.5} size={50} /></button
 				>
 				<div class="flex h-full items-end justify-between">
 					<div

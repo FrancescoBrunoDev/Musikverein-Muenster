@@ -15,6 +15,6 @@
 <style lang="postcss">
 	@reference '../../app.css';
 	.selected {
-		@apply bg-background rounded-sm;
+		@apply bg-background dark:bg-dark-background rounded-sm;
 	}
 </style>

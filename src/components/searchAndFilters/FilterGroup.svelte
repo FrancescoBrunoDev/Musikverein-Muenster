@@ -48,7 +48,7 @@
 >
 	{#if Object.keys(groupedFilters).length !== 0 || $isAFilterDragged}
 		<div
-			class="absolute bottom-0 left-0 top-0 flex h-full -translate-x-5 items-center text-xs font-bold uppercase"
+			class="absolute top-0 bottom-0 left-0 flex h-full -translate-x-5 items-center text-xs font-bold uppercase"
 			transition:fade={{ duration: 200 }}
 		>
 			<span style="writing-mode: vertical-rl;" class="rotate-180"
@@ -59,11 +59,14 @@
 	<div class="absolute h-full w-1 rounded-full bg-{color}"></div>
 	<div
 		class="ml-3 pb-2 transition-all duration-200 {$isAFilterDragged
-			? 'min-h-10 rounded-sm outline-dotted outline-secondary'
-			: 'min-h-1 border-background'}"
+			? 'outline-secondary min-h-10 rounded-sm outline-dotted'
+			: 'border-background min-h-1'}"
 	>
 		{#each Object.keys(groupedFilters) as entity}
-			<div class="grid pl-2 text-primary" transition:slide={{ axis: 'y', delay: 150 }}>
+			<div
+				class="text-text dark:text-dark-text grid pl-2"
+				transition:slide={{ axis: 'y', delay: 150 }}
+			>
 				<h2 class="mb-2 text-sm font-bold">
 					{entity === 'person'
 						? $LL.filters.entities['performer']()
