@@ -13,9 +13,9 @@
 		<img
 			data-speed="-2"
 			data-tilt="-4"
-			class="fixed h-full w-full bg-cover bg-center object-cover brightness-75"
+			class="fixed h-full w-full bg-cover bg-center object-cover brightness-65"
 			alt="Rathaussaal in Münster"
-			src="img/bg.png"
+			src="img/bg.avif"
 		/>
 		<img
 			data-speed="1"
