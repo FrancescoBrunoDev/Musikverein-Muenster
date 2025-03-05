@@ -20,7 +20,8 @@ const config = {
 			$static: 'src/static',
 			$routes: 'src/routes',
 			$states: 'src/states',
-			$mdcache: 'src/.mdcache'
+			$mdcache: 'src/.mdcache',
+			$databaseMusiconn: 'src/databaseMusiconn/src'
 		}
 	},
 	preprocess: sequence([vitePreprocess(), preprocessMeltUI()])
