@@ -18,7 +18,7 @@
 		"cron": "node src/scripts/cron.js",
 		"start": "npm-run-all --parallel node-server cron",
 		"node-server": "node build",
-		"postinstall": "[ -d src/databaseMusiconn ] || git clone https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/databaseMusiconn && cd src/databaseMusiconn && yarn install && yarn build"
+		"postinstall": "[ -d src/components/databaseMusiconn ] || git clone https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn && cd src/databaseMusiconn && yarn install && yarn build"
 	},
 	"devDependencies": {
 		"@melt-ui/pp": "^0.3.2",
