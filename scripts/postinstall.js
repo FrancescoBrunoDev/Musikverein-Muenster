@@ -59,8 +59,32 @@ try {
     console.log('Adding DatabaseMusiconn as a Git submodule...');
     execSync(`git submodule add --force ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
   } else {
-    console.log('Updating existing DatabaseMusiconn submodule...');
-    execSync(`git submodule update --init --recursive ${databaseMusiconnPath}`, { stdio: 'inherit' });
+    // Check if URL exists in .gitmodules before updating
+    try {
+      const gitmodulesExists = existsSync('.gitmodules');
+      let hasSubmoduleUrl = false;
+      
+      if (gitmodulesExists) {
+        const gitModulesContent = execSync('git config -f .gitmodules --get submodule.src/components/databaseMusiconn.url', {
+          stdio: ['pipe', 'pipe', 'pipe'],
+          encoding: 'utf8'
+        }).trim();
+        hasSubmoduleUrl = gitModulesContent.length > 0;
+      }
+      
+      if (!hasSubmoduleUrl) {
+        // No URL in .gitmodules, re-add the submodule
+        console.log('No URL found in .gitmodules, re-adding submodule...');
+        execSync(`git submodule add --force ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
+      } else {
+        console.log('Updating existing DatabaseMusiconn submodule...');
+        execSync(`git submodule update --init --recursive ${databaseMusiconnPath}`, { stdio: 'inherit' });
+      }
+    } catch (e) {
+      // If anything fails, default to adding the submodule
+      console.log('Error checking .gitmodules, re-adding submodule...');
+      execSync(`git submodule add --force ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
+    }
   }
   
   // Create a minimal tsconfig.json to avoid build errors
