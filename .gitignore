@@ -6,4 +6,3 @@ build
 src/.mdcache
 package-lock.json
 yarn.lock
-src/components/databaseMusiconn

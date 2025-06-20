@@ -1,0 +1,3 @@
+[submodule "src/components/databaseMusiconn"]
+	path = src/components/databaseMusiconn
+	url = https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git
