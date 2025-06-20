@@ -8,18 +8,25 @@ const rootDir = join(__dirname, '..');
 
 try {
   console.log('📦 Running postinstall script...');
-  
+
   // Check if the .git directory exists (to avoid errors in environments like CI where git might not be available)
   if (existsSync(join(rootDir, '.git'))) {
     console.log('🔄 Initializing git submodules...');
     execSync('git submodule init', { stdio: 'inherit', cwd: rootDir });
-    
+
     console.log('🔄 Updating git submodules...');
     execSync('git submodule update', { stdio: 'inherit', cwd: rootDir });
-    
+
+    // Add this section to update the submodule to the latest commit
+    console.log('🔄 Updating databaseMusiconn to latest version...');
+    const modulePath = join(rootDir, 'src', 'components', 'databaseMusiconn');
+    if (existsSync(join(modulePath, '.git'))) {
+      execSync('git fetch', { stdio: 'inherit', cwd: modulePath });
+      execSync('git checkout main', { stdio: 'inherit', cwd: modulePath });
+      execSync('git pull origin main', { stdio: 'inherit', cwd: modulePath });
+    }
+
     console.log('✅ Git submodules successfully initialized and updated.');
-  } else {
-    console.log('ℹ️ Skipping git submodule initialization (not a git repository).');
   }
 
   // Handle the databaseMusiconn submodule configuration files
