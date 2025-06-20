@@ -24,6 +24,13 @@ try {
     execSync(`rm ${path.join(databaseMusiconnPath, 'tsconfig.json')}`, { stdio: 'inherit' });
   }
   
+  // Remove .git directory to avoid Docker build conflicts
+  const gitDirPath = path.join(databaseMusiconnPath, '.git');
+  if (existsSync(gitDirPath)) {
+    console.log('Removing .git directory to prevent Docker build issues...');
+    execSync(`rm -rf ${gitDirPath}`, { stdio: 'inherit' });
+  }
+  
   // Install dependencies and build
   execSync(`cd ${databaseMusiconnPath} && yarn install`, { stdio: 'inherit' });
   
