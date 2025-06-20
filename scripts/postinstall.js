@@ -1,4 +1,4 @@
-import { existsSync } from 'fs';
+import { existsSync, writeFileSync } from 'fs';
 import { execSync } from 'child_process';
 import path from 'path';
 import { mkdirSync } from 'fs';
@@ -19,9 +19,31 @@ try {
   execSync(`git clone ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
   
   console.log('Setting up DatabaseMusiconn...');
-  // Remove tsconfig.json if it exists to avoid conflicts
-  if (existsSync(path.join(databaseMusiconnPath, 'tsconfig.json'))) {
-    execSync(`rm ${path.join(databaseMusiconnPath, 'tsconfig.json')}`, { stdio: 'inherit' });
+  
+  // Handle tsconfig.json - replace it with a simple one instead of just removing
+  const tsconfigPath = path.join(databaseMusiconnPath, 'tsconfig.json');
+  if (existsSync(tsconfigPath)) {
+    console.log('Replacing tsconfig.json with a compatible version...');
+    const simpleConfig = {
+      "compilerOptions": {
+        "target": "ES2020",
+        "useDefineForClassFields": true,
+        "module": "ESNext",
+        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "skipLibCheck": true,
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "strict": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noFallthroughCasesInSwitch": true
+      },
+      "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
+    };
+    writeFileSync(tsconfigPath, JSON.stringify(simpleConfig, null, 2));
   }
   
   // Remove .git directory to avoid Docker build conflicts
