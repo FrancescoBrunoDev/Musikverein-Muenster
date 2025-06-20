@@ -20,31 +20,15 @@ try {
   
   console.log('Setting up DatabaseMusiconn...');
   
-  // Handle tsconfig.json - replace it with a simple one instead of just removing
+  // Create an empty tsconfig.json to prevent reference errors
   const tsconfigPath = path.join(databaseMusiconnPath, 'tsconfig.json');
-  if (existsSync(tsconfigPath)) {
-    console.log('Replacing tsconfig.json with a compatible version...');
-    const simpleConfig = {
-      "compilerOptions": {
-        "target": "ES2020",
-        "useDefineForClassFields": true,
-        "module": "ESNext",
-        "lib": ["ES2020", "DOM", "DOM.Iterable"],
-        "skipLibCheck": true,
-        "moduleResolution": "bundler",
-        "allowImportingTsExtensions": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": true,
-        "strict": true,
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
-        "noFallthroughCasesInSwitch": true
-      },
-      "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
-    };
-    writeFileSync(tsconfigPath, JSON.stringify(simpleConfig, null, 2));
-  }
+  console.log('Creating minimal tsconfig.json to avoid build errors...');
+  // Use a minimal valid tsconfig without any extends
+  writeFileSync(tsconfigPath, JSON.stringify({
+    "compilerOptions": {
+      "skipLibCheck": true
+    }
+  }, null, 2));
   
   // Remove .git directory to avoid Docker build conflicts
   const gitDirPath = path.join(databaseMusiconnPath, '.git');
