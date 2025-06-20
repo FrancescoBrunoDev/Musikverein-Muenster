@@ -36,6 +36,8 @@ try {
   const buildCommand = 'npm run build';
   console.log(`🚀 Running build command: ${buildCommand}`)
   execSync(buildCommand, { stdio: 'inherit', cwd: modulePath })
+
+  // Log success message
   console.log('✅ Postinstall script completed successfully.');
 } catch (error) {
   console.error('❌ Error during postinstall script:', error.message);
