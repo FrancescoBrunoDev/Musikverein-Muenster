@@ -1,47 +1,85 @@
 import { existsSync, writeFileSync } from 'fs';
 import { execSync } from 'child_process';
 import path from 'path';
-import { mkdirSync } from 'fs';
 
 const databaseMusiconnPath = path.join(process.cwd(), 'src/components/databaseMusiconn');
 const repoUrl = 'https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git';
 
 try {
-  // Check if directory exists, delete it first if it does
-  if (existsSync(databaseMusiconnPath)) {
-    console.log('DatabaseMusiconn directory exists. Removing for fresh installation...');
-    execSync(`rm -rf ${databaseMusiconnPath}`, { stdio: 'inherit' });
+  console.log('Setting up DatabaseMusiconn as a Git submodule...');
+  
+  // Check if this is a CI/production environment where submodules are already handled
+  if (process.env.CI || process.env.NODE_ENV === 'production') {
+    console.log('CI/Production environment detected, skipping submodule setup');
+    process.exit(0);
+  }
+
+  // Check if the path exists in the Git index (has been added as submodule before)
+  let pathInIndex = false;
+  try {
+    const gitLsOutput = execSync('git ls-files --stage src/components/databaseMusiconn', { 
+      encoding: 'utf8',
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+    pathInIndex = gitLsOutput.trim().length > 0;
+  } catch (e) {
+    // If command fails, assume path is not in index
+    pathInIndex = false;
+  }
+
+  // If path exists in index but directory doesn't exist or is not a Git repo,
+  // we need to deinit the submodule and remove it from the index
+  if (pathInIndex && (!existsSync(databaseMusiconnPath) || !existsSync(path.join(databaseMusiconnPath, '.git')))) {
+    console.log('Cleaning up incomplete submodule registration...');
+    try {
+      // Deinitialize the submodule if it exists
+      execSync('git submodule deinit -f src/components/databaseMusiconn', {
+        stdio: ['pipe', 'pipe', 'pipe']
+      });
+    } catch (e) {
+      // Ignore errors if the submodule isn't initialized
+    }
+    
+    // Remove from the index and working tree
+    execSync('git rm -f src/components/databaseMusiconn', {
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+    
+    // Remove any remaining directories
+    execSync('rm -rf src/components/databaseMusiconn .git/modules/src/components/databaseMusiconn', {
+      stdio: 'inherit'
+    });
+    
+    // Reset pathInIndex flag
+    pathInIndex = false;
+  }
+
+  // Initialize submodule if needed
+  if (!pathInIndex) {
+    console.log('Adding DatabaseMusiconn as a Git submodule...');
+    execSync(`git submodule add ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
+  } else {
+    console.log('Updating existing DatabaseMusiconn submodule...');
+    execSync(`git submodule update --init --recursive ${databaseMusiconnPath}`, { stdio: 'inherit' });
   }
   
-  // Create directory and clone repository
-  console.log('Creating directory and cloning DatabaseMusiconn repository...');
-  mkdirSync(databaseMusiconnPath, { recursive: true });
-  execSync(`git clone ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
-  
-  console.log('Setting up DatabaseMusiconn...');
-  
-  // Create an empty tsconfig.json to prevent reference errors
+  // Create a minimal tsconfig.json to avoid build errors
   const tsconfigPath = path.join(databaseMusiconnPath, 'tsconfig.json');
   console.log('Creating minimal tsconfig.json to avoid build errors...');
-  // Use a minimal valid tsconfig without any extends
   writeFileSync(tsconfigPath, JSON.stringify({
     "compilerOptions": {
-      "skipLibCheck": true
+      "skipLibCheck": true,
+      "target": "ES2020",
+      "moduleResolution": "bundler"
     }
   }, null, 2));
   
-  // Remove .git directory to avoid Docker build conflicts
-  const gitDirPath = path.join(databaseMusiconnPath, '.git');
-  if (existsSync(gitDirPath)) {
-    console.log('Removing .git directory to prevent Docker build issues...');
-    execSync(`rm -rf ${gitDirPath}`, { stdio: 'inherit' });
-  }
-  
-  // Install dependencies and build
+  // Install dependencies
+  console.log('Installing DatabaseMusiconn dependencies...');
   execSync(`cd ${databaseMusiconnPath} && yarn install`, { stdio: 'inherit' });
   
-  console.log('DatabaseMusiconn setup completed successfully');
+  console.log('DatabaseMusiconn submodule setup completed successfully');
 } catch (error) {
-  console.error('Error during postinstall:', error.message);
+  console.error('Error during DatabaseMusiconn setup:', error.message);
   process.exit(1);
 }

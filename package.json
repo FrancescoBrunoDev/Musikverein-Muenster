@@ -17,8 +17,7 @@
 		"typesafe-i18n": "typesafe-i18n",
 		"cron": "node src/scripts/cron.js",
 		"start": "npm-run-all --parallel node-server cron",
-		"node-server": "node build",
-		"postinstall": "node scripts/postinstall.js"
+		"node-server": "node build"
 	},
 	"devDependencies": {
 		"@melt-ui/pp": "^0.3.2",
