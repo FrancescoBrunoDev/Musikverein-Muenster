@@ -32,7 +32,7 @@ try {
   }
   
   // Install dependencies and build
-  execSync(`cd ${databaseMusiconnPath} && yarn install && yarn build`, { stdio: 'inherit' });
+  execSync(`cd ${databaseMusiconnPath} && yarn install`, { stdio: 'inherit' });
   
   console.log('DatabaseMusiconn setup completed successfully');
 } catch (error) {
