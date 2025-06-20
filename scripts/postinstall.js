@@ -24,19 +24,6 @@ try {
 
   // Handle the databaseMusiconn submodule configuration files
   const modulePath = join(rootDir, 'src', 'components', 'databaseMusiconn');
-  
-  // Remove problematic configuration files (both tsconfig.json and jsconfig.json)
-  const tsconfigPath = join(modulePath, 'tsconfig.json');
-  if (existsSync(tsconfigPath)) {
-    console.log(`🗑️ Removing tsconfig.json from ${modulePath}`);
-    execSync(`rm ${tsconfigPath}`, { stdio: 'inherit' });
-  }
-  
-  const jsconfigPath = join(modulePath, 'jsconfig.json');
-  if (existsSync(jsconfigPath)) {
-    console.log(`🗑️ Removing jsconfig.json from ${modulePath}`);
-    execSync(`rm ${jsconfigPath}`, { stdio: 'inherit' });
-  }
 
   // install the submodule dependencies
   const submodulePackageJson = join(modulePath, 'package.json');
@@ -44,6 +31,12 @@ try {
     console.log(`📦 Installing dependencies for submodule at ${modulePath}`);
     execSync('npm install --omit=dev', { stdio: 'inherit', cwd: modulePath });
   }
+
+  //  npm run build
+  const buildCommand = 'npm run build';
+  console.log(`🚀 Running build command: ${buildCommand}`)
+  execSync(buildCommand, { stdio: 'inherit', cwd: modulePath })
+  console.log('✅ Postinstall script completed successfully.');
 } catch (error) {
   console.error('❌ Error during postinstall script:', error.message);
   // Not exiting with error code to avoid failing the install process
