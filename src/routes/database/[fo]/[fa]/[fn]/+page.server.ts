@@ -7,7 +7,10 @@ export const load: PageServerLoad = async ({ params }) => {
 	const filterfn = params.fn;
 	let events: Events = {};
 	try {
-		events = await joinEventByYear();
+		const res = await joinEventByYear();
+		cachedEvents = res.event;
+		startYear = res.startYear;
+		endYear = res.endYear;
 	} catch (error) {
 		console.error('An error occurred while fetching events:', error);
 	}
@@ -19,7 +22,9 @@ export const load: PageServerLoad = async ({ params }) => {
 				fo: filterfo,
 				fa: filterfa,
 				fn: filterfn
-			}
+			},
+			startYear: startYear,
+			endYear: endYear
 		}
 	};
 };

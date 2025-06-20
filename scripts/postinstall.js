@@ -7,23 +7,16 @@ const databaseMusiconnPath = path.join(process.cwd(), 'src/components/databaseMu
 const repoUrl = 'https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git';
 
 try {
-  // Check if directory exists
-  if (!existsSync(databaseMusiconnPath)) {
-    console.log('DatabaseMusiconn directory does not exist. Creating directory...');
-    mkdirSync(databaseMusiconnPath, { recursive: true });
-    
-    console.log('Cloning DatabaseMusiconn repository...');
-    execSync(`git clone ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
-  } else if (!existsSync(path.join(databaseMusiconnPath, 'package.json'))) {
-    console.log('DatabaseMusiconn directory exists but is empty. Cloning repository...');
-    // Remove directory and clone again
+  // Check if directory exists, delete it first if it does
+  if (existsSync(databaseMusiconnPath)) {
+    console.log('DatabaseMusiconn directory exists. Removing for fresh installation...');
     execSync(`rm -rf ${databaseMusiconnPath}`, { stdio: 'inherit' });
-    mkdirSync(databaseMusiconnPath, { recursive: true });
-    execSync(`git clone ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
-  } else {
-    console.log('DatabaseMusiconn already exists, updating...');
-    execSync(`cd ${databaseMusiconnPath} && git pull origin main`, { stdio: 'inherit' });
   }
+  
+  // Create directory and clone repository
+  console.log('Creating directory and cloning DatabaseMusiconn repository...');
+  mkdirSync(databaseMusiconnPath, { recursive: true });
+  execSync(`git clone ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
   
   console.log('Setting up DatabaseMusiconn...');
   // Remove tsconfig.json if it exists to avoid conflicts
