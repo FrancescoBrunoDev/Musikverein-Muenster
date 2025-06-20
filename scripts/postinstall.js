@@ -1,14 +1,28 @@
 import { existsSync } from 'fs';
 import { execSync } from 'child_process';
 import path from 'path';
+import { mkdirSync } from 'fs';
 
 const databaseMusiconnPath = path.join(process.cwd(), 'src/components/databaseMusiconn');
+const repoUrl = 'https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git';
 
 try {
-  // Check if submodule content exists
-  if (!existsSync(path.join(databaseMusiconnPath, 'package.json'))) {
-    console.log('Initializing DatabaseMusiconn submodule...');
-    execSync('git submodule update --init --recursive', { stdio: 'inherit' });
+  // Check if directory exists
+  if (!existsSync(databaseMusiconnPath)) {
+    console.log('DatabaseMusiconn directory does not exist. Creating directory...');
+    mkdirSync(databaseMusiconnPath, { recursive: true });
+    
+    console.log('Cloning DatabaseMusiconn repository...');
+    execSync(`git clone ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
+  } else if (!existsSync(path.join(databaseMusiconnPath, 'package.json'))) {
+    console.log('DatabaseMusiconn directory exists but is empty. Cloning repository...');
+    // Remove directory and clone again
+    execSync(`rm -rf ${databaseMusiconnPath}`, { stdio: 'inherit' });
+    mkdirSync(databaseMusiconnPath, { recursive: true });
+    execSync(`git clone ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
+  } else {
+    console.log('DatabaseMusiconn already exists, updating...');
+    execSync(`cd ${databaseMusiconnPath} && git pull origin main`, { stdio: 'inherit' });
   }
   
   console.log('Setting up DatabaseMusiconn...');
@@ -18,8 +32,7 @@ try {
   }
   
   // Install dependencies and build
-  execSync('cd src/components/databaseMusiconn && yarn install && yarn build', 
-    { stdio: 'inherit' });
+  execSync(`cd ${databaseMusiconnPath} && yarn install && yarn build`, { stdio: 'inherit' });
   
   console.log('DatabaseMusiconn setup completed successfully');
 } catch (error) {
