@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '$tailwind';
+	import '../app.css';
 	import NavBar from '$components/layout/NavBar.svelte';
 	import { setFirstThemeData } from '$states/stateGeneral.svelte';
 	import { browser } from '$app/environment';
