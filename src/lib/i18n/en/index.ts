@@ -1,4 +1,3 @@
-import { map } from 'd3';
 import type { BaseTranslation } from '../i18n-types';
 
 const en = {
