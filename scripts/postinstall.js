@@ -57,7 +57,7 @@ try {
   // Initialize submodule if needed
   if (!pathInIndex) {
     console.log('Adding DatabaseMusiconn as a Git submodule...');
-    execSync(`git submodule add ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
+    execSync(`git submodule add --force ${repoUrl} ${databaseMusiconnPath}`, { stdio: 'inherit' });
   } else {
     console.log('Updating existing DatabaseMusiconn submodule...');
     execSync(`git submodule update --init --recursive ${databaseMusiconnPath}`, { stdio: 'inherit' });
