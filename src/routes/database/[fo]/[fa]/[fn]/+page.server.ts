@@ -1,4 +1,4 @@
-import { joinEventByYear } from '$lib/dataMusiconn.server';
+import { joinEventByYear } from '$databaseMusiconn/lib/dataMusiconn.server';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
