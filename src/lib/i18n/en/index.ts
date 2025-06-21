@@ -26,7 +26,8 @@ const en = {
 	},
 	graphs: {
 		line: 'Line',
-		map: 'Map'
+		map: 'Map',
+		pie: 'Pie'
 	},
 	events: {
 		showAllPerformances: 'Show all performances',

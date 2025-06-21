@@ -1,6 +1,10 @@
 import { joinEventByYear } from '$databaseMusiconn/lib/dataMusiconn.server';
 import type { PageServerLoad } from './$types';
 
+let cachedEvents: Events;
+let startYear: number;
+let endYear: number;
+
 export const load: PageServerLoad = async ({ params }) => {
 	const filterfo = params.fo;
 	const filterfa = params.fa;
