@@ -44,6 +44,17 @@ try {
   console.log(`🚀 Running build command: ${buildCommand}`)
   execSync(buildCommand, { stdio: 'inherit', cwd: modulePath })
 
+  // copy the src/api/map folder to the local src/api folder
+  const srcApiMapPath = join(modulePath, 'src', 'routes', 'api', 'map');
+  const destApiMapPath = join(rootDir, 'src', 'routes', 'api', 'map');
+  // Check if the destination directory exists, ad assure a clean copy
+  if (existsSync(destApiMapPath)) {
+    console.log(`🗂️ Copying ${srcApiMapPath} to ${destApiMapPath}`);
+    execSync(`rm -rf ${destApiMapPath}`, { stdio: 'inherit' });
+  }
+  execSync(`cp -r ${srcApiMapPath} ${destApiMapPath}`, { stdio: 'inherit' });
+  console.log(`✅ Successfully copied ${srcApiMapPath} to ${destApiMapPath}`);
+
   // Log success message
   console.log('✅ Postinstall script completed successfully.');
 } catch (error) {
