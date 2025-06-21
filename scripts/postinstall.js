@@ -44,6 +44,17 @@ try {
   console.log(`🚀 Running build command: ${buildCommand}`)
   execSync(buildCommand, { stdio: 'inherit', cwd: modulePath })
 
+  // copy in the module path the .env file from the root directory
+  const envFilePath = join(rootDir, '.env');
+  const destEnvFilePath = join(modulePath, '.env');
+  if (existsSync(envFilePath)) {
+    console.log(`📄 Copying .env file from ${envFilePath} to ${destEnvFilePath}`);
+    execSync(`cp ${envFilePath} ${destEnvFilePath}`, { stdio: 'inherit' });
+    console.log('✅ .env file copied successfully.');
+  } else {
+    console.warn('⚠️ .env file not found in the root directory. Skipping copy.');
+  }
+
   // copy the src/api/map folder to the local src/api folder
   const srcApiMapPath = join(modulePath, 'src', 'routes', 'api', 'map');
   const destApiMapPath = join(rootDir, 'src', 'routes', 'api', 'map');
@@ -54,6 +65,16 @@ try {
   }
   execSync(`cp -r ${srcApiMapPath} ${destApiMapPath}`, { stdio: 'inherit' });
   console.log(`✅ Successfully copied ${srcApiMapPath} to ${destApiMapPath}`);
+
+  // remove the env file from the module path
+  const moduleEnvFilePath = join(modulePath, '.env');
+  if (existsSync(moduleEnvFilePath)) {
+    console.log(`🗑️ Removing .env file from ${moduleEnvFilePath}`);
+    execSync(`rm ${moduleEnvFilePath}`, { stdio: 'inherit' });
+    console.log('✅ .env file removed successfully.');
+  } else {
+    console.warn('⚠️ .env file not found in the module path. Skipping removal.');
+  }
 
   // Log success message
   console.log('✅ Postinstall script completed successfully.');
