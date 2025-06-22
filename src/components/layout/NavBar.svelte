@@ -4,11 +4,11 @@
 	import { quintInOut } from 'svelte/easing';
 	import { X } from 'lucide-svelte';
 	import ThemeSwitch from '$components/layout/ThemeSwitch.svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Button from '$components/ui/Button.svelte';
 	import { locale } from '$states/stateGeneral.svelte';
 
-	let isHomePage = $derived($page.url.pathname === '/');
+	let isHomePage = $derived(page.url.pathname === '/');
 
 	const { value, handleLocaleChange } = $props<{ value: Locales; handleLocaleChange: any }>();
 
