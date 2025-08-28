@@ -1,26 +1,30 @@
 # ---- Build Stage ----
-FROM node:24 as builder
+FROM node:24 AS builder
 
 WORKDIR /app
 
 # Copy package files first to leverage Docker cache. If you have a lockfile (package-lock.json or yarn.lock)
 # include it here for more reproducible installs. This project currently has no package-lock, so npm will be used.
-COPY package.json ./
+# Copy package files first to leverage Docker cache. Include yarn.lock for reproducible installs
+COPY package.json yarn.lock ./
 
 # Install full dependencies (including dev deps) required for the build
-RUN npm install
+# Use yarn (this repo uses yarn v1) and respect the lockfile
+RUN yarn install --frozen-lockfile
 
 # Copy the rest of the source code
 COPY . .
 
 # Build the app (runs `vite build` via package.json)
-RUN npm run build
+RUN yarn build
 
 # Remove development dependencies to prepare a smaller production image
-RUN npm prune --production
+# Reinstall only production dependencies to shrink node_modules
+RUN yarn install --production --frozen-lockfile
 
 # ---- Production Stage ----
-FROM node:24-slim as runner
+# ---- Production Stage ----
+FROM node:24-slim AS runner
 
 WORKDIR /app
 
