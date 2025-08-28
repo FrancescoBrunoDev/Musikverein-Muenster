@@ -3,20 +3,22 @@ FROM node:24 AS builder
 
 WORKDIR /app
 
-# Copy only package manifest (no yarn.lock present)
+# Copy manifests (add yarn.lock if you commit it)
 COPY package.json ./
+# Copy scripts needed during install (postinstall)
+COPY scripts ./scripts
 
-# Install deps (will generate a yarn.lock inside image)
+# Install deps
 RUN yarn install --non-interactive
 
-# Copy source
+# Copy rest of source
 COPY . .
 
-# Build (assumes yarn build exists)
+# Build
 RUN yarn build
 
-# Optional: reinstall only production deps (since no lockfile, skip --frozen-lockfile)
-RUN rm -rf node_modules && yarn install --production --non-interactive
+# Prune to production deps
+RUN rm -rf node_modules && YARN_PRODUCTION=true yarn install --non-interactive --production
 
 # ---- Production Stage ----
 FROM node:24-slim AS runner
@@ -25,7 +27,6 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy build output and production deps
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules
