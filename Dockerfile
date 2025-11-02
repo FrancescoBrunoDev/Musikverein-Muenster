@@ -7,6 +7,9 @@ WORKDIR /usr/src/app
 # Copy package manifests first for better caching
 COPY package.json package-lock.json* yarn.lock* ./
 
+# Copy scripts directory needed by postinstall
+COPY scripts/ ./scripts/
+
 # Use npm (no lockfile detected in repo snapshot). If you prefer yarn, adjust here.
 RUN npm ci --silent || npm install --silent
 
