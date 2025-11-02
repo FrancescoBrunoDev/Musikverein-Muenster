@@ -44,12 +44,11 @@ COPY --from=builder /usr/src/app/scripts ./scripts
 # Install production dependencies only
 RUN npm ci --omit=dev --silent || npm install --omit=dev --silent
 
-# Expose port 4200
-EXPOSE 4200
+# Expose default SvelteKit adapter-node port
+EXPOSE 3000
 
 # Default environment
 ENV NODE_ENV=production
-ENV PORT=4200
 
 # Start the node server produced by the adapter-node (package.json "node-server": "node build")
 CMD ["node", "build"]
