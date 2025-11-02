@@ -51,5 +51,5 @@ EXPOSE 3000
 # Default environment
 ENV NODE_ENV=production
 
-# Start the node server with cron using npm start
+# Use the start script which runs both server and cron
 CMD ["npm", "start"]
