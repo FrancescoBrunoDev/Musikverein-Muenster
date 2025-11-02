@@ -8,10 +8,23 @@ dotenv.config();
 const pb = new PocketBase(process.env.POKETBASE);
 pb.autoCancellation(false);
 
+// Verifica che le credenziali siano presenti
+if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+	console.warn('⚠️  ADMIN_EMAIL or ADMIN_PASSWORD not set. Cron job will not run.');
+	process.exit(0);
+}
+
 // Autenticazione come admin
-await pb
-	.collection('_superusers')
-	.authWithPassword(String(process.env.ADMIN_EMAIL), String(process.env.ADMIN_PASSWORD));
+try {
+	await pb
+		.collection('_superusers')
+		.authWithPassword(String(process.env.ADMIN_EMAIL), String(process.env.ADMIN_PASSWORD));
+	console.log('✅ Authenticated with PocketBase');
+} catch (error) {
+	console.error('❌ Failed to authenticate with PocketBase:', error.message);
+	console.warn('⚠️  Cron job will not run due to authentication failure.');
+	process.exit(0);
+}
 
 const job = new CronJob('* * * * *', async () => {
 	try {
