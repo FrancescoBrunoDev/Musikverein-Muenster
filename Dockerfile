@@ -38,8 +38,9 @@ WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/build ./build
 COPY --from=builder /usr/src/app/package.json ./package.json
 
-# Copy scripts directory needed by postinstall
+# Copy scripts directory needed by postinstall and cron
 COPY --from=builder /usr/src/app/scripts ./scripts
+COPY --from=builder /usr/src/app/src/scripts ./src/scripts
 
 # Install production dependencies only
 RUN npm ci --omit=dev --silent || npm install --omit=dev --silent
@@ -50,5 +51,5 @@ EXPOSE 3000
 # Default environment
 ENV NODE_ENV=production
 
-# Start the node server produced by the adapter-node (package.json "node-server": "node build")
-CMD ["node", "build"]
+# Start the node server with cron using npm start
+CMD ["npm", "start"]
