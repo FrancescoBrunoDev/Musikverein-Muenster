@@ -1,35 +1,45 @@
-# ---- Build Stage ----
-FROM node:24 AS builder
 
-WORKDIR /app
+# Stage 1: install deps and build
+FROM node:latest AS builder
 
-# Copy manifests (add yarn.lock if you commit it)
-COPY package.json ./
-# Copy scripts needed during install (postinstall)
-COPY scripts ./scripts
+WORKDIR /usr/src/app
 
-# Install deps
-RUN yarn install --non-interactive
+# Copy package manifests first for better caching
+COPY package.json package-lock.json* yarn.lock* ./
 
-# Copy rest of source
+# Use npm (no lockfile detected in repo snapshot). If you prefer yarn, adjust here.
+RUN npm ci --silent || npm install --silent
+
+# Copy the rest of the sources
+# Copy source files
 COPY . .
 
-# Build
-RUN yarn build
+# If you have a .env file with build-time secrets (MINIO_*, etc.), copy it so Vite's static env plugin
+# (virtual:env/static/private) can expose the variables during the build.
+# This will fail silently if .env is not present in the build context.
+ARG COPY_ENV=true
+RUN if [ "$COPY_ENV" = "true" ] && [ -f .env ]; then echo "Copying .env for build"; else echo ".env not found or copy disabled"; fi
 
-# Prune to production deps
-RUN rm -rf node_modules && YARN_PRODUCTION=true yarn install --non-interactive --production
+# Build the app (this project uses Vite / SvelteKit)
+RUN npm run build
 
-# ---- Production Stage ----
-FROM node:24-slim AS runner
+# Stage 2: production image
+FROM node:latest AS runner
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
+# Copy only the production artifacts and necessary files
+COPY --from=builder /usr/src/app/build ./build
+COPY --from=builder /usr/src/app/package.json ./package.json
+
+# Install production dependencies only
+RUN npm ci --omit=dev --silent || npm install --omit=dev --silent
+
+# Expose default SvelteKit adapter-node port
+EXPOSE 3000
+
+# Default environment
 ENV NODE_ENV=production
 
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
-
-EXPOSE 4200
+# Start the node server produced by the adapter-node (package.json "node-server": "node build")
 CMD ["node", "build"]
