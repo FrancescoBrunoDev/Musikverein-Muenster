@@ -23,6 +23,9 @@ COPY . .
 ARG COPY_ENV=true
 RUN if [ "$COPY_ENV" = "true" ] && [ -f .env ]; then echo "Copying .env for build"; else echo ".env not found or copy disabled"; fi
 
+# Sync SvelteKit to generate TypeScript definitions
+RUN npx svelte-kit sync
+
 # Build the app (this project uses Vite / SvelteKit)
 RUN npm run build
 
