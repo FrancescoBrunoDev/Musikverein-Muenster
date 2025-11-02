@@ -1,5 +1,7 @@
 .vscode
 .svelte-kit
+# Allow the nested databaseMusiconn .svelte-kit directory
+!src/components/databaseMusiconn/.svelte-kit
 .build
 .builds
 dist
