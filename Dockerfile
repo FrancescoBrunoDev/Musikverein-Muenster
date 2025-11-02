@@ -38,6 +38,9 @@ WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/build ./build
 COPY --from=builder /usr/src/app/package.json ./package.json
 
+# Copy scripts directory needed by postinstall
+COPY --from=builder /usr/src/app/scripts ./scripts
+
 # Install production dependencies only
 RUN npm ci --omit=dev --silent || npm install --omit=dev --silent
 
