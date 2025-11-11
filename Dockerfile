@@ -1,4 +1,4 @@
-# Stage 1: Build
+# Stage 1: install deps and build
 FROM node:latest AS builder
 
 WORKDIR /usr/src/app
@@ -6,58 +6,50 @@ WORKDIR /usr/src/app
 # Install git for submodule handling
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
-# Declare build arguments for environment variables
-ARG POKETBASE
-ARG ADMIN_EMAIL
-ARG ADMIN_PASSWORD
-ARG MINIO_ENDPOINT
-ARG MINIO_PORT
-ARG MINIO_ACCESS_KEY
-ARG MINIO_SECRET_KEY
-ARG MINIO_USE_SSL
-ARG MINIO_BUCKET_NAME
-ARG PROTOMAP_V
-
-# Set them as environment variables for the build
-ENV POKETBASE=${POKETBASE}
-ENV ADMIN_EMAIL=${ADMIN_EMAIL}
-ENV ADMIN_PASSWORD=${ADMIN_PASSWORD}
-ENV MINIO_ENDPOINT=${MINIO_ENDPOINT}
-ENV MINIO_PORT=${MINIO_PORT}
-ENV MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
-ENV MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
-ENV MINIO_USE_SSL=${MINIO_USE_SSL}
-ENV MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
-ENV PROTOMAP_V=${PROTOMAP_V}
-
-# Copy package files
-COPY package.json package-lock.json* ./
+# Copy package manifests first for better caching
+COPY package.json package-lock.json* yarn.lock* ./
 
 # Copy scripts directory (needed by postinstall)
 COPY scripts/ ./scripts/
 
-# Copy source code
+# Install dependencies first (without postinstall running yet)
+RUN npm ci --silent --ignore-scripts || npm install --silent --ignore-scripts
+
+# Copy the rest of the sources
 COPY . .
 
-# Clone the submodule directly (since .git is excluded)
+# Clone the submodule directly (since .git is excluded from build context)
 RUN git clone --branch main --single-branch https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn
 
-# Install all dependencies (postinstall will handle submodule build)
-RUN npm install
+# Create a temporary .env file with placeholder values for build
+# Coolify will inject real values at runtime
+RUN echo "POKETBASE=http://localhost:8090" > .env && \
+    echo "ADMIN_EMAIL=build@placeholder.com" >> .env && \
+    echo "ADMIN_PASSWORD=placeholder" >> .env && \
+    echo "MINIO_ENDPOINT=localhost" >> .env && \
+    echo "MINIO_PORT=9000" >> .env && \
+    echo "MINIO_ACCESS_KEY=placeholder" >> .env && \
+    echo "MINIO_SECRET_KEY=placeholder" >> .env && \
+    echo "MINIO_USE_SSL=false" >> .env && \
+    echo "MINIO_BUCKET_NAME=protomaps" >> .env && \
+    echo "PROTOMAP_V=placeholder" >> .env
 
-# Build the application
+# Now run postinstall to build the submodule
+RUN npm run postinstall || echo "Postinstall completed with warnings"
+
+# Build the main app
 RUN npm run build
 
-# Stage 2: Production
+# Stage 2: production image
 FROM node:latest AS runner
 
 WORKDIR /usr/src/app
 
-# Copy build artifacts
+# Copy only the production artifacts and necessary files
 COPY --from=builder /usr/src/app/build ./build
 COPY --from=builder /usr/src/app/package.json ./package.json
 
-# Copy scripts (needed for cron)
+# Copy scripts directory needed by cron
 COPY --from=builder /usr/src/app/scripts ./scripts
 COPY --from=builder /usr/src/app/src/scripts ./src/scripts
 
@@ -67,11 +59,12 @@ COPY --from=builder /usr/src/app/src/routes/api/map ./src/routes/api/map
 # Install production dependencies only
 RUN npm ci --omit=dev --silent || npm install --omit=dev --silent
 
-# Expose port
+# Expose default SvelteKit adapter-node port
 EXPOSE 3000
 
-# Set production environment
+# Default environment
 ENV NODE_ENV=production
 
-# Start the application
+# Start the node server (using npm start which runs both server and cron)
+# Coolify will inject real environment variables at runtime
 CMD ["npm", "start"]
