@@ -18,8 +18,9 @@ RUN npm ci --silent --ignore-scripts || npm install --silent --ignore-scripts
 # Copy the rest of the sources
 COPY . .
 
-# Clone the submodule directly (since .git is excluded from build context)
-RUN git clone --branch main --single-branch https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn
+# Remove the submodule directory if it exists and clone fresh
+RUN rm -rf src/components/databaseMusiconn && \
+    git clone --branch main --single-branch https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn
 
 # Create a temporary .env file with placeholder values for build
 # Coolify will inject real values at runtime
