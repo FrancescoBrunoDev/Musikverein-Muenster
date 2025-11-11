@@ -1,18 +1,6 @@
-# create-svelte
+# Musikverein-Münster
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+A SvelteKit application for managing music society exhibitions and events in Münster.
 
 ## Developing
 
@@ -35,4 +23,30 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Deployment with Coolify
+
+This project is configured for deployment using Coolify with the Dockerfile.
+
+### Environment Variables
+
+Set these in your Coolify project settings (Project page > gear icon):
+
+- `POKETBASE` - PocketBase backend URL (e.g., `http://localhost:8090`)
+- `ADMIN_EMAIL` - Admin email for cron jobs
+- `ADMIN_PASSWORD` - Admin password for cron jobs
+- `MINIO_ENDPOINT` - MinIO server endpoint
+- `MINIO_PORT` - MinIO server port (e.g., `9000`)
+- `MINIO_ACCESS_KEY` - MinIO access key
+- `MINIO_SECRET_KEY` - MinIO secret key
+- `MINIO_USE_SSL` - Use SSL for MinIO (`true` or `false`)
+- `MINIO_BUCKET_NAME` - MinIO bucket name (e.g., `protomaps`)
+- `PROTOMAP_V` - ProtoMap tiles version (e.g., `world-v1`)
+
+Reference `.env.example` for sample values.
+
+### Deployment Steps
+
+1. Push your code to GitHub
+2. In Coolify, create a new resource and select "Dockerfile" as the build pack
+3. Configure the environment variables in the project settings
+4. Deploy!

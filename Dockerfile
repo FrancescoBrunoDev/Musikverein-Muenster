@@ -1,55 +1,77 @@
-
-# Stage 1: install deps and build
+# Stage 1: Build
 FROM node:latest AS builder
 
 WORKDIR /usr/src/app
 
-# Copy package manifests first for better caching
-COPY package.json package-lock.json* yarn.lock* ./
+# Install git for submodule handling
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
-# Copy scripts directory needed by postinstall
+# Declare build arguments for environment variables
+ARG POKETBASE
+ARG ADMIN_EMAIL
+ARG ADMIN_PASSWORD
+ARG MINIO_ENDPOINT
+ARG MINIO_PORT
+ARG MINIO_ACCESS_KEY
+ARG MINIO_SECRET_KEY
+ARG MINIO_USE_SSL
+ARG MINIO_BUCKET_NAME
+ARG PROTOMAP_V
+
+# Set them as environment variables for the build
+ENV POKETBASE=${POKETBASE}
+ENV ADMIN_EMAIL=${ADMIN_EMAIL}
+ENV ADMIN_PASSWORD=${ADMIN_PASSWORD}
+ENV MINIO_ENDPOINT=${MINIO_ENDPOINT}
+ENV MINIO_PORT=${MINIO_PORT}
+ENV MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+ENV MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+ENV MINIO_USE_SSL=${MINIO_USE_SSL}
+ENV MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+ENV PROTOMAP_V=${PROTOMAP_V}
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Copy scripts directory (needed by postinstall)
 COPY scripts/ ./scripts/
 
-# Use npm (no lockfile detected in repo snapshot). If you prefer yarn, adjust here.
-RUN npm ci --silent || npm install --silent
-
-# Copy the rest of the sources
-# Copy source files
+# Copy source code
 COPY . .
 
-# If you have a .env file with build-time secrets (MINIO_*, etc.), copy it so Vite's static env plugin
-# (virtual:env/static/private) can expose the variables during the build.
-# This will fail silently if .env is not present in the build context.
-ARG COPY_ENV=true
-RUN if [ "$COPY_ENV" = "true" ] && [ -f .env ]; then echo "Copying .env for build"; else echo ".env not found or copy disabled"; fi
+# Clone the submodule directly (since .git is excluded)
+RUN git clone --branch main --single-branch https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn
 
-# Sync SvelteKit to generate TypeScript definitions
-RUN npx svelte-kit sync
+# Install all dependencies (postinstall will handle submodule build)
+RUN npm install
 
-# Build the app (this project uses Vite / SvelteKit)
+# Build the application
 RUN npm run build
 
-# Stage 2: production image
+# Stage 2: Production
 FROM node:latest AS runner
 
 WORKDIR /usr/src/app
 
-# Copy only the production artifacts and necessary files
+# Copy build artifacts
 COPY --from=builder /usr/src/app/build ./build
 COPY --from=builder /usr/src/app/package.json ./package.json
 
-# Copy scripts directory needed by postinstall and cron
+# Copy scripts (needed for cron)
 COPY --from=builder /usr/src/app/scripts ./scripts
 COPY --from=builder /usr/src/app/src/scripts ./src/scripts
+
+# Copy the API routes from submodule (generated during build)
+COPY --from=builder /usr/src/app/src/routes/api/map ./src/routes/api/map
 
 # Install production dependencies only
 RUN npm ci --omit=dev --silent || npm install --omit=dev --silent
 
-# Expose default SvelteKit adapter-node port
+# Expose port
 EXPOSE 3000
 
-# Default environment
+# Set production environment
 ENV NODE_ENV=production
 
-# Use the start script which runs both server and cron
+# Start the application
 CMD ["npm", "start"]
