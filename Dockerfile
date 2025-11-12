@@ -1,64 +1,45 @@
-# Stage 1: Build
+
+# Stage 1: install deps and build
 FROM node:latest AS builder
 
 WORKDIR /usr/src/app
 
-# Install git for submodule handling
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
-
-# Copy manifests and scripts for caching
+# Copy package manifests first for better caching
 COPY package.json package-lock.json* yarn.lock* ./
-COPY scripts/ ./scripts/
 
-# Install all dependencies (including dev)
+# Use npm (no lockfile detected in repo snapshot). If you prefer yarn, adjust here.
 RUN npm ci --silent || npm install --silent
 
-# Copy the rest of the source code
+# Copy the rest of the sources
+# Copy source files
 COPY . .
 
-# --- Submodule Handling ---
-# Remove submodule directory if it exists and clone fresh
-RUN rm -rf src/components/databaseMusiconn && \
-    git clone --branch main --single-branch https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn
+# If you have a .env file with build-time secrets (MINIO_*, etc.), copy it so Vite's static env plugin
+# (virtual:env/static/private) can expose the variables during the build.
+# This will fail silently if .env is not present in the build context.
+ARG COPY_ENV=true
+RUN if [ "$COPY_ENV" = "true" ] && [ -f .env ]; then echo "Copying .env for build"; else echo ".env not found or copy disabled"; fi
 
-# --- Build-time Environment ---
-# Create a temporary .env for SvelteKit build, will be replaced by Coolify at runtime
-RUN echo "POKETBASE=http://localhost:8090" > .env && \
-    echo "ADMIN_EMAIL=build@placeholder.com" >> .env && \
-    echo "ADMIN_PASSWORD=placeholder" >> .env && \
-    echo "MINIO_ENDPOINT=localhost" >> .env && \
-    echo "MINIO_PORT=9000" >> .env && \
-    echo "MINIO_ACCESS_KEY=placeholder" >> .env && \
-    echo "MINIO_SECRET_KEY=placeholder" >> .env && \
-    echo "MINIO_USE_SSL=false" >> .env && \
-    echo "MINIO_BUCKET_NAME=protomaps" >> .env && \
-    echo "PROTOMAP_V=placeholder" >> .env
-
-# --- Build Process ---
-# 1. Build the submodule via postinstall script
-RUN npm run postinstall
-# 2. Build the main SvelteKit application
+# Build the app (this project uses Vite / SvelteKit)
 RUN npm run build
 
-# --- Stage 2: Production Runner ---
+# Stage 2: production image
 FROM node:latest AS runner
 
 WORKDIR /usr/src/app
 
-# Copy production artifacts from the builder stage
+# Copy only the production artifacts and necessary files
 COPY --from=builder /usr/src/app/build ./build
 COPY --from=builder /usr/src/app/package.json ./package.json
-COPY --from=builder /usr/src/app/package-lock.json ./package-lock.json
-COPY --from=builder /usr/src/app/scripts ./scripts
-# Copy generated API routes from the submodule build
-COPY --from=builder /usr/src/app/src/routes/api/map ./src/routes/api/map
 
-# Install only production dependencies
+# Install production dependencies only
 RUN npm ci --omit=dev --silent || npm install --omit=dev --silent
 
-# --- Runtime Configuration ---
+# Expose default SvelteKit adapter-node port
 EXPOSE 3000
+
+# Default environment
 ENV NODE_ENV=production
 
-# Start the node server and the cron job
-CMD ["npm", "start"]
+# Start the node server produced by the adapter-node (package.json "node-server": "node build")
+CMD ["node", "build"]

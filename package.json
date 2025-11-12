@@ -15,7 +15,7 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin=prettier-plugin-svelte --plugin=prettier-plugin-organize-imports --plugin=prettier-plugin-tailwindcss --write . --ignore-path .prettierignore",
 		"typesafe-i18n": "typesafe-i18n",
-		"cron": "node src/scripts/cron.js",
+		"cron": "node scripts/cron.js",
 		"start": "npm-run-all --parallel node-server cron",
 		"node-server": "node build",
 		"postinstall": "node scripts/postinstall.js"

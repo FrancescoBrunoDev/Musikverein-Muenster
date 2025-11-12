@@ -12,6 +12,9 @@ dist
 npm-debug.log
 coverage
 
+# Exclude submodule directory (will be cloned fresh in Dockerfile)
+src/components/databaseMusiconn
+
 # local dev
 .idea
 *.local
