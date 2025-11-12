@@ -21,10 +21,15 @@ COPY . .
 # Initialize git repository and configure hooks
 RUN git init && \
     git config core.hooksPath scripts/githooks && \
-    chmod +x scripts/githooks/post-checkout
+    chmod +x scripts/githooks/post-checkout && \
+    git add -A && \
+    git config user.email "docker@build.local" && \
+    git config user.name "Docker Build" && \
+    git commit -m "Docker build snapshot" || true
 
-# Clone and initialize submodules
-RUN git submodule update --init --recursive || \
+# Initialize and update submodules
+RUN git submodule init && \
+    git submodule update --init --recursive || \
     (rm -rf src/components/databaseMusiconn && \
      git clone --branch main --single-branch https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn)
 
