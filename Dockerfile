@@ -4,15 +4,29 @@ FROM node:latest AS builder
 
 WORKDIR /usr/src/app
 
-# Copy package manifests first for better caching
+# Install git for submodule handling
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+# Copy package manifests and scripts first for better caching
 COPY package.json package-lock.json* yarn.lock* ./
+COPY scripts/ ./scripts/
 
 # Use npm (no lockfile detected in repo snapshot). If you prefer yarn, adjust here.
 RUN npm ci --silent || npm install --silent
 
 # Copy the rest of the sources
-# Copy source files
 COPY . .
+
+# --- Submodule Handling ---
+# Initialize git repository and configure hooks
+RUN git init && \
+    git config core.hooksPath scripts/githooks && \
+    chmod +x scripts/githooks/post-checkout
+
+# Clone and initialize submodules
+RUN git submodule update --init --recursive || \
+    (rm -rf src/components/databaseMusiconn && \
+     git clone --branch main --single-branch https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn)
 
 # If you have a .env file with build-time secrets (MINIO_*, etc.), copy it so Vite's static env plugin
 # (virtual:env/static/private) can expose the variables during the build.
