@@ -33,6 +33,14 @@ RUN if [ "$COPY_ENV" = "true" ] && [ -f .env ]; then echo "Copying .env for buil
 # Build the app (this project uses Vite / SvelteKit)
 RUN npm run build
 
+# Verify build output
+RUN echo "=== Build verification ===" && \
+    ls -la /usr/src/app && \
+    echo "=== Build directory ===" && \
+    ls -la /usr/src/app/build 2>/dev/null || echo "No build directory found" && \
+    echo "=== Package.json exists? ===" && \
+    test -f /usr/src/app/package.json && echo "YES" || echo "NO"
+
 # Stage 2: production image
 FROM node:latest AS runner
 
@@ -40,9 +48,16 @@ WORKDIR /usr/src/app
 
 # Copy only the production artifacts and necessary files
 COPY --from=builder /usr/src/app/build ./build
-COPY --from=builder /usr/src/app/package.json ./package.json
+COPY --from=builder /usr/src/app/package.json ./
 COPY --from=builder /usr/src/app/package-lock.json* ./
 COPY --from=builder /usr/src/app/scripts ./scripts
+
+# Verify what was copied
+RUN echo "=== Runner stage verification ===" && \
+    pwd && \
+    ls -la && \
+    echo "=== package.json content ===" && \
+    cat package.json | head -n 20
 
 # Install production dependencies only (skip postinstall since build is already done)
 RUN npm ci --omit=dev --ignore-scripts --silent || npm install --omit=dev --ignore-scripts --silent
