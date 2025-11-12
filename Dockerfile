@@ -52,5 +52,5 @@ EXPOSE 3000
 # Default environment
 ENV NODE_ENV=production
 
-# Start the node server produced by the adapter-node (package.json "node-server": "node build")
-CMD ["node", "build"]
+# Start the node server produced by the adapter-node (package.json "start": runs node-server and cron)
+CMD ["npm", "start"]
