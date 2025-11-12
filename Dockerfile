@@ -41,9 +41,10 @@ WORKDIR /usr/src/app
 # Copy only the production artifacts and necessary files
 COPY --from=builder /usr/src/app/build ./build
 COPY --from=builder /usr/src/app/package.json ./package.json
+COPY --from=builder /usr/src/app/scripts ./scripts
 
-# Install production dependencies only
-RUN npm ci --omit=dev --silent || npm install --omit=dev --silent
+# Install production dependencies only (skip postinstall since build is already done)
+RUN npm ci --omit=dev --ignore-scripts --silent || npm install --omit=dev --ignore-scripts --silent
 
 # Expose default SvelteKit adapter-node port
 EXPOSE 3000
