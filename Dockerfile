@@ -18,20 +18,11 @@ RUN npm ci --silent || npm install --silent
 COPY . .
 
 # --- Submodule Handling ---
-# Initialize git repository and configure hooks
-RUN git init && \
-    git config core.hooksPath scripts/githooks && \
-    chmod +x scripts/githooks/post-checkout && \
-    git add -A && \
-    git config user.email "docker@build.local" && \
-    git config user.name "Docker Build" && \
-    git commit -m "Docker build snapshot" || true
-
-# Initialize and update submodules
-RUN git submodule init && \
-    git submodule update --init --recursive || \
-    (rm -rf src/components/databaseMusiconn && \
-     git clone --branch main --single-branch https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn)
+# Clone the submodule directly (git hooks are for local development)
+RUN rm -rf src/components/databaseMusiconn && \
+    git clone --branch main --single-branch https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn && \
+    echo "Submodule cloned successfully" && \
+    ls -la src/components/databaseMusiconn/src/components/ || echo "Warning: submodule structure may be different"
 
 # If you have a .env file with build-time secrets (MINIO_*, etc.), copy it so Vite's static env plugin
 # (virtual:env/static/private) can expose the variables during the build.
