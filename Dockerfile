@@ -41,10 +41,14 @@ WORKDIR /usr/src/app
 # Copy only the production artifacts and necessary files
 COPY --from=builder /usr/src/app/build ./build
 COPY --from=builder /usr/src/app/package.json ./package.json
+COPY --from=builder /usr/src/app/package-lock.json* ./
 COPY --from=builder /usr/src/app/scripts ./scripts
 
 # Install production dependencies only (skip postinstall since build is already done)
 RUN npm ci --omit=dev --ignore-scripts --silent || npm install --omit=dev --ignore-scripts --silent
+
+# Verify files are in place
+RUN ls -la /usr/src/app && echo "Build directory contents:" && ls -la /usr/src/app/build || echo "Build directory not found"
 
 # Expose default SvelteKit adapter-node port
 EXPOSE 3000
@@ -53,4 +57,4 @@ EXPOSE 3000
 ENV NODE_ENV=production
 
 # Start the node server produced by the adapter-node (package.json "start": runs node-server and cron)
-CMD ["npm", "start"]
+CMD ["sh", "-c", "cd /usr/src/app && npm start"]
