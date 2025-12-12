@@ -1,75 +1,51 @@
-
 # Stage 1: install deps and build
-FROM node:latest AS builder
+FROM node:20-slim AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Install git for submodule handling
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
-# Copy package manifests and scripts first for better caching
-COPY package.json package-lock.json* yarn.lock* ./
+# Copy package manifests first for better caching
+COPY package.json package-lock.json* ./
 COPY scripts/ ./scripts/
 
-# Use npm (no lockfile detected in repo snapshot). If you prefer yarn, adjust here.
-RUN npm ci --silent || npm install --silent
+# Install all dependencies (including devDependencies for build)
+RUN npm ci || npm install
 
 # Copy the rest of the sources
 COPY . .
 
-# --- Submodule Handling ---
-# Clone the submodule directly (git hooks are for local development)
+# Clone the submodule directly (git submodules don't work in Docker build context)
 RUN rm -rf src/components/databaseMusiconn && \
-    git clone --branch main --single-branch https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn && \
-    echo "Submodule cloned successfully" && \
-    ls -la src/components/databaseMusiconn/src/components/ || echo "Warning: submodule structure may be different"
+    git clone --branch main --single-branch --depth 1 https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn
 
-# If you have a .env file with build-time secrets (MINIO_*, etc.), copy it so Vite's static env plugin
-# (virtual:env/static/private) can expose the variables during the build.
-# This will fail silently if .env is not present in the build context.
-ARG COPY_ENV=true
-RUN if [ "$COPY_ENV" = "true" ] && [ -f .env ]; then echo "Copying .env for build"; else echo ".env not found or copy disabled"; fi
-
-# Build the app (this project uses Vite / SvelteKit)
+# Build the app
 RUN npm run build
 
-# Verify build output
-RUN echo "=== Build verification ===" && \
-    ls -la /usr/src/app && \
-    echo "=== Build directory ===" && \
-    ls -la /usr/src/app/build 2>/dev/null || echo "No build directory found" && \
-    echo "=== Package.json exists? ===" && \
-    test -f /usr/src/app/package.json && echo "YES" || echo "NO"
+# Verify build output exists
+RUN test -d /app/build && echo "Build successful" || (echo "Build failed - no build directory" && exit 1)
 
 # Stage 2: production image
-FROM node:latest AS runner
+FROM node:20-slim AS runner
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy only the production artifacts and necessary files
-COPY --from=builder /usr/src/app/build ./build
-COPY --from=builder /usr/src/app/package.json ./
-COPY --from=builder /usr/src/app/package-lock.json* ./
-COPY --from=builder /usr/src/app/scripts ./scripts
-
-# Verify what was copied
-RUN echo "=== Runner stage verification ===" && \
-    pwd && \
-    ls -la && \
-    echo "=== package.json content ===" && \
-    cat package.json | head -n 20
+# Copy package files first
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/package-lock.json* ./
+COPY --from=builder /app/scripts ./scripts
 
 # Install production dependencies only (skip postinstall since build is already done)
-RUN npm ci --omit=dev --ignore-scripts --silent || npm install --omit=dev --ignore-scripts --silent
+RUN npm ci --omit=dev --ignore-scripts || npm install --omit=dev --ignore-scripts
 
-# Verify files are in place
-RUN ls -la /usr/src/app && echo "Build directory contents:" && ls -la /usr/src/app/build || echo "Build directory not found"
+# Copy build output
+COPY --from=builder /app/build ./build
 
 # Expose default SvelteKit adapter-node port
 EXPOSE 3000
 
-# Default environment
 ENV NODE_ENV=production
 
-# Start the node server produced by the adapter-node (package.json "start": runs node-server and cron)
-CMD ["sh", "-c", "cd /usr/src/app && npm start"]
+# Start the server
+CMD ["npm", "start"]

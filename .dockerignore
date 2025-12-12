@@ -1,24 +1,33 @@
-.vscode
+# Dependencies
+node_modules
+
+# Build outputs (will be built in container)
 .svelte-kit
-# Allow the nested databaseMusiconn .svelte-kit directory
-!src/components/databaseMusiconn/.svelte-kit
+build
 .build
 .builds
 dist
-.build
-.DS_Store
-.git
-.gitignore
-npm-debug.log
-coverage
 
-# Exclude submodule directory (will be cloned fresh in Dockerfile)
+# Submodule (cloned fresh in Dockerfile)
 src/components/databaseMusiconn
 
-# local dev
-.idea
-*.local
+# Git
+.git
+.gitignore
+.gitmodules
 
-# logs
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+
+# Logs
 logs
 *.log
+npm-debug.log
+
+# Local/dev files
+*.local
+coverage
