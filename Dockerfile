@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json* ./
 COPY scripts/ ./scripts/
 
-# Install all dependencies (including devDependencies for build)
-RUN npm ci || npm install
+# Install dependencies WITHOUT postinstall (we'll run it after cloning submodule)
+RUN npm ci --ignore-scripts || npm install --ignore-scripts
 
 # Copy the rest of the sources
 COPY . .
@@ -19,6 +19,9 @@ COPY . .
 # Clone the submodule directly (git submodules don't work in Docker build context)
 RUN rm -rf src/components/databaseMusiconn && \
     git clone --branch main --single-branch --depth 1 https://github.com/FrancescoBrunoDev/DatabaseMusiconn.git src/components/databaseMusiconn
+
+# Run postinstall to copy api/map route from submodule
+RUN node scripts/postinstall.js
 
 # Build the app
 RUN npm run build
