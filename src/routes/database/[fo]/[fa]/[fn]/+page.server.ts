@@ -1,34 +1,30 @@
-import { joinEventByYear } from '$databaseMusiconn/lib/dataMusiconn.server';
+import { streamEventsForLocation } from '$databaseMusiconn/lib/dataMusiconn.server';
+import { mainLocationID } from '$databaseMusiconn/stores/storeEvents';
 import type { PageServerLoad } from './$types';
-
-let cachedEvents: Events;
-let startYear: number;
-let endYear: number;
 
 export const load: PageServerLoad = async ({ params }) => {
 	const filterfo = params.fo;
 	const filterfa = params.fa;
 	const filterfn = params.fn;
-	let events: Events = {};
-	try {
-		const res = await joinEventByYear();
-		cachedEvents = res.event;
-		startYear = res.startYear;
-		endYear = res.endYear;
-	} catch (error) {
-		console.error('An error occurred while fetching events:', error);
-	}
+
+	// Default to Muenster for the shared-filter view; the filter route does not
+	// carry a location id, so we reuse the configured main location.
+	mainLocationID.set(332);
+
+	const streamed = await streamEventsForLocation(332);
 
 	return {
 		props: {
-			events: events,
+			eventPages: streamed.eventPages,
+			timeline: streamed.timeline,
+			firstYear: streamed.firstYear,
+			lastYear: streamed.lastYear,
+			totalPages: streamed.totalPages,
 			filters: {
 				fo: filterfo,
 				fa: filterfa,
 				fn: filterfn
-			},
-			startYear: startYear,
-			endYear: endYear
+			}
 		}
 	};
 };
