@@ -67,7 +67,7 @@
 				.catch((error) => console.error('Error loading an event page:', error));
 		}
 
-		Promise.all(data.props.eventPages)
+		Promise.allSettled(data.props.eventPages)
 			.then(() => {
 				deUrlifyerFilters(data.props.filters)
 					.then(() => {
