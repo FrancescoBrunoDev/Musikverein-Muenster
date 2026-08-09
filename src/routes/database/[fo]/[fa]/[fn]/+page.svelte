@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { updateFilteredEventsAndUdateDataForGraph, updateLineDataFromTimeline } from '$databaseMusiconn/stores/storeGraph';
+	import {
+		updateFilteredEventsAndUdateDataForGraph,
+		updateLineDataFromTimeline
+	} from '$databaseMusiconn/stores/storeGraph';
 	import {
 		endYear,
 		eventsLoadProgress,
@@ -30,14 +33,14 @@
 
 	timeline.set(data.props.timeline);
 	if (!get(useBounderiesYears)) {
-		startYear.set(data.props.startYear ?? data.props.firstYear);
-		endYear.set(data.props.endYear ?? data.props.lastYear);
+		startYear.set(data.props.firstYear);
+		endYear.set(data.props.lastYear);
 	} else {
 		startYear.set(1850); // Default start year
 		endYear.set(1900); // Default end year
 	}
 	updateLineDataFromTimeline();
-	fetchedEvents.set(undefined);
+	fetchedEvents.set({});
 	eventsLoadProgress.set(0);
 
 	const totalPages = data.props.totalPages || (data.props.eventPages?.length ?? 0) || 1;
@@ -50,7 +53,14 @@
 				.then((page: EventItem[]) => {
 					mergeEvents(page);
 					updateFilteredEventsAndUdateDataForGraph();
-					updateLineDataFromTimeline();
+					const currentFilters = get(filters);
+					if (
+						currentFilters.and.length === 0 &&
+						currentFilters.or.length === 0 &&
+						currentFilters.not.length === 0
+					) {
+						updateLineDataFromTimeline();
+					}
 					resolved++;
 					eventsLoadProgress.set(resolved / totalPages);
 				})

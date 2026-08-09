@@ -35,14 +35,14 @@
 	// while the detailed event list streams in.
 	timeline.set(data.props.timeline);
 	if (!get(useBounderiesYears)) {
-		startYear.set(data.props.startYear ?? data.props.firstYear);
-		endYear.set(data.props.endYear ?? data.props.lastYear);
+		startYear.set(data.props.firstYear);
+		endYear.set(data.props.lastYear);
 	} else {
 		startYear.set(1850); // Default start year
 		endYear.set(1900); // Default end year
 	}
 	updateLineDataFromTimeline();
-	fetchedEvents.set(undefined);
+	fetchedEvents.set({});
 	eventsLoadProgress.set(0);
 
 	// Stream the detailed events page by page: each entry of `eventPages` is a
@@ -59,9 +59,16 @@
 				if (!loading) return;
 				mergeEvents(page);
 				updateFilteredEventsAndUdateDataForGraph();
-				// Keep the line graph on the complete timeline (the rebuild above would
-				// shrink it to the partially-loaded data). Identical values once loaded.
-				updateLineDataFromTimeline();
+				// Keep the cheap complete timeline only when no filters are active.
+				// Otherwise preserve the filtered graph computed above.
+				const currentFilters = get(filters);
+				if (
+					currentFilters.and.length === 0 &&
+					currentFilters.or.length === 0 &&
+					currentFilters.not.length === 0
+				) {
+					updateLineDataFromTimeline();
+				}
 				resolved++;
 				eventsLoadProgress.set(resolved / totalPages);
 			})
@@ -76,7 +83,9 @@
 			// Preload titles for the full event list now that everything is available.
 			const allEvents = get(fetchedEvents);
 			if (allEvents) {
-				const flat = Object.values(allEvents).flat();
+				const flat = Object.values(allEvents)
+					.flat()
+					.filter((event): event is EventItem => typeof event !== 'string');
 				if (flat.length > 0) {
 					import('$databaseMusiconn/stores/storeEvents').then(({ preloadTitlesForEvents }) => {
 						preloadTitlesForEvents(flat).catch((e) => console.error('preload titles:', e));

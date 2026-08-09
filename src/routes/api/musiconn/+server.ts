@@ -25,16 +25,22 @@ export const POST: RequestHandler = async ({ request }) => {
 	if (!body.query) {
 		throw error(400, 'Missing GraphQL query');
 	}
+	if (body.query.length > 100_000 || JSON.stringify(body.variables || {}).length > 100_000) {
+		throw error(413, 'GraphQL request is too large');
+	}
+
+	const controller = new AbortController();
+	const timeout = setTimeout(() => controller.abort(), 30_000);
+	request.signal.addEventListener('abort', () => controller.abort(), { once: true });
 
 	try {
 		const res = await fetch(MUSICONN_API_URL, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ query: body.query, variables: body.variables })
+			body: JSON.stringify({ query: body.query, variables: body.variables }),
+			signal: controller.signal
 		});
 
-		// Forward the GraphQL payload status, but normalize errors so they don't
-		// get swallowed as 200 + JSON (which the client expects to read).
 		const text = await res.text();
 		return new Response(text, {
 			status: res.status,
@@ -43,5 +49,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	} catch (err) {
 		console.error('musiconn proxy error:', err);
 		throw error(502, 'Failed to reach musiconn API');
+	} finally {
+		clearTimeout(timeout);
 	}
 };
