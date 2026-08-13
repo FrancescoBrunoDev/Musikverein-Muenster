@@ -2,79 +2,84 @@
 	import { onMount } from 'svelte';
 
 	let background: HTMLElement;
-	let animationFrame: number;
+	let animationFrame: number | null = null;
 	let currentX = 0;
 	let currentY = 0;
 	let targetX = 0;
 	let targetY = 0;
-	let isMouseDevice = $state(false);
+	let isMouseDevice = false;
+
+	type Layer = {
+		el: HTMLElement;
+		speed: number;
+		tilt: number;
+		focusPoint: number | null;
+		maxBlur: number;
+		minBlur: number;
+	};
+
+	let layers: Layer[] = [];
 
 	let { children } = $props();
 
-	const checkIfMouseDevice = () => {
-		return window.matchMedia('(pointer: fine)').matches;
-	};
-
 	// Lerp function for smooth interpolation
-	const lerp = (start: number, end: number, factor: number) => {
-		return start + (end - start) * factor;
-	};
+	const lerp = (start: number, end: number, factor: number) => start + (end - start) * factor;
 
-	const updatePosition = () => {
-		if (!isMouseDevice) return;
-
+	const applyFrame = () => {
 		currentX = lerp(currentX, targetX, 0.1);
 		currentY = lerp(currentY, targetY, 0.02);
 
-		if (background) {
-			background.querySelectorAll('[data-speed]').forEach((element) => {
-				const speed = Number(element.getAttribute('data-speed'));
-				const tiltIntensity = Number(element.getAttribute('data-tilt') || '0');
-				const xOffset = currentX * speed;
-				const yOffset = currentY * speed;
+		for (const layer of layers) {
+			const xOffset = currentX * layer.speed;
+			const yOffset = currentY * layer.speed;
+			const tiltX = currentY * layer.tilt;
+			const tiltY = -currentX * layer.tilt;
 
-				const tiltX = currentY * tiltIntensity;
-				const tiltY = -currentX * tiltIntensity;
+			let filter = '';
+			if (layer.focusPoint !== null) {
+				const blur = Math.max(layer.minBlur, Math.abs(currentX - layer.focusPoint) * layer.maxBlur);
+				filter = `blur(${blur}px)`;
+			}
 
-				const focusPoint = element.getAttribute('data-focus-point');
-				let filterStyle = '';
-
-				if (focusPoint !== null) {
-					const distanceFromFocus = Math.abs(currentX - Number(focusPoint));
-					const maxBlur = Number(element.getAttribute('data-max-blur')) || 5;
-					const minBlur = element.hasAttribute('data-can-focus') ? 0 : 1;
-					const blur = Math.max(minBlur, distanceFromFocus * maxBlur);
-					filterStyle = `blur(${blur}px)`;
-				}
-
-				(element as HTMLElement).style.transform =
-					`translate(${xOffset}px, ${yOffset}px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-				(element as HTMLElement).style.filter = filterStyle;
-			});
+			layer.el.style.transform = `translate(${xOffset}px, ${yOffset}px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+			layer.el.style.filter = filter;
 		}
 
-		animationFrame = requestAnimationFrame(updatePosition);
+		// ponytail: stop the loop once the lerp settles, restart on next mousemove
+		if (Math.abs(currentX - targetX) < 0.001 && Math.abs(currentY - targetY) < 0.001) {
+			animationFrame = null;
+		} else {
+			animationFrame = requestAnimationFrame(applyFrame);
+		}
 	};
 
 	const handleMouseMove = (e: MouseEvent) => {
-		if (!isMouseDevice) return;
-
 		targetX = (e.clientX / window.innerWidth - 0.5) * 2;
 		targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+
+		if (animationFrame === null) {
+			animationFrame = requestAnimationFrame(applyFrame);
+		}
 	};
 
 	onMount(() => {
-		isMouseDevice = checkIfMouseDevice();
-		if (isMouseDevice) {
-			window.addEventListener('mousemove', handleMouseMove);
-			animationFrame = requestAnimationFrame(updatePosition);
-		}
+		isMouseDevice = window.matchMedia('(pointer: fine)').matches;
+		if (!isMouseDevice) return;
+
+		layers = Array.from(background.querySelectorAll<HTMLElement>('[data-speed]')).map((el) => ({
+			el,
+			speed: Number(el.dataset.speed),
+			tilt: Number(el.dataset.tilt || '0'),
+			focusPoint: el.hasAttribute('data-focus-point') ? Number(el.dataset.focusPoint) : null,
+			maxBlur: Number(el.dataset.maxBlur) || 5,
+			minBlur: el.hasAttribute('data-can-focus') ? 0 : 1
+		}));
+
+		window.addEventListener('mousemove', handleMouseMove);
 
 		return () => {
-			if (isMouseDevice) {
-				window.removeEventListener('mousemove', handleMouseMove);
-				cancelAnimationFrame(animationFrame);
-			}
+			window.removeEventListener('mousemove', handleMouseMove);
+			if (animationFrame !== null) cancelAnimationFrame(animationFrame);
 		};
 	});
 </script>
