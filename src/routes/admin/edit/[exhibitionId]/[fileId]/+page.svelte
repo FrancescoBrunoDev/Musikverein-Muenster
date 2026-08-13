@@ -230,7 +230,7 @@
 			</div>
 		</div>
 		<div class="flex gap-2">
-			{#if data.file?.live}
+			{#if publishStatus.state}
 				<Button
 					action={revert}
 					size="sm"
