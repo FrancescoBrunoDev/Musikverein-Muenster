@@ -367,4 +367,10 @@
 		min-height: 0;
 		overflow-y: auto;
 	}
+
+	/* Make the in-editor preview match the final article typography. */
+	:global(.carta-renderer),
+	:global(.carta-viewer) {
+		@apply prose dark:prose-invert max-w-none;
+	}
 </style>
