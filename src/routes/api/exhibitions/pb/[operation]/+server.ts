@@ -1,52 +1,52 @@
 import type { Gallery } from '$components/markdown/gallery/types';
+import { requireAdmin } from '$lib/auth.server';
 import { formatMD } from '$lib/utils';
-import { error, json } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
+const FILE_NAME = 'preview.md';
+
+type Fetch = typeof globalThis.fetch;
+
 export const POST: RequestHandler = async ({ request, locals, params, fetch }) => {
-	if (params.operation === 'updateFile') {
-		return updateFile({ request, locals });
-	} else if (params.operation === 'deleteExhibition') {
-		return deleteExhibition({ request, locals });
-	} else if (params.operation === 'publishFile') {
-		return publishFile({ request, locals });
-	} else if (params.operation === 'changeEditingBy') {
-		return changeEditingBy({ locals, request });
-	} else if (params.operation === 'unpublishFile') {
-		return unpublishFile({ locals, request });
-	} else if (params.operation === 'getGallery') {
-		return getGallery({ locals, request });
-	} else if (params.operation === 'getExhibitionsList') {
-		return getExhibitionsList({ locals, fetch });
+	// Mutating operations require the configured admin.
+	// Read-only operations used by public pages stay public.
+	if (params.operation !== 'getGallery' && params.operation !== 'getExhibitionsList') {
+		requireAdmin(locals);
 	}
-	throw error(400, {
-		message: 'Invalid operation'
-	});
+
+	switch (params.operation) {
+		case 'updateFile':
+			return updateFile({ request, locals });
+		case 'deleteExhibition':
+			return deleteExhibition({ request, locals });
+		case 'publishFile':
+			return publishFile({ request, locals, fetch });
+		case 'changeEditingBy':
+			return changeEditingBy({ locals, request });
+		case 'unpublishFile':
+			return unpublishFile({ locals, request });
+		case 'revertFile':
+			return revertFile({ locals, request, fetch });
+		case 'getGallery':
+			return getGallery({ locals, request });
+		case 'getExhibitionsList':
+			return getExhibitionsList({ locals, fetch });
+		default:
+			return json({ success: false, message: 'Invalid operation' }, { status: 400 });
+	}
 };
 
-async function getExhibitionsList({
-	locals,
-	fetch
-}: {
-	locals: App.Locals;
-	fetch: {
-		(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
-		(input: string | URL | globalThis.Request, init?: RequestInit): Promise<Response>;
-	};
-}) {
+async function getExhibitionsList({ locals, fetch }: { locals: App.Locals; fetch: Fetch }) {
 	const exhibitions = await locals.pb.collection('exhibitions').getFullList({
 		expand: 'files'
 	});
-	if (!exhibitions) {
-		throw error(500, {
-			message: 'Failed to get exhibitions'
-		});
-	}
+
 	const filesArray = await Promise.all(
 		exhibitions.flatMap(
 			async (exhibition: any) =>
 				await Promise.all(
-					exhibition.expand.files
+					(exhibition.expand?.files ?? [])
 						.filter((file: any) => file.live && file.lang === locals.locale)
 						.map(async (file: any) => {
 							const url = locals.pb.files.getURL(file, file.live);
@@ -63,80 +63,66 @@ async function getExhibitionsList({
 		)
 	).then((arrays) => arrays.flat());
 
-	return json({ success: true, exhibitions: filesArray }, { status: 200 });
+	return json({ success: true, exhibitions: filesArray });
 }
 
 async function getGallery({ locals, request }: { locals: App.Locals; request: Request }) {
 	try {
 		const body = await request.json();
 		const { id } = body;
+		if (!id) {
+			return json({ success: false, message: 'Gallery id is required' }, { status: 400 });
+		}
+
 		const gallery = await locals.pb.collection('galleries').getOne(id, {
 			expand: 'images'
 		});
-		if (!gallery) {
-			throw error(500, {
-				message: 'Failed to get gallery'
-			});
-		}
-		const images = gallery?.expand?.images;
-		if (!images) {
-			const GalleryArray: Gallery = {
-				id: gallery.id,
-				title: gallery.title,
-				cover: locals.pb.files.getURL(gallery, gallery.cover),
-				caption: gallery.caption,
-				images: []
-			};
-			return json({ success: true, gallery: GalleryArray }, { status: 200 });
-		}
-		const imagesArray = images.map((image: any) => {
-			return {
-				caption: image.caption,
-				src: locals.pb.files.getURL(image, image.src)
-			};
-		});
-		const GalleryArray: Gallery = {
+		const images = (gallery?.expand?.images ?? []).map((image: any) => ({
+			caption: image.caption,
+			src: locals.pb.files.getURL(image, image.src)
+		}));
+
+		const galleryArray: Gallery = {
 			id: gallery.id,
 			title: gallery.title,
 			cover: locals.pb.files.getURL(gallery, gallery.cover),
 			caption: gallery.caption,
-			images: imagesArray
+			images
 		};
-		return json({ success: true, gallery: GalleryArray }, { status: 200 });
+		return json({ success: true, gallery: galleryArray });
 	} catch (e) {
-		throw error(400, {
-			message: 'Error retrieving gallery'
-		});
+		console.error('getGallery failed:', e);
+		return json({ success: false, message: 'Error retrieving gallery' }, { status: 400 });
 	}
 }
 
 async function updateFile({ request, locals }: { request: Request; locals: App.Locals }) {
 	try {
 		const body = await request.json();
-		const { markdown, id, field, collection } = body;
+		const { markdown, id } = body;
 
-		if (!markdown || !id) {
-			throw error(400, {
-				message: 'Markdown and id are required'
-			});
+		if (!id || typeof markdown !== 'string') {
+			return json({ success: false, message: 'Markdown and id are required' }, { status: 400 });
 		}
 
-		const file = await locals.pb.collection(collection).update(String(id), {
-			[field]: [new File([markdown], 'preview.md', { type: 'text/markdown' })],
-			previewUpdated: new Date().toISOString()
+		const current = await locals.pb.collection('exhibitionsFiles').getOne(String(id));
+		if (current.editingBy && current.editingBy !== locals.pb.authStore.record?.id) {
+			return json(
+				{ success: false, locked: true, message: 'This file is being edited by someone else' },
+				{ status: 423 }
+			);
+		}
+
+		const file = await locals.pb.collection('exhibitionsFiles').update(String(id), {
+			preview: [new File([markdown], FILE_NAME, { type: 'text/markdown' })],
+			previewUpdated: new Date().toISOString(),
+			editingBy: locals.pb.authStore.record?.id
 		});
 
-		if (!file) {
-			throw error(500, {
-				message: 'Failed to save file'
-			});
-		}
-
-		return json({ success: true, updated: file }, { status: 200 });
+		return json({ success: true, updated: file });
 	} catch (e) {
-		throw error(400, {
-			message: 'Errore durante il salvataggio'
-		});
+		console.error('updateFile failed:', e);
+		return json({ success: false, message: 'Error while saving' }, { status: 400 });
 	}
 }
 
@@ -144,36 +130,38 @@ async function changeEditingBy({ locals, request }: { locals: App.Locals; reques
 	try {
 		const body = await request.json();
 		const { id } = body;
-		// clean the other files you are editing
+		if (!id) {
+			return json({ success: false, message: 'File id is required' }, { status: 400 });
+		}
+
+		const currentUserId = locals.pb.authStore.record?.id;
+		const target = await locals.pb.collection('exhibitionsFiles').getOne(String(id));
+
+		if (target.editingBy && target.editingBy !== currentUserId) {
+			return json(
+				{ success: false, locked: true, message: 'This file is being edited by someone else' },
+				{ status: 423 }
+			);
+		}
+
+		// A user edits one file at a time: release any previous lock they held.
 		const files = await locals.pb.collection('exhibitionsFiles').getFullList({
-			filter: `editingBy = "${locals.pb.authStore.record?.id}"`
+			filter: `editingBy = "${currentUserId}"`
 		});
-		if (files) {
-			files.forEach(async (file: any) => {
-				await locals.pb.collection('exhibitionsFiles').update(file.id, {
-					editingBy: ''
-				});
-			});
-		}
-		const data = {
-			editingBy: locals.pb.authStore.record?.id
-		};
-		// // update the file you are editing
-		const file = await locals.pb
-			.collection('exhibitionsFiles')
-			.update(id, data, { requestKey: null });
+		await Promise.all(
+			files.map((file: any) =>
+				locals.pb.collection('exhibitionsFiles').update(file.id, { editingBy: '' })
+			)
+		);
 
-		if (!file) {
-			throw error(500, {
-				message: 'Failed to save file'
-			});
-		}
+		const file = await locals.pb.collection('exhibitionsFiles').update(String(id), {
+			editingBy: currentUserId
+		});
 
-		return json({ success: true, file }, { status: 200 });
+		return json({ success: true, file });
 	} catch (e) {
-		throw error(400, {
-			message: 'Errore durante il salvataggio'
-		});
+		console.error('changeEditingBy failed:', e);
+		return json({ success: false, message: 'Error while saving' }, { status: 400 });
 	}
 }
 
@@ -181,49 +169,55 @@ async function deleteExhibition({ locals, request }: { locals: App.Locals; reque
 	try {
 		const body = await request.json();
 		const { id } = body;
-		const exhibition = await locals.pb.collection('exhibitions').getOne(id);
-		const stateElimination = await locals.pb.collection('exhibitions').delete(id);
-		// delete the files
-		const files = exhibition.files;
-		files.forEach(async (file: any) => {
-			await locals.pb.collection('exhibitionsFiles').delete(file);
-		});
-		if (!exhibition) {
-			throw error(500, {
-				message: 'Failed to delete exhibition'
-			});
+		if (!id) {
+			return json({ success: false, message: 'Exhibition id is required' }, { status: 400 });
 		}
 
-		return json({ success: true, stateElimination }, { status: 200 });
+		const exhibition = await locals.pb.collection('exhibitions').getOne(String(id));
+		await locals.pb.collection('exhibitions').delete(String(id));
+
+		await Promise.all(
+			(exhibition.files ?? []).map((file: any) =>
+				locals.pb.collection('exhibitionsFiles').delete(file)
+			)
+		);
+
+		return json({ success: true });
 	} catch (e) {
-		throw error(400, {
-			message: 'Errore durante la cancellazione'
-		});
+		console.error('deleteExhibition failed:', e);
+		return json({ success: false, message: 'Error while deleting' }, { status: 400 });
 	}
 }
 
-async function publishFile({ locals, request }: { locals: App.Locals; request: Request }) {
+async function publishFile({
+	locals,
+	request,
+	fetch
+}: {
+	locals: App.Locals;
+	request: Request;
+	fetch: Fetch;
+}) {
 	try {
 		const body = await request.json();
 		const { id } = body;
-		const file = await locals.pb.collection('exhibitionsFiles').getOne(id);
-		const url = locals.pb.files.getURL(file, file.preview);
-		const markdown = await fetch(url).then((res) => res.text());
-		const fileLive = await locals.pb.collection('exhibitionsFiles').update(id, {
-			live: [new File([markdown], 'preview.md', { type: 'text/markdown' })],
-			liveUpdated: new Date().toISOString()
-		});
-		if (!file) {
-			throw error(500, {
-				message: 'Failed to delete file'
-			});
+		if (!id) {
+			return json({ success: false, message: 'File id is required' }, { status: 400 });
 		}
 
-		return json({ success: true, updated: fileLive }, { status: 200 });
-	} catch (e) {
-		throw error(400, {
-			message: 'Errore durante la cancellazione'
+		const file = await locals.pb.collection('exhibitionsFiles').getOne(String(id));
+		const url = locals.pb.files.getURL(file, file.preview);
+		const markdown = await fetch(url).then((res) => res.text());
+
+		const fileLive = await locals.pb.collection('exhibitionsFiles').update(String(id), {
+			live: [new File([markdown], FILE_NAME, { type: 'text/markdown' })],
+			liveUpdated: new Date().toISOString()
 		});
+
+		return json({ success: true, updated: fileLive });
+	} catch (e) {
+		console.error('publishFile failed:', e);
+		return json({ success: false, message: 'Error while publishing' }, { status: 400 });
 	}
 }
 
@@ -231,39 +225,58 @@ async function unpublishFile({ locals, request }: { locals: App.Locals; request:
 	try {
 		const body = await request.json();
 		const { id } = body;
-		const file = await locals.pb.collection('exhibitionsFiles').getOne(id);
-		const fileLive = await locals.pb.collection('exhibitionsFiles').update(id, {
+		if (!id) {
+			return json({ success: false, message: 'File id is required' }, { status: 400 });
+		}
+
+		const file = await locals.pb.collection('exhibitionsFiles').getOne(String(id));
+		const fileLive = await locals.pb.collection('exhibitionsFiles').update(String(id), {
 			live: [],
 			liveUpdated: ''
 		});
-		if (!file) {
-			throw error(500, {
-				message: 'Failed to delete file'
-			});
-		}
 
-		return json({ success: true, updated: fileLive }, { status: 200 });
+		return json({ success: true, updated: fileLive });
 	} catch (e) {
-		throw error(400, {
-			message: 'Errore durante la cancellazione'
-		});
+		console.error('unpublishFile failed:', e);
+		return json({ success: false, message: 'Error while unpublishing' }, { status: 400 });
 	}
 }
 
-async function deleteFile({ locals }: { locals: App.Locals }) {
+async function revertFile({
+	locals,
+	request,
+	fetch
+}: {
+	locals: App.Locals;
+	request: Request;
+	fetch: Fetch;
+}) {
 	try {
-		//TODO: questo metodo bisogna finirlo
-		const file = await locals.pb.collection('exhibitionsFiles').delete('id');
-		if (!file) {
-			throw error(500, {
-				message: 'Failed to delete file'
-			});
+		const body = await request.json();
+		const { id } = body;
+		if (!id) {
+			return json({ success: false, message: 'File id is required' }, { status: 400 });
 		}
 
-		return json({ success: true, file }, { status: 200 });
-	} catch (e) {
-		throw error(400, {
-			message: 'Errore durante la cancellazione'
+		const file = await locals.pb.collection('exhibitionsFiles').getOne(String(id));
+		if (!file.live) {
+			return json(
+				{ success: false, message: 'No published version to revert to' },
+				{ status: 400 }
+			);
+		}
+
+		const url = locals.pb.files.getURL(file, file.live);
+		const markdown = await fetch(url).then((res) => res.text());
+
+		const updated = await locals.pb.collection('exhibitionsFiles').update(String(id), {
+			preview: [new File([markdown], FILE_NAME, { type: 'text/markdown' })],
+			previewUpdated: new Date().toISOString()
 		});
+
+		return json({ success: true, updated });
+	} catch (e) {
+		console.error('revertFile failed:', e);
+		return json({ success: false, message: 'Error while reverting' }, { status: 400 });
 	}
 }
