@@ -75,6 +75,10 @@
 			minBlur: el.hasAttribute('data-can-focus') ? 0 : 1
 		}));
 
+		// ponytail: cursor position can't be read before a mousemove, so apply one frame
+		// with the centered default to set the initial focus blur
+		applyFrame();
+
 		window.addEventListener('mousemove', handleMouseMove);
 
 		return () => {
