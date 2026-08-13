@@ -1,9 +1,10 @@
+import { isAdmin } from '$lib/auth.server';
 import { fail, redirect } from '@sveltejs/kit';
 import type { ClientResponseError } from 'pocketbase';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ locals }) => {
-	if (locals.pb.authStore.record) {
+	if (locals.pb.authStore.record && isAdmin(locals)) {
 		return redirect(303, '/admin');
 	}
 
@@ -30,6 +31,11 @@ export const actions: Actions = {
 		} catch (error) {
 			const errorObj = error as ClientResponseError;
 			return fail(500, { fail: true, message: errorObj.data.message });
+		}
+
+		if (!isAdmin(locals)) {
+			locals.pb.authStore.clear();
+			return fail(403, { fail: true, message: 'This account is not an administrator' });
 		}
 
 		throw redirect(303, '/admin');

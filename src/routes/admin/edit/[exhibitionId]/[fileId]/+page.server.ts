@@ -1,41 +1,34 @@
-import { error, redirect } from '@sveltejs/kit';
+import { requireAdmin } from '$lib/auth.server';
+import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ locals, params, fetch }) => {
-	if (!locals.pb.authStore.record) {
-		return redirect(303, '/login');
-	}
+	requireAdmin(locals);
 
-	// make temorary directory
-
-	let exhibition = await locals.pb.collection('exhibitions').getOne(params.exhibitionId, {
+	const exhibition = await locals.pb.collection('exhibitions').getOne(params.exhibitionId, {
 		expand: 'files'
 	});
 
-	if (exhibition.files) {
-		let fileObj = await locals.pb.collection('exhibitionsFiles').getOne(params.fileId, {
-			expand: 'editedBy'
-		});
-		// trow an error if the file does not exist
-		if (!fileObj) throw error(404, { message: 'File not found' });
+	const fileObj = await locals.pb.collection('exhibitionsFiles').getOne(params.fileId, {
+		expand: 'editedBy'
+	});
+	if (!fileObj) throw error(404, { message: 'File not found' });
 
-		let url = locals.pb.files.getURL(fileObj, fileObj.preview);
-
-		let response = await fetch(url);
-		let content = await response.text();
-		let isLocked = false;
-
-		if (fileObj.editingBy === locals.pb.authStore.record.id || fileObj.editingBy === '') {
-			isLocked = false;
-		} else if (fileObj.editingBy !== locals.pb.authStore.record.id) {
-			isLocked = true;
-		}
-
-		return {
-			exhibition,
-			markdown: content,
-			file: fileObj,
-			isLocked
-		};
+	// The file must belong to the exhibition being edited.
+	if (!exhibition.files?.includes(fileObj.id)) {
+		throw error(404, { message: 'File not found' });
 	}
+
+	const url = locals.pb.files.getURL(fileObj, fileObj.preview);
+	const response = await fetch(url);
+	const content = await response.text();
+
+	const isLocked = fileObj.editingBy !== '' && fileObj.editingBy !== locals.pb.authStore.record!.id;
+
+	return {
+		exhibition,
+		markdown: content,
+		file: fileObj,
+		isLocked
+	};
 }) satisfies PageServerLoad;

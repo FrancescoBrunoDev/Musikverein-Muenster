@@ -1,14 +1,20 @@
+import { requireAdmin } from '$lib/auth.server';
 import { fail, redirect } from '@sveltejs/kit';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import type { Actions, PageServerLoad } from './$types';
 
+const BLANK_MARKDOWN = `---
+title:
+description:
+img:
+---
+
+`;
+const FILE_NAME = 'preview.md';
+
 export const load = (async ({ locals }) => {
-	if (!locals.pb.authStore.record) {
-		return redirect(303, '/login');
-	}
-	// return the infos about the user
-	const user = await locals.pb.collection('users').getOne(locals.pb.authStore.record.id);
+	requireAdmin(locals);
+
+	const user = await locals.pb.collection('users').getOne(locals.pb.authStore.record!.id);
 	const exhibitions = await locals.pb.collection('exhibitions').getFullList({
 		expand: 'files'
 	});
@@ -21,25 +27,27 @@ export const actions = {
 		return redirect(303, '/login');
 	},
 	addNewExhibition: async ({ locals, request }) => {
+		requireAdmin(locals);
 		const data = await request.formData();
-		const title = data.get('title');
-		//  first create a new file for en and for de using the blank
-		const enPath = join(process.cwd(), 'src/routes/[locale]/[type]/markdown/en/new.md');
-		const enContent = readFileSync(enPath, 'utf-8');
+		const title = String(data.get('title') ?? '').trim();
+
+		if (!title) {
+			return fail(400, { message: 'Title is required' });
+		}
+
 		const fileEn = await locals.pb.collection('exhibitionsFiles').create({
 			lang: 'en',
-			preview: [new File([enContent], 'preview.md', { type: 'text/markdown' })],
+			preview: [new File([BLANK_MARKDOWN], FILE_NAME, { type: 'text/markdown' })],
 			editingBy: ''
 		});
-		const dePath = join(process.cwd(), 'src/routes/[locale]/[type]/markdown/de/new.md');
-		const deContent = readFileSync(dePath, 'utf-8');
 		const fileDe = await locals.pb.collection('exhibitionsFiles').create({
 			lang: 'de',
-			preview: [new File([deContent], 'preview.md', { type: 'text/markdown' })],
+			preview: [new File([BLANK_MARKDOWN], FILE_NAME, { type: 'text/markdown' })],
 			editingBy: ''
 		});
+
 		const exhibition = await locals.pb.collection('exhibitions').create({
-			title: title,
+			title,
 			visible: false,
 			files: [fileEn.id, fileDe.id]
 		});
@@ -51,11 +59,17 @@ export const actions = {
 		return { success: true };
 	},
 	modifyExhibition: async ({ locals, request }) => {
+		requireAdmin(locals);
 		const data = await request.formData();
-		const id = data.get('id');
-		const title = data.get('title');
+		const id = String(data.get('id') ?? '');
+		const title = String(data.get('title') ?? '').trim();
+
+		if (!id || !title) {
+			return fail(400, { message: 'Id and title are required' });
+		}
+
 		const exhibition = await locals.pb.collection('exhibitions').update(id, {
-			title: title
+			title
 		});
 
 		if (!exhibition) {
