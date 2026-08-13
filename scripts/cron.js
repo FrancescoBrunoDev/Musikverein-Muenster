@@ -30,7 +30,7 @@ async function main() {
 	const job = new CronJob('* * * * *', async () => {
 		try {
 			const exhibitionsFiles = await pb.collection('exhibitionsFiles').getFullList({
-				filter: 'editingBy > 0',
+				filter: "editingBy != ''",
 				autoCancellation: false
 			});
 			exhibitionsFiles.forEach(async (file) => {
