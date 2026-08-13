@@ -358,9 +358,10 @@
 		flex: 1 1 auto;
 		min-height: 0;
 	}
+	/* The library default sets a fixed 600px height; let the flex layout size it. */
 	:global(.carta-input),
 	:global(.carta-renderer) {
-		height: auto;
+		height: auto !important;
 		min-height: 0;
 	}
 	:global(.carta-viewer) {
