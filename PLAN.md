@@ -33,6 +33,7 @@ Findings are tracked here; each fix is a separate commit.
        save/publish timestamps (use API response); init `activeLang` from file; remove
        `goto` from `$effect`; fix `bind:value` on read-only Markdown.
 - [x] 8. Add "Revert to published" (copy `live` back into `preview`) — cheap undo without schema change.
+- [x] 8b. Add "Take over editing" (admin force-unlock) for files locked by another user.
 
 ### Data safety / UX
 - [x] 9. Delete exhibition: confirmation + await all file deletions; fix dead `if (!exhibition)`.
@@ -62,3 +63,6 @@ Findings are tracked here; each fix is a separate commit.
   - publish -> public `/en/exhibitions/:id` shows published content while
     `/en/preview/:id` shows the newer draft (live vs preview split confirmed)
   - delete with confirm dialog removes the exhibition and its files (no orphans)
+  - en/de language switch navigates to the correct file without redirect loops
+  - locked file shows read-only view; "Take over editing" clears the lock and
+    returns the editor to editable mode
