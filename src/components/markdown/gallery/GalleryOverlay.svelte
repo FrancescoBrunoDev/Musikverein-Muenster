@@ -26,6 +26,17 @@
 					}
 				]
 	);
+
+	$effect(() => {
+		if (!isOpen) return;
+		const handleKeydown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') {
+				isOpen = false;
+			}
+		};
+		window.addEventListener('keydown', handleKeydown);
+		return () => window.removeEventListener('keydown', handleKeydown);
+	});
 </script>
 
 <Portal>
