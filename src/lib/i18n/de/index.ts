@@ -49,7 +49,37 @@ const de = {
 	commons: {
 		year: 'Jahr',
 		hallo: 'Hallo',
-		codeLang: 'de-DE',
+		codeLang: 'de-DE'
+	},
+	admin: {
+		logout: 'Abmelden',
+		preview: 'Vorschau',
+		edit: 'Bearbeiten',
+		delete: 'Löschen',
+		addNewExhibition: 'Neue Ausstellung hinzufügen',
+		createNewExhibition: 'Neue Ausstellung erstellen',
+		modifyExhibition: 'Ausstellung bearbeiten',
+		title: 'Titel',
+		noLang: 'keine Sprache',
+		publishedSuffix: ' - veröffentlicht',
+		back: 'Zurück',
+		publish: 'Veröffentlichen',
+		unpublish: 'Veröffentlichung aufheben',
+		revertToPublished: 'Auf veröffentlichte Version zurücksetzen',
+		takeOverEditing: 'Bearbeitung übernehmen',
+		notPublishedYet: 'noch nicht veröffentlicht',
+		lastPublish: 'zuletzt veröffentlicht',
+		lastSave: 'zuletzt gespeichert',
+		editingBy: 'Bearbeitet von',
+		deleteConfirm:
+			'Diese Ausstellung und alle zugehörigen Dateien löschen? Dies kann nicht rückgängig gemacht werden.',
+		deleting: 'Löschen…',
+		errorDeleting: 'Fehler beim Löschen der Ausstellung',
+		email: 'E-Mail',
+		password: 'Passwort',
+		login: 'Anmelden',
+		emailPlaceholder: 'mail@example.com',
+		passwordPlaceholder: 'passwort'
 	}
 } satisfies Translation;
 

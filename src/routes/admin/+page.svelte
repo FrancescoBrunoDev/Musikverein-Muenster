@@ -35,7 +35,7 @@
 	<div class="flex flex-wrap items-center gap-4">
 		<h1 class="text-4xl font-bold sm:text-6xl">{$LL.commons.hallo()}, {data.user.name}</h1>
 		<form action="?/logout" method="post" class="flex flex-col gap-4">
-			<Button type="submit" size="sm" label={'Logout'}></Button>
+			<Button type="submit" size="sm" label={$LL.admin.logout()}></Button>
 		</form>
 	</div>
 	<div class="flex flex-col gap-4">
@@ -57,14 +57,14 @@
 						<div class="flex flex-wrap items-center gap-2">
 							{#if exhibition.expand}
 								{#each exhibition.expand.files as file}
-									{@const isPublished = file.live ? ' - published' : ''}
+									{@const isPublished = file.live ? $LL.admin.publishedSuffix() : ''}
 									<p class="bg-secondary dark:bg-dark-secondary h-fit rounded-xl px-2 py-1 text-sm">
 										{file.lang}
 										{isPublished}
 									</p>
 								{/each}
 							{:else}
-								<span>no lang</span>
+								<span>{$LL.admin.noLang()}</span>
 							{/if}
 						</div>
 					</div>
@@ -72,14 +72,14 @@
 						<div class="flex gap-1">
 							<Button
 								href="/{locale.current}/preview/{exhibition.id}"
-								label="Preview"
+								label={$LL.admin.preview()}
 								className="px-4 w-fit"
 								type="button"
 								size="sm"
 							/>
 							<Button
 								href="/admin/edit/{exhibition.id}/{exhibition.expand?.files[0].id}"
-								label="Edit"
+								label={$LL.admin.edit()}
 								className="px-4 w-fit"
 								type="button"
 								size="sm"
@@ -89,7 +89,7 @@
 								action={() => openModalModifyExhibition(exhibition)}
 								size="sm"
 								icon={Settings2}
-								ariaLabel="Modify exhibition"
+								ariaLabel={$LL.admin.modifyExhibition()}
 							/>
 						</div>
 						<DeleteExhibition exhibitionId={exhibition.id}></DeleteExhibition>
@@ -100,7 +100,7 @@
 				type="button"
 				action={() => (isModalNewExhibitionOpen = !isModalNewExhibitionOpen)}
 				size="md"
-				label="Add new exhibition"
+				label={$LL.admin.addNewExhibition()}
 			/>
 		</div>
 	</div>
@@ -113,16 +113,16 @@
 		<h3
 			class="bg-background dark:bg-dark-background sticky top-0 mb-10 px-4 pt-4 pb-0 text-3xl font-bold"
 		>
-			Create new exhibition
+			{$LL.admin.createNewExhibition()}
 		</h3>
 		<div>
 			<form class="flex flex-col gap-4 px-4 pb-4" action="?/addNewExhibition" method="post">
 				<input
 					class="bg-background dark:bg-dark-background w-full rounded-xl border-2 p-2"
 					name="title"
-					placeholder="Title"
+					placeholder={$LL.admin.title()}
 				/>
-				<Button type="submit" className="w-full" label="Add new exhibition" />
+				<Button type="submit" className="w-full" label={$LL.admin.addNewExhibition()} />
 			</form>
 		</div>
 	</div>
@@ -135,18 +135,18 @@
 		<h3
 			class="bg-background dark:bg-dark-background sticky top-0 mb-10 px-4 pt-4 pb-0 text-3xl font-bold"
 		>
-			Modify exhibition
+			{$LL.admin.modifyExhibition()}
 		</h3>
 		<div>
 			<form class="flex flex-col gap-4 px-4 pb-4" action="?/modifyExhibition" method="post">
 				<input
 					class="bg-background dark:bg-dark-background w-full rounded-xl border-2 p-2"
 					name="title"
-					placeholder="Title"
+					placeholder={$LL.admin.title()}
 					value={isModalModifyExhibitionOpen.exhibition.title}
 				/>
 				<input type="hidden" name="id" value={isModalModifyExhibitionOpen.exhibition.id} />
-				<Button type="submit" className="w-full" label="Modify exhibition" />
+				<Button type="submit" className="w-full" label={$LL.admin.modifyExhibition()} />
 			</form>
 		</div>
 	</div>

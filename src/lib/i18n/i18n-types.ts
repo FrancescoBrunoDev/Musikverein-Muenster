@@ -156,6 +156,116 @@ type RootTranslation = {
 		 */
 		codeLang: string
 	}
+	admin: {
+		/**
+		 * L​o​g​o​u​t
+		 */
+		logout: string
+		/**
+		 * P​r​e​v​i​e​w
+		 */
+		preview: string
+		/**
+		 * E​d​i​t
+		 */
+		edit: string
+		/**
+		 * D​e​l​e​t​e
+		 */
+		'delete': string
+		/**
+		 * A​d​d​ ​n​e​w​ ​e​x​h​i​b​i​t​i​o​n
+		 */
+		addNewExhibition: string
+		/**
+		 * C​r​e​a​t​e​ ​n​e​w​ ​e​x​h​i​b​i​t​i​o​n
+		 */
+		createNewExhibition: string
+		/**
+		 * M​o​d​i​f​y​ ​e​x​h​i​b​i​t​i​o​n
+		 */
+		modifyExhibition: string
+		/**
+		 * T​i​t​l​e
+		 */
+		title: string
+		/**
+		 * n​o​ ​l​a​n​g
+		 */
+		noLang: string
+		/**
+		 *  ​-​ ​p​u​b​l​i​s​h​e​d
+		 */
+		publishedSuffix: string
+		/**
+		 * B​a​c​k
+		 */
+		back: string
+		/**
+		 * P​u​b​l​i​s​h
+		 */
+		publish: string
+		/**
+		 * U​n​p​u​b​l​i​s​h
+		 */
+		unpublish: string
+		/**
+		 * R​e​v​e​r​t​ ​t​o​ ​p​u​b​l​i​s​h​e​d
+		 */
+		revertToPublished: string
+		/**
+		 * T​a​k​e​ ​o​v​e​r​ ​e​d​i​t​i​n​g
+		 */
+		takeOverEditing: string
+		/**
+		 * n​o​t​ ​p​u​b​l​i​s​h​e​d​ ​y​e​t
+		 */
+		notPublishedYet: string
+		/**
+		 * l​a​s​t​ ​p​u​b​l​i​s​h
+		 */
+		lastPublish: string
+		/**
+		 * l​a​s​t​ ​s​a​v​e
+		 */
+		lastSave: string
+		/**
+		 * E​d​i​t​i​n​g​ ​b​y
+		 */
+		editingBy: string
+		/**
+		 * D​e​l​e​t​e​ ​t​h​i​s​ ​e​x​h​i​b​i​t​i​o​n​ ​a​n​d​ ​a​l​l​ ​i​t​s​ ​f​i​l​e​s​?​ ​T​h​i​s​ ​c​a​n​n​o​t​ ​b​e​ ​u​n​d​o​n​e​.
+		 */
+		deleteConfirm: string
+		/**
+		 * D​e​l​e​t​i​n​g​…
+		 */
+		deleting: string
+		/**
+		 * E​r​r​o​r​ ​d​e​l​e​t​i​n​g​ ​e​x​h​i​b​i​t​i​o​n
+		 */
+		errorDeleting: string
+		/**
+		 * E​-​M​a​i​l
+		 */
+		email: string
+		/**
+		 * P​a​s​s​w​o​r​d
+		 */
+		password: string
+		/**
+		 * L​o​g​i​n
+		 */
+		login: string
+		/**
+		 * m​a​i​l​@​e​x​a​m​p​l​e​.​c​o​m
+		 */
+		emailPlaceholder: string
+		/**
+		 * p​a​s​s​w​o​r​d
+		 */
+		passwordPlaceholder: string
+	}
 }
 
 export type TranslationFunctions = {
@@ -300,6 +410,116 @@ export type TranslationFunctions = {
 		 * en-GB
 		 */
 		codeLang: () => LocalizedString
+	}
+	admin: {
+		/**
+		 * Logout
+		 */
+		logout: () => LocalizedString
+		/**
+		 * Preview
+		 */
+		preview: () => LocalizedString
+		/**
+		 * Edit
+		 */
+		edit: () => LocalizedString
+		/**
+		 * Delete
+		 */
+		'delete': () => LocalizedString
+		/**
+		 * Add new exhibition
+		 */
+		addNewExhibition: () => LocalizedString
+		/**
+		 * Create new exhibition
+		 */
+		createNewExhibition: () => LocalizedString
+		/**
+		 * Modify exhibition
+		 */
+		modifyExhibition: () => LocalizedString
+		/**
+		 * Title
+		 */
+		title: () => LocalizedString
+		/**
+		 * no lang
+		 */
+		noLang: () => LocalizedString
+		/**
+		 *  - published
+		 */
+		publishedSuffix: () => LocalizedString
+		/**
+		 * Back
+		 */
+		back: () => LocalizedString
+		/**
+		 * Publish
+		 */
+		publish: () => LocalizedString
+		/**
+		 * Unpublish
+		 */
+		unpublish: () => LocalizedString
+		/**
+		 * Revert to published
+		 */
+		revertToPublished: () => LocalizedString
+		/**
+		 * Take over editing
+		 */
+		takeOverEditing: () => LocalizedString
+		/**
+		 * not published yet
+		 */
+		notPublishedYet: () => LocalizedString
+		/**
+		 * last publish
+		 */
+		lastPublish: () => LocalizedString
+		/**
+		 * last save
+		 */
+		lastSave: () => LocalizedString
+		/**
+		 * Editing by
+		 */
+		editingBy: () => LocalizedString
+		/**
+		 * Delete this exhibition and all its files? This cannot be undone.
+		 */
+		deleteConfirm: () => LocalizedString
+		/**
+		 * Deleting…
+		 */
+		deleting: () => LocalizedString
+		/**
+		 * Error deleting exhibition
+		 */
+		errorDeleting: () => LocalizedString
+		/**
+		 * E-Mail
+		 */
+		email: () => LocalizedString
+		/**
+		 * Password
+		 */
+		password: () => LocalizedString
+		/**
+		 * Login
+		 */
+		login: () => LocalizedString
+		/**
+		 * mail@example.com
+		 */
+		emailPlaceholder: () => LocalizedString
+		/**
+		 * password
+		 */
+		passwordPlaceholder: () => LocalizedString
 	}
 }
 

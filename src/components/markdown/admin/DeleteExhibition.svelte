@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '$components/ui/Button.svelte';
 	import { invalidateAll } from '$app/navigation';
+	import { LL } from '$lib/i18n/i18n-svelte';
 
 	interface Props {
 		exhibitionId: string;
@@ -10,7 +11,7 @@
 	let deleting = $state(false);
 
 	async function handleDeleteExhibition() {
-		const confirmed = confirm('Delete this exhibition and all its files? This cannot be undone.');
+		const confirmed = confirm($LL.admin.deleteConfirm());
 		if (!confirmed) return;
 
 		deleting = true;
@@ -25,7 +26,7 @@
 			await invalidateAll();
 		} else {
 			deleting = false;
-			alert(result.message ?? 'Error deleting exhibition');
+			alert(result.message ?? $LL.admin.errorDeleting());
 		}
 	}
 </script>
@@ -36,5 +37,5 @@
 	type="button"
 	size="sm"
 	disabled={deleting}
-	label={deleting ? 'Deleting…' : 'Delete'}
+	label={deleting ? $LL.admin.deleting() : $LL.admin.delete()}
 ></Button>

@@ -230,7 +230,7 @@
 		<div class="flex items-center gap-4">
 			<Button
 				href="/admin"
-				label="Back"
+				label={$LL.admin.back()}
 				type={'button'}
 				size="sm"
 				className="pr-4 w-fit"
@@ -239,7 +239,7 @@
 			<Button
 				href="/{activeLang}/preview/{data.exhibition?.id}"
 				target="_blank"
-				label="Preview"
+				label={$LL.admin.preview()}
 				type={'button'}
 				size="sm"
 				className="px-4 w-fit"
@@ -255,7 +255,7 @@
 					size="sm"
 					className="bg-secondary text-text dark:bg-dark-secondary dark:text-dark-text"
 					type={'button'}
-					label="Take over editing"
+					label={$LL.admin.takeOverEditing()}
 				/>
 			{/if}
 			{#if publishStatus.state}
@@ -264,27 +264,33 @@
 					size="sm"
 					className="bg-secondary text-text dark:bg-dark-secondary dark:text-dark-text"
 					type={'button'}
-					label="Revert to published"
+					label={$LL.admin.revertToPublished()}
 					icon={Undo2}
 				/>
 			{/if}
-			<Button disabled={data.isLocked} action={publish} size="sm" type={'button'} label="Publish" />
+			<Button
+				disabled={data.isLocked}
+				action={publish}
+				size="sm"
+				type={'button'}
+				label={$LL.admin.publish()}
+			/>
 			{#if publishStatus.state}
 				<Button
 					action={unpublish}
 					size="sm"
 					className=" bg-destructive"
 					type={'button'}
-					label="Unpublish"
+					label={$LL.admin.unpublish()}
 				/>
 			{/if}
 		</div>
 	</div>
 	<div class="flex h-6 justify-end gap-1 text-xs">
 		{#if publishStatus.state}
-			<CircleCheckBig class="h-4 w-4" />last publish {publishStatus.updated}
+			<CircleCheckBig class="h-4 w-4" />{$LL.admin.lastPublish()} {publishStatus.updated}
 		{:else}
-			<span>not published yet</span>
+			<span>{$LL.admin.notPublishedYet()}</span>
 		{/if}
 	</div>
 	{#if data.isLocked}
@@ -297,7 +303,8 @@
 	>
 		{#if data.isLocked}
 			<div class="text-destructive inline-flex gap-1">
-				Editing by {data.file.editingBy}
+				{$LL.admin.editingBy()}
+				{data.file.editingBy}
 				<CloudAlert class="h-4 w-4" />
 			</div>
 		{:else if lockError}
@@ -307,7 +314,8 @@
 			</div>
 		{:else if saveStatus.state}
 			<div class="inline-flex gap-1">
-				last save {saveStatus.updated}<Save class="h-4 w-4" />
+				{$LL.admin.lastSave()}
+				{saveStatus.updated}<Save class="h-4 w-4" />
 			</div>
 		{:else if saveStatus.updated}
 			<div class="text-destructive inline-flex gap-1">
