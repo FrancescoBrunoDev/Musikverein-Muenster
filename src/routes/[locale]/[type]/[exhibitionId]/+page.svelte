@@ -19,6 +19,9 @@
 	let { data }: Props = $props();
 
 	let value = $derived(data.markdown.content);
+	let heroStyle = $derived(
+		`background-image: url('${(data.markdown.metadata.img ?? '').replace(/'/g, '%27')}')`
+	);
 
 	const carta = new Carta({
 		sanitizer: DOMPurify.sanitize
@@ -91,16 +94,14 @@
 							action={async () => await invalidateAll()}
 							type={'button'}
 							size="sm"
+							ariaLabel="Refresh preview"
 						/>
 					</div>
 					<Selector bind:active={activeLang} {options} />
 				</div>
 			</div>
 		{/if}
-		<div
-			class="flex h-screen w-screen items-center bg-cover bg-center"
-			style="background-image: url('{data.markdown.metadata.img}')"
-		>
+		<div class="flex h-screen w-screen items-center bg-cover bg-center" style={heroStyle}>
 			<div class="container">
 				<h1 class="text-background dark:text-dark-background font-serif text-4xl lg:text-8xl">
 					{data.markdown.metadata.title}

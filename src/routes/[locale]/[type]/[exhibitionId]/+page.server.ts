@@ -1,21 +1,32 @@
+import { requireAdmin } from '$lib/auth.server';
 import { formatMD } from '$lib/utils';
-import { redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ locals, params }) => {
-	if (params.type === 'preview' && !locals.pb.authStore.record) {
-		return redirect(303, '/login');
+	if (params.type === 'preview') {
+		requireAdmin(locals);
 	}
-	// return the infos about the user
 
-	let exhibition = await locals.pb.collection('exhibitions').getOne(params.exhibitionId, {
+	const exhibition = await locals.pb.collection('exhibitions').getOne(params.exhibitionId, {
 		expand: 'files'
 	});
 
-	let file = exhibition?.expand?.files?.find(
+	const file = exhibition?.expand?.files?.find(
 		(file: { lang: string }) => file.lang === params.locale
 	);
-	let url = locals.pb.files.getURL(file, file.preview);
+
+	if (!file) {
+		throw error(404, { message: 'No markdown file for this language' });
+	}
+
+	// Public pages show the published (`live`) file; the admin preview shows the draft.
+	const field = params.type === 'preview' ? file.preview : file.live;
+	if (!field) {
+		throw error(404, { message: 'This article has not been published yet' });
+	}
+
+	const url = locals.pb.files.getURL(file, field);
 	const response = await fetch(url);
 	const markdown = await response.text();
 

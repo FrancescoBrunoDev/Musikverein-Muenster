@@ -17,17 +17,19 @@ export function formatData({ date, lang }: { date: string; lang: string }) {
 }
 
 export function formatMD({ markdown }: { markdown: string }) {
-	const metadata: RegExpMatchArray | null = markdown.match(/---\n([\s\S]*?)\n---/);
-	const metadataArray = metadata ? metadata[1].split('\n') : [];
-	const metadataObject = metadataArray.reduce((acc: Record<string, string>, curr: string) => {
-		const [key, ...values] = curr.split(':');
-		if (key) {
-			acc[key.trim()] = values.join(':').trim();
-		}
-		return acc;
-	}, {});
+	const frontmatter = markdown.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*/);
+	const metadataObject = (frontmatter?.[1] ?? '')
+		.split(/\r?\n/)
+		.filter((line) => line.includes(':'))
+		.reduce((acc: Record<string, string>, curr: string) => {
+			const [key, ...values] = curr.split(':');
+			if (key) {
+				acc[key.trim()] = values.join(':').trim();
+			}
+			return acc;
+		}, {});
 
-	const content = metadata ? markdown.replace(metadata[0], '') : markdown;
+	const content = frontmatter ? markdown.replace(frontmatter[0], '').trim() : markdown.trim();
 
 	return {
 		content,
