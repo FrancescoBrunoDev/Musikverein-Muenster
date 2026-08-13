@@ -14,5 +14,5 @@
 	<div class="relative size-full overflow-hidden rounded-lg">
 		<img src={selected.src} alt={caption} class="absolute inset-0 size-full object-contain" />
 	</div>
-	{#if caption}<p>{@html caption}</p>{/if}
+	{#if caption}<p>{caption}</p>{/if}
 </div>

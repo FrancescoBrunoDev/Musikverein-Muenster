@@ -34,7 +34,7 @@
 	<h4
 		class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 p-4 text-xl font-bold opacity-0 transition-opacity group-hover:opacity-100"
 	>
-		<p>{@html gallery.title}</p>
+		<p>{gallery.title}</p>
 		<Expand />
 	</h4>
 	<img
