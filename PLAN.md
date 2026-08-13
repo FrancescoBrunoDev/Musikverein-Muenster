@@ -45,9 +45,14 @@ Findings are tracked here; each fix is a separate commit.
 - [x] 13. Button a11y: remove hardcoded "Open Popover"; aria-label only when icon-only.
 - [x] 14. Fix `npm run check` errors in admin files (FormData types, bind:value).
 - [x] 15. Fix cron stale-lock filter (`editingBy > 0` -> `editingBy != ''`).
+- [x] 16. Localize admin UI (de/en) — admin list, editor, delete button, login form.
 
 ## Deferred (need PocketBase superuser / schema change — documented, not code)
-- PB collection rules: restrict write to the admin user id/email.
+- PB collection rules: restrict write to the admin user id/email. Recommended PocketBase
+  rules (apply to `exhibitions` and `exhibitionsFiles`):
+  - create/update/delete rule: `@request.auth.email = "francesco.bruno001@gmail.com"`
+  - (or pin the id: `@request.auth.id = "9et6s29yi48l152"`)
+  Keep list/view rules public so articles still render for visitors.
 - Revision history (new collection or JSON field) — partially mitigated by #8 revert-to-live.
 - Gallery management UI (needs galleries schema knowledge + upload flow).
 
@@ -66,3 +71,4 @@ Findings are tracked here; each fix is a separate commit.
   - en/de language switch navigates to the correct file without redirect loops
   - locked file shows read-only view; "Take over editing" clears the lock and
     returns the editor to editable mode
+  - i18n smoke test: login and admin list render localized strings (en verified)
