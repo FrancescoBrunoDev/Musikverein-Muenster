@@ -12,7 +12,7 @@
 
 	import { Carta, MarkdownEditor, Markdown } from 'carta-md';
 	// Component default theme
-	import 'carta-md/default.css';
+	import '$lib/carta-theme.css';
 
 	interface Props {
 		data: PageData;
@@ -358,10 +358,8 @@
 		flex: 1 1 auto;
 		min-height: 0;
 	}
-	/* The library default sets a fixed 600px height; let the flex layout size it. */
 	:global(.carta-input),
 	:global(.carta-renderer) {
-		height: auto !important;
 		min-height: 0;
 	}
 	:global(.carta-viewer) {
