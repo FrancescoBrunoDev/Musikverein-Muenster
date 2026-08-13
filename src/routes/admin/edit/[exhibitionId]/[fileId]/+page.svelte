@@ -225,8 +225,8 @@
 	<meta property="og:title" content="edit" />
 </svelte:head>
 
-<div class="h-[93dvh]">
-	<div class="flex justify-between">
+<div class="flex h-[calc(100dvh_-_2.5rem)] flex-col">
+	<header class="flex flex-wrap items-center justify-between gap-3">
 		<div class="flex items-center gap-4">
 			<Button
 				href="/admin"
@@ -244,11 +244,9 @@
 				size="sm"
 				className="px-4 w-fit"
 			/>
-			<div>
-				<Selector {options} bind:active={activeLang} />
-			</div>
+			<Selector {options} bind:active={activeLang} />
 		</div>
-		<div class="flex gap-2">
+		<div class="flex flex-wrap items-center justify-end gap-2">
 			{#if data.isLocked}
 				<Button
 					action={takeOver}
@@ -285,44 +283,47 @@
 				/>
 			{/if}
 		</div>
-	</div>
-	<div class="flex h-6 justify-end gap-1 text-xs">
-		{#if publishStatus.state}
-			<CircleCheckBig class="h-4 w-4" />{$LL.admin.lastPublish()} {publishStatus.updated}
-		{:else}
-			<span>{$LL.admin.notPublishedYet()}</span>
-		{/if}
-	</div>
-	{#if data.isLocked}
-		<Markdown {value} {carta} />
-	{:else}
-		<MarkdownEditor {carta} bind:value mode="tabs" />
-	{/if}
-	<div
-		class="variant-soft-success rounded-token flex items-center justify-end gap-1 px-4 py-2 text-xs"
-	>
+	</header>
+	<div class="mt-3 flex min-h-0 flex-1 flex-col">
 		{#if data.isLocked}
-			<div class="text-destructive inline-flex gap-1">
-				{$LL.admin.editingBy()}
-				{data.file.editingBy}
-				<CloudAlert class="h-4 w-4" />
-			</div>
-		{:else if lockError}
-			<div class="text-destructive inline-flex gap-1">
-				{lockError}
-				<CloudAlert class="h-4 w-4" />
-			</div>
-		{:else if saveStatus.state}
-			<div class="inline-flex gap-1">
-				{$LL.admin.lastSave()}
-				{saveStatus.updated}<Save class="h-4 w-4" />
-			</div>
-		{:else if saveStatus.updated}
-			<div class="text-destructive inline-flex gap-1">
-				{saveStatus.updated}
-				<CloudAlert class="h-4 w-4" />
-			</div>
+			<Markdown {value} {carta} />
+		{:else}
+			<MarkdownEditor {carta} bind:value mode="tabs" />
 		{/if}
+	</div>
+	<div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t-2 py-2 text-xs">
+		<div class="flex min-w-0 items-center gap-1">
+			{#if data.isLocked}
+				<span class="text-destructive inline-flex items-center gap-1">
+					{$LL.admin.editingBy()}
+					{data.file.editingBy}
+					<CloudAlert class="h-4 w-4" />
+				</span>
+			{:else if lockError}
+				<span class="text-destructive inline-flex items-center gap-1">
+					{lockError}
+					<CloudAlert class="h-4 w-4" />
+				</span>
+			{:else if saveStatus.state}
+				<span class="inline-flex items-center gap-1">
+					{$LL.admin.lastSave()}
+					{saveStatus.updated}<Save class="h-4 w-4" />
+				</span>
+			{:else if saveStatus.updated}
+				<span class="text-destructive inline-flex items-center gap-1">
+					{saveStatus.updated}
+					<CloudAlert class="h-4 w-4" />
+				</span>
+			{/if}
+		</div>
+		<div class="flex items-center gap-1">
+			{#if publishStatus.state}
+				<CircleCheckBig class="h-4 w-4" />
+				<span>{$LL.admin.lastPublish()} {publishStatus.updated}</span>
+			{:else}
+				<span>{$LL.admin.notPublishedYet()}</span>
+			{/if}
+		</div>
 	</div>
 </div>
 
@@ -340,5 +341,31 @@
 	}
 	:global(.carta-font-code) {
 		@apply text-text;
+	}
+
+	/* Fill the available editor area instead of the fixed 600px default. */
+	:global(.carta-editor) {
+		flex: 1 1 auto;
+		min-height: 0;
+	}
+	:global(.carta-wrapper) {
+		display: flex;
+		flex: 1 1 auto;
+		flex-direction: column;
+		min-height: 0;
+	}
+	:global(.carta-container) {
+		flex: 1 1 auto;
+		min-height: 0;
+	}
+	:global(.carta-input),
+	:global(.carta-renderer) {
+		height: auto;
+		min-height: 0;
+	}
+	:global(.carta-viewer) {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow-y: auto;
 	}
 </style>

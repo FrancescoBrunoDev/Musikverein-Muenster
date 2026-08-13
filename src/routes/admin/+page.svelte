@@ -31,10 +31,10 @@
 	}
 </script>
 
-<div class="mt-10 flex flex-col gap-20">
+<div class="flex flex-col gap-10">
 	<div class="flex flex-wrap items-center gap-4">
 		<h1 class="text-4xl font-bold sm:text-6xl">{$LL.commons.hallo()}, {data.user.name}</h1>
-		<form action="?/logout" method="post" class="flex flex-col gap-4">
+		<form action="?/logout" method="post">
 			<Button type="submit" size="sm" label={$LL.admin.logout()}></Button>
 		</form>
 	</div>
@@ -47,18 +47,18 @@
 					lang: $LL.commons.codeLang()
 				})}
 				<div
-					class="flex flex-col justify-between gap-4 rounded-xl border-2 px-2 py-1 sm:flex-row sm:items-center"
+					class="flex flex-col justify-between gap-4 rounded-xl border-2 p-4 sm:flex-row sm:items-center"
 				>
-					<div class="flex flex-col gap-1 sm:flex-row sm:gap-8">
-						<div>
-							<p class="font-bold">{exhibition.title}</p>
+					<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-8">
+						<div class="min-w-0">
+							<p class="font-bold break-words">{exhibition.title}</p>
 							<p class="text-xs">{formattedData}</p>
 						</div>
 						<div class="flex flex-wrap items-center gap-2">
 							{#if exhibition.expand}
 								{#each exhibition.expand.files as file}
 									{@const isPublished = file.live ? $LL.admin.publishedSuffix() : ''}
-									<p class="bg-secondary dark:bg-dark-secondary h-fit rounded-xl px-2 py-1 text-sm">
+									<p class="bg-secondary dark:bg-dark-secondary h-fit rounded-lg px-2.5 py-1 text-xs">
 										{file.lang}
 										{isPublished}
 									</p>
@@ -111,14 +111,14 @@
 		class="bg-background dark:bg-dark-background max-h-[80dvh] overflow-y-auto rounded-xl dark:border-2"
 	>
 		<h3
-			class="bg-background dark:bg-dark-background sticky top-0 mb-10 px-4 pt-4 pb-0 text-3xl font-bold"
+			class="bg-background dark:bg-dark-background sticky top-0 mb-4 px-4 pt-4 pb-0 text-3xl font-bold"
 		>
 			{$LL.admin.createNewExhibition()}
 		</h3>
 		<div>
 			<form class="flex flex-col gap-4 px-4 pb-4" action="?/addNewExhibition" method="post">
 				<input
-					class="bg-background dark:bg-dark-background w-full rounded-xl border-2 p-2"
+					class="bg-background dark:bg-dark-background w-full rounded-xl border-2 px-3 py-2"
 					name="title"
 					placeholder={$LL.admin.title()}
 				/>
@@ -133,14 +133,14 @@
 		class="bg-background dark:bg-dark-background max-h-[80dvh] overflow-y-auto rounded-xl dark:border-2"
 	>
 		<h3
-			class="bg-background dark:bg-dark-background sticky top-0 mb-10 px-4 pt-4 pb-0 text-3xl font-bold"
+			class="bg-background dark:bg-dark-background sticky top-0 mb-4 px-4 pt-4 pb-0 text-3xl font-bold"
 		>
 			{$LL.admin.modifyExhibition()}
 		</h3>
 		<div>
 			<form class="flex flex-col gap-4 px-4 pb-4" action="?/modifyExhibition" method="post">
 				<input
-					class="bg-background dark:bg-dark-background w-full rounded-xl border-2 p-2"
+					class="bg-background dark:bg-dark-background w-full rounded-xl border-2 px-3 py-2"
 					name="title"
 					placeholder={$LL.admin.title()}
 					value={isModalModifyExhibitionOpen.exhibition.title}
