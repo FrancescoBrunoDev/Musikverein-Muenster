@@ -16,6 +16,7 @@
 		focusPoint: number | null;
 		maxBlur: number;
 		minBlur: number;
+		useTwBlur: boolean;
 	};
 
 	let layers: Layer[] = [];
@@ -42,7 +43,14 @@
 			}
 
 			layer.el.style.transform = `translate(${xOffset}px, ${yOffset}px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-			layer.el.style.filter = filter;
+
+			// ponytail: compose with Tailwind's filter chain (brightness-*) via --tw-blur,
+			// otherwise a direct `filter: blur()` would wipe the brightness dimming
+			if (layer.useTwBlur) {
+				layer.el.style.setProperty('--tw-blur', filter);
+			} else {
+				layer.el.style.filter = filter;
+			}
 		}
 
 		// ponytail: stop the loop once the lerp settles, restart on next mousemove
@@ -72,7 +80,8 @@
 			tilt: Number(el.dataset.tilt || '0'),
 			focusPoint: el.hasAttribute('data-focus-point') ? Number(el.dataset.focusPoint) : null,
 			maxBlur: Number(el.dataset.maxBlur) || 5,
-			minBlur: el.hasAttribute('data-can-focus') ? 0 : 1
+			minBlur: el.hasAttribute('data-can-focus') ? 0 : 1,
+			useTwBlur: getComputedStyle(el).filter !== 'none'
 		}));
 
 		// ponytail: cursor position can't be read before a mousemove, so apply one frame
@@ -96,7 +105,6 @@
 	@reference '$tailwind';
 
 	:global([data-speed]) {
-		transition: filter 0.3s ease-out;
 		will-change: transform, filter;
 	}
 </style>
