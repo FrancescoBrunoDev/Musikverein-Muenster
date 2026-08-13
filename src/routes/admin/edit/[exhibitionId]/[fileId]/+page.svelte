@@ -177,6 +177,25 @@
 		}
 	}
 
+	async function takeOver() {
+		try {
+			const res = await fetch('/api/exhibitions/pb/unlockFile', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id: data.file?.id })
+			});
+			const result = await res.json();
+			if (result.success) {
+				await invalidateAll();
+			} else {
+				lockError = result.message ?? 'Unable to take over editing';
+			}
+		} catch (error) {
+			console.error('Error while taking over editing:', error);
+			lockError = 'Unable to take over editing';
+		}
+	}
+
 	async function revert() {
 		try {
 			const res = await fetch('/api/exhibitions/pb/revertFile', {
@@ -230,6 +249,15 @@
 			</div>
 		</div>
 		<div class="flex gap-2">
+			{#if data.isLocked}
+				<Button
+					action={takeOver}
+					size="sm"
+					className="bg-secondary text-text dark:bg-dark-secondary dark:text-dark-text"
+					type={'button'}
+					label="Take over editing"
+				/>
+			{/if}
 			{#if publishStatus.state}
 				<Button
 					action={revert}

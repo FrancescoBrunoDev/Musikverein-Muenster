@@ -28,6 +28,8 @@ export const POST: RequestHandler = async ({ request, locals, params, fetch }) =
 			return unpublishFile({ locals, request });
 		case 'revertFile':
 			return revertFile({ locals, request, fetch });
+		case 'unlockFile':
+			return unlockFile({ locals, request });
 		case 'getGallery':
 			return getGallery({ locals, request });
 		case 'getExhibitionsList':
@@ -36,6 +38,25 @@ export const POST: RequestHandler = async ({ request, locals, params, fetch }) =
 			return json({ success: false, message: 'Invalid operation' }, { status: 400 });
 	}
 };
+
+async function unlockFile({ locals, request }: { locals: App.Locals; request: Request }) {
+	try {
+		const body = await request.json();
+		const { id } = body;
+		if (!id) {
+			return json({ success: false, message: 'File id is required' }, { status: 400 });
+		}
+
+		const file = await locals.pb.collection('exhibitionsFiles').update(String(id), {
+			editingBy: ''
+		});
+
+		return json({ success: true, file });
+	} catch (e) {
+		console.error('unlockFile failed:', e);
+		return json({ success: false, message: 'Error while unlocking' }, { status: 400 });
+	}
+}
 
 async function getExhibitionsList({ locals, fetch }: { locals: App.Locals; fetch: Fetch }) {
 	const exhibitions = await locals.pb.collection('exhibitions').getFullList({
