@@ -15,6 +15,7 @@
 		iconFirst?: boolean;
 		href?: string;
 		target?: string;
+		ariaLabel?: string;
 	}
 
 	let {
@@ -30,11 +31,12 @@
 		disabled = false,
 		iconFirst = true,
 		href = undefined,
-		target = undefined
+		target = undefined,
+		ariaLabel = undefined
 	}: Props = $props();
 
 	const Icon = $derived(icon);
-	let formattedLabel = $derived(label?.replace(/\s/g, '-').toLowerCase());
+	let accessibleLabel = $derived(ariaLabel ?? label ?? undefined);
 
 	const buttonClass = cn(
 		'flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary dark:bg-dark-primary p-2 text-background dark:text-dark-background transition-all hover:scale-103 hover:drop-shadow-xl',
@@ -49,33 +51,13 @@
 </script>
 
 {#if href}
-	<a {href} {target} class={buttonClass} aria-label={formattedLabel} onclick={action} role="button">
-		{#if label}
-			<span
-				class={cn('text-xs', {
-					'text-base': !icon,
-					'text-xs': size === 'sm'
-				})}>{label}</span
-			>
-		{/if}
-		{#if Icon}
-			<Icon
-				class={cn('stroke-2', {
-					'order-first': iconFirst
-				})}
-			/>
-		{/if}
-		{@render children?.()}
-		<span class="sr-only">Open Popover</span>
-	</a>
-{:else}
-	<button
-		formaction={formAction}
-		{type}
-		{disabled}
-		onclick={action}
+	<a
+		{href}
+		{target}
 		class={buttonClass}
-		aria-label={formattedLabel}
+		aria-label={accessibleLabel}
+		onclick={action}
+		role="button"
 	>
 		{#if label}
 			<span
@@ -93,6 +75,31 @@
 			/>
 		{/if}
 		{@render children?.()}
-		<span class="sr-only">Open Popover</span>
+	</a>
+{:else}
+	<button
+		formaction={formAction}
+		{type}
+		{disabled}
+		onclick={action}
+		class={buttonClass}
+		aria-label={accessibleLabel}
+	>
+		{#if label}
+			<span
+				class={cn('text-xs', {
+					'text-base': !icon,
+					'text-xs': size === 'sm'
+				})}>{label}</span
+			>
+		{/if}
+		{#if Icon}
+			<Icon
+				class={cn('stroke-2', {
+					'order-first': iconFirst
+				})}
+			/>
+		{/if}
+		{@render children?.()}
 	</button>
 {/if}

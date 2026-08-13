@@ -27,7 +27,12 @@
 				class="z-10 container grid w-full max-w-xl justify-items-stretch gap-2 px-2 md:w-3/4 md:px-0"
 			>
 				<div class="flex justify-end">
-					<Button action={() => (isOpen = !isOpen)} light={true} icon={Minimize2} />
+					<Button
+						action={() => (isOpen = !isOpen)}
+						light={true}
+						icon={Minimize2}
+						ariaLabel="Close"
+					/>
 				</div>
 				<div class="max-h-[80dvh]">
 					{@render children?.()}

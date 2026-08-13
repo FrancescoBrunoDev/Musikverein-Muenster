@@ -89,6 +89,7 @@
 								action={() => openModalModifyExhibition(exhibition)}
 								size="sm"
 								icon={Settings2}
+								ariaLabel="Modify exhibition"
 							/>
 						</div>
 						<DeleteExhibition exhibitionId={exhibition.id}></DeleteExhibition>
