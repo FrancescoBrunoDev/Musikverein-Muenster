@@ -2,11 +2,11 @@
 	import type { PageData } from './$types';
 	import DOMPurify from 'isomorphic-dompurify';
 	import { onMount } from 'svelte';
-	import { Save, CloudAlert, CircleCheckBig } from 'lucide-svelte';
+	import { Save, CloudAlert, CircleCheckBig, Undo2 } from 'lucide-svelte';
 	import Button from '$components/ui/Button.svelte';
 	import { ChevronLeft } from 'lucide-svelte';
 	import Selector from '$components/ui/Selector.svelte';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { LL } from '$lib/i18n/i18n-svelte';
 	import { formatData } from '$lib/utils';
 
@@ -20,17 +20,22 @@
 
 	let { data }: Props = $props();
 
-	let value: string = $state('');
-	let activeLang: string = $state('en');
+	let value: string = $state(data.markdown ?? '');
+	let lastSaved: string = data.markdown ?? '';
+	let activeLang: string = $state(data.file?.lang ?? 'en');
 
 	let saveStatus: { state: boolean; updated: string } = $state({
 		state: false,
-		updated: 'loading'
-	});
-	let publishStatus: { state: boolean; updated: string } = $state({
-		state: false,
 		updated: ''
 	});
+	let publishStatus: { state: boolean; updated: string } = $state({
+		state: Boolean(data.file?.live),
+		updated: data.file?.liveUpdated
+			? formatData({ date: data.file.liveUpdated, lang: $LL.commons.codeLang() })
+			: ''
+	});
+	let lockError: string = $state('');
+
 	let options = $derived.by(() => {
 		let items: { label: string; value: string; id: string }[] = [];
 		data.exhibition?.expand?.files.forEach((item: { lang: any; id: any }) => {
@@ -39,143 +44,155 @@
 		return items;
 	});
 
+	// Reset local editor state when the loaded file changes (e.g. language switch).
+	let loadedFileId: string | undefined = data.file?.id;
 	$effect(() => {
-		let fileId = options.find((item) => item.value === activeLang)?.id;
-		goto(`/admin/edit/${data.exhibition?.id}/${fileId}`);
-		value = data.markdown ?? '';
-		publishStatus = {
-			state: data.file?.live,
-			updated: formatData({
-				date: data.file?.liveUpdated,
-				lang: $LL.commons.codeLang()
-			})
-		};
+		if (data.file?.id !== loadedFileId) {
+			loadedFileId = data.file?.id;
+			value = data.markdown ?? '';
+			lastSaved = data.markdown ?? '';
+			activeLang = data.file?.lang ?? 'en';
+			lockError = '';
+			saveStatus = { state: false, updated: '' };
+			publishStatus = {
+				state: Boolean(data.file?.live),
+				updated: data.file?.liveUpdated
+					? formatData({ date: data.file.liveUpdated, lang: $LL.commons.codeLang() })
+					: ''
+			};
+			if (!data.isLocked) claimLock();
+		}
+	});
+
+	// Navigate only when the user actually switches language (not on initial mount).
+	$effect(() => {
+		if (activeLang !== data.file?.lang) {
+			const fileId = options.find((item) => item.value === activeLang)?.id;
+			if (fileId) goto(`/admin/edit/${data.exhibition?.id}/${fileId}`);
+		}
 	});
 
 	onMount(() => {
-		value = data.markdown ?? '';
-		activeLang = data.file?.lang;
-		publishStatus = {
-			state: data.file?.live,
-			updated: formatData({
-				date: data.file?.liveUpdated,
-				lang: $LL.commons.codeLang()
-			})
-		};
+		if (!data.isLocked) claimLock();
 	});
 
 	let debounceTimer: ReturnType<typeof setTimeout>;
-	// submit the form whebn value changes
-	async function saveAndUpdateEditing() {
-		try {
-			await Promise.all([save(), changeEditingBy()]);
-		} catch (error) {
-			console.error('Errore durante il salvataggio:', error);
-		}
-	}
 
 	$effect(() => {
-		if (value && !data.isLocked) {
+		if (!data.isLocked && !lockError && value !== lastSaved) {
 			clearTimeout(debounceTimer);
-
 			debounceTimer = setTimeout(() => {
-				saveAndUpdateEditing();
+				save();
 			}, 1000);
 		}
 	});
 
-	async function changeEditingBy() {
-		await fetch('/api/exhibitions/pb/changeEditingBy', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				id: data.file?.id
-			})
-		});
+	async function claimLock() {
+		try {
+			const res = await fetch('/api/exhibitions/pb/changeEditingBy', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id: data.file?.id })
+			});
+			const result = await res.json();
+			if (!result.success) {
+				lockError = result.message ?? 'Unable to lock this file';
+			}
+		} catch (error) {
+			console.error('Error while claiming lock:', error);
+		}
 	}
 
 	async function save() {
-		const res = await fetch('/api/exhibitions/pb/updateFile', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				id: data.file?.id,
-				markdown: value,
-				field: 'preview',
-				collection: 'exhibitionsFiles'
-			})
-		});
-		const result = await res.json();
-		if (result.success) {
-			saveStatus = {
-				state: true,
-				updated: formatData({
-					date: data.file?.previewUpdated,
-					lang: $LL.commons.codeLang()
+		try {
+			const res = await fetch('/api/exhibitions/pb/updateFile', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					id: data.file?.id,
+					markdown: value
 				})
-			};
-		} else {
-			saveStatus = {
-				state: false,
-				updated: result.message
-			};
+			});
+			const result = await res.json();
+			if (result.success) {
+				lastSaved = value;
+				saveStatus = {
+					state: true,
+					updated: formatData({
+						date: result.updated?.previewUpdated ?? new Date().toISOString(),
+						lang: $LL.commons.codeLang()
+					})
+				};
+			} else {
+				if (result.locked) lockError = result.message;
+				saveStatus = { state: false, updated: result.message ?? 'Save failed' };
+			}
+		} catch (error) {
+			console.error('Error while saving:', error);
+			saveStatus = { state: false, updated: 'Save failed' };
 		}
 	}
 
 	async function publish() {
-		const res = await fetch('/api/exhibitions/pb/publishFile', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				id: data.file?.id
-			})
-		});
-		const result = await res.json();
-
-		if (result.success) {
-			publishStatus = {
-				state: true,
-				updated: formatData({
-					date: data.file?.liveUpdated,
-					lang: $LL.commons.codeLang()
-				})
-			};
-		} else {
-			publishStatus = {
-				state: false,
-				updated: result.message
-			};
+		try {
+			const res = await fetch('/api/exhibitions/pb/publishFile', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id: data.file?.id })
+			});
+			const result = await res.json();
+			if (result.success) {
+				publishStatus = {
+					state: true,
+					updated: formatData({
+						date: result.updated?.liveUpdated ?? new Date().toISOString(),
+						lang: $LL.commons.codeLang()
+					})
+				};
+			} else {
+				publishStatus = { state: false, updated: result.message ?? 'Publish failed' };
+			}
+		} catch (error) {
+			console.error('Error while publishing:', error);
+			publishStatus = { state: false, updated: 'Publish failed' };
 		}
 	}
 
 	async function unpublish() {
-		const res = await fetch('/api/exhibitions/pb/unpublishFile', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				id: data.file?.id
-			})
-		});
-		const result = await res.json();
+		try {
+			const res = await fetch('/api/exhibitions/pb/unpublishFile', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id: data.file?.id })
+			});
+			const result = await res.json();
+			if (result.success) {
+				publishStatus = { state: false, updated: '' };
+			} else {
+				publishStatus = { state: false, updated: result.message ?? 'Unpublish failed' };
+			}
+		} catch (error) {
+			console.error('Error while unpublishing:', error);
+			publishStatus = { state: false, updated: 'Unpublish failed' };
+		}
+	}
 
-		if (result.success) {
-			publishStatus = {
-				state: false,
-				updated: ''
-			};
-		} else {
-			publishStatus = {
-				state: false,
-				updated: result.message
-			};
+	async function revert() {
+		try {
+			const res = await fetch('/api/exhibitions/pb/revertFile', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id: data.file?.id })
+			});
+			const result = await res.json();
+			if (result.success) {
+				await invalidateAll();
+			} else {
+				lockError = result.message ?? 'Revert failed';
+			}
+		} catch (error) {
+			console.error('Error while reverting:', error);
+			lockError = 'Revert failed';
 		}
 	}
 
@@ -213,6 +230,16 @@
 			</div>
 		</div>
 		<div class="flex gap-2">
+			{#if data.file?.live}
+				<Button
+					action={revert}
+					size="sm"
+					className="bg-secondary text-text dark:bg-dark-secondary dark:text-dark-text"
+					type={'button'}
+					label="Revert to published"
+					icon={Undo2}
+				/>
+			{/if}
 			<Button disabled={data.isLocked} action={publish} size="sm" type={'button'} label="Publish" />
 			{#if publishStatus.state}
 				<Button
@@ -229,43 +256,38 @@
 		{#if publishStatus.state}
 			<CircleCheckBig class="h-4 w-4" />last publish {publishStatus.updated}
 		{:else}
-			<span>not published jet</span>
+			<span>not published yet</span>
 		{/if}
 	</div>
-	{#if value !== ''}
+	{#if data.isLocked}
+		<Markdown {value} {carta} />
+	{:else}
+		<MarkdownEditor {carta} bind:value mode="tabs" />
+	{/if}
+	<div
+		class="variant-soft-success rounded-token flex items-center justify-end gap-1 px-4 py-2 text-xs"
+	>
 		{#if data.isLocked}
-			<Markdown bind:value {carta} />
-			<div
-				class="variant-soft-success rounded-token flex items-center justify-end gap-1 px-4 py-2 text-xs"
-			>
-				<div class="text-destructive inline-flex gap-1">
-					Editing by {data.file.editingBy}
-					<CloudAlert class="h-4 w-4" />
-				</div>
+			<div class="text-destructive inline-flex gap-1">
+				Editing by {data.file.editingBy}
+				<CloudAlert class="h-4 w-4" />
 			</div>
-		{:else}
-			<MarkdownEditor {carta} bind:value mode="tabs" />
-			<div
-				class="variant-soft-success rounded-token flex items-center justify-end gap-1 px-4 py-2 text-xs"
-			>
-				{#if !saveStatus.state}
-					<div class="text-destructive inline-flex gap-1">
-						{saveStatus.updated}
-						<CloudAlert class="h-4 w-4" />
-					</div>
-				{/if}
-				{#if saveStatus.state}
-					<div class="inline-flex gap-1">
-						last save {saveStatus.updated}<Save class="h-4 w-4" />
-					</div>
-				{/if}
+		{:else if lockError}
+			<div class="text-destructive inline-flex gap-1">
+				{lockError}
+				<CloudAlert class="h-4 w-4" />
+			</div>
+		{:else if saveStatus.state}
+			<div class="inline-flex gap-1">
+				last save {saveStatus.updated}<Save class="h-4 w-4" />
+			</div>
+		{:else if saveStatus.updated}
+			<div class="text-destructive inline-flex gap-1">
+				{saveStatus.updated}
+				<CloudAlert class="h-4 w-4" />
 			</div>
 		{/if}
-	{:else}
-		<div class="flex h-[93dvh] items-center justify-center">
-			<p class="text-center">Loading...</p>
-		</div>
-	{/if}
+	</div>
 </div>
 
 <style lang="postcss">
@@ -280,7 +302,7 @@
 	:global(.carta-theme__default .carta-toolbar) {
 		@apply border-border border-b-2 pt-2 pb-1;
 	}
-	:gloabl(.carta-font-code) {
+	:global(.carta-font-code) {
 		@apply text-text;
 	}
 </style>
