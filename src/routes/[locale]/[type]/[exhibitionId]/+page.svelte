@@ -69,11 +69,11 @@
 <section>
 	{#if data}
 		{#if data.type === 'preview'}
-			<div class="fixed top-16 z-50 container w-full">
+			<div class="fixed top-12 left-1/2 z-50 w-fit max-w-[calc(100dvw_-_2rem)] -translate-x-1/2">
 				<div
-					class="flex flex-wrap items-center justify-between gap-4 rounded-2xl p-2 backdrop-blur-xl"
+					class="bg-background/80 dark:bg-dark-background/80 flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 p-2 shadow-lg backdrop-blur-xl"
 				>
-					<div class="flex gap-4">
+					<div class="flex flex-wrap items-center gap-3">
 						<Button
 							href="/admin"
 							type={'button'}

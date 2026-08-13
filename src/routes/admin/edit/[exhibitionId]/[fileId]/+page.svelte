@@ -288,7 +288,7 @@
 		{#if data.isLocked}
 			<Markdown {value} {carta} />
 		{:else}
-			<MarkdownEditor {carta} bind:value mode="tabs" />
+			<MarkdownEditor {carta} bind:value mode="auto" />
 		{/if}
 	</div>
 	<div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t-2 py-2 text-xs">

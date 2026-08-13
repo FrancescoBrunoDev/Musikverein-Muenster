@@ -34,6 +34,8 @@ export const POST: RequestHandler = async ({ request, locals, params, fetch }) =
 			return getGallery({ locals, request });
 		case 'getExhibitionsList':
 			return getExhibitionsList({ locals, fetch });
+		case 'reorderExhibitions':
+			return reorderExhibitions({ locals, request });
 		default:
 			return json({ success: false, message: 'Invalid operation' }, { status: 400 });
 	}
@@ -58,8 +60,30 @@ async function unlockFile({ locals, request }: { locals: App.Locals; request: Re
 	}
 }
 
+async function reorderExhibitions({ locals, request }: { locals: App.Locals; request: Request }) {
+	try {
+		const body = await request.json();
+		const { ids } = body;
+		if (!Array.isArray(ids)) {
+			return json({ success: false, message: 'ids array is required' }, { status: 400 });
+		}
+
+		await Promise.all(
+			ids.map((id: string, index: number) =>
+				locals.pb.collection('exhibitions').update(String(id), { sort: index })
+			)
+		);
+
+		return json({ success: true });
+	} catch (e) {
+		console.error('reorderExhibitions failed:', e);
+		return json({ success: false, message: 'Error while reordering' }, { status: 400 });
+	}
+}
+
 async function getExhibitionsList({ locals, fetch }: { locals: App.Locals; fetch: Fetch }) {
 	const exhibitions = await locals.pb.collection('exhibitions').getFullList({
+		sort: 'sort,created',
 		expand: 'files'
 	});
 

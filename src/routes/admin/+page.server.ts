@@ -16,6 +16,7 @@ export const load = (async ({ locals }) => {
 
 	const user = await locals.pb.collection('users').getOne(locals.pb.authStore.record!.id);
 	const exhibitions = await locals.pb.collection('exhibitions').getFullList({
+		sort: 'sort,created',
 		expand: 'files'
 	});
 	return { user, exhibitions };
@@ -46,9 +47,11 @@ export const actions = {
 			editingBy: ''
 		});
 
+		const exhibitions = await locals.pb.collection('exhibitions').getFullList();
 		const exhibition = await locals.pb.collection('exhibitions').create({
 			title,
 			visible: false,
+			sort: exhibitions.length,
 			files: [fileEn.id, fileDe.id]
 		});
 
