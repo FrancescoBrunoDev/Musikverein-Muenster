@@ -43,7 +43,7 @@
 					x: 1500,
 					easing: quintInOut
 				}}
-				class="bg-background dark:bg-dark-background text-text dark:text-dark-text absolute top-0 right-0 bottom-0 left-0 z-50 container flex h-dvh flex-col py-8 lg:left-[unset] lg:w-[850px] lg:drop-shadow-2xl"
+				class="bg-background dark:bg-dark-background text-text dark:text-dark-text absolute top-0 right-0 bottom-0 left-0 z-50 container flex h-dvh flex-col py-8 lg:left-[unset] lg:w-[850px] lg:shadow-[0_25px_25px_rgb(0_0_0_/_0.15)]"
 			>
 				<button
 					onclick={() => toggleMenu()}

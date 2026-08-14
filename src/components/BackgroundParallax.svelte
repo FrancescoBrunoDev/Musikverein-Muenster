@@ -101,10 +101,4 @@
 	{@render children?.()}
 </div>
 
-<style lang="postcss">
-	@reference '$tailwind';
 
-	:global([data-speed]) {
-		will-change: transform, filter;
-	}
-</style>
